@@ -3,81 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishal Vaishnav - Portfolio</title>
+    <title>Vishal Vaishnav - Pro Portfolio</title>
     <style>
-        /* यहाँ से CSS की स्टाइलिंग शुरू होती है */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        /* गूगल से एक शानदार फॉन्ट इम्पोर्ट किया है */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
         body {
-            /* यह पेज के बैकग्राउंड में दो रंगों का मिक्स (Gradient) बनाएगा */
-            background: linear-gradient(135deg, #74ebd5, #9face6);
+            background: #0b0f19; /* हैकर्स वाला डार्क बैकग्राउंड */
+            color: white;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
         }
+
+        /* बैकग्राउंड में तैरते हुए चमकते गोले (Animated Background) */
+        .circle1, .circle2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px); /* इसे धुंधला किया है ताकि अच्छी चमक आए */
+            z-index: -1;
+        }
+        .circle1 { 
+            width: 300px; height: 300px; background: #00f2fe; 
+            top: -50px; left: -50px; 
+            animation: float 6s infinite alternate; 
+        }
+        .circle2 { 
+            width: 400px; height: 400px; background: #4facfe; 
+            bottom: -100px; right: -50px; 
+            animation: float 8s infinite alternate-reverse; 
+        }
+        @keyframes float { 
+            0% { transform: translateY(0); } 
+            100% { transform: translateY(50px); } 
+        }
+
+        /* ग्लासमॉर्फिज़्म कार्ड (कांच जैसा इफ़ेक्ट) */
         .card {
-            background-color: white;
+            background: rgba(255, 255, 255, 0.05); /* हल्का पारदर्शी */
+            backdrop-filter: blur(15px); /* पीछे का हिस्सा धुंधला करेगा */
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border-radius: 20px;
             text-align: center;
-            max-width: 400px;
             width: 90%;
-            transition: transform 0.3s ease;
+            max-width: 450px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
+            transition: 0.5s;
         }
-        .card:hover {
-            transform: translateY(-10px); /* माउस ले जाने पर कार्ड थोड़ा ऊपर उठेगा */
+        .card:hover { 
+            transform: translateY(-10px); 
+            border: 1px solid rgba(255, 255, 255, 0.3); 
         }
-        .profile-icon {
-            font-size: 60px;
-            margin-bottom: 15px;
+
+        /* प्रोफाइल फोटो की जगह चमकता हुआ गोला */
+        .profile-pic {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(45deg, #00f2fe, #4facfe);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 50px;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
         }
-        h1 {
-            color: #2c3e50;
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #34495e;
-            font-size: 16px;
-            font-weight: normal;
-            margin-bottom: 20px;
-        }
-        p {
-            color: #7f8c8d;
-            font-size: 15px;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-        .btn {
+
+        h1 { font-size: 32px; font-weight: 600; margin-bottom: 5px; letter-spacing: 1px; }
+        
+        /* टाइपिंग टेक्स्ट का रंग */
+        .typing-text { color: #00f2fe; font-size: 18px; font-weight: 400; height: 25px; margin-bottom: 20px; }
+        
+        p { color: #ccc; font-size: 14px; line-height: 1.6; margin-bottom: 30px; }
+
+        /* नियॉन बटन (Neon Glow Button) */
+        .neon-btn {
             display: inline-block;
-            padding: 12px 25px;
-            background-color: #3498db;
-            color: white;
+            padding: 12px 30px;
+            color: #00f2fe;
             text-decoration: none;
-            border-radius: 25px;
-            font-weight: bold;
-            transition: background 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 2px solid #00f2fe;
+            border-radius: 30px;
+            transition: 0.3s;
         }
-        .btn:hover {
-            background-color: #2980b9; /* माउस ले जाने पर बटन का रंग गहरा होगा */
+        .neon-btn:hover {
+            background: #00f2fe;
+            color: #0b0f19;
+            box-shadow: 0 0 10px #00f2fe, 0 0 40px #00f2fe, 0 0 80px #00f2fe; /* बटन पर माउस ले जाने पर लाइट जलेगी */
         }
     </style>
 </head>
 <body>
 
+    <div class="circle1"></div>
+    <div class="circle2"></div>
+
     <div class="card">
-        <div class="profile-icon">👨‍💻</div>
+        <div class="profile-pic">👨‍💻</div>
         <h1>विशाल वैष्णव</h1>
-        <h2>भावी कंप्यूटर अनुदेशक | वेब डेवलपर</h2>
-        <p>यह मेरी एडवांस प्रैक्टिस वेबसाइट है। 23 अगस्त के एग्जाम की तैयारी के साथ-साथ मैं यहाँ अपनी कोडिंग स्किल्स को भी निखार रहा हूँ।</p>
-        <a href="#" class="btn">मेरा रेज़्यूमे देखें</a>
+        <div class="typing-text" id="typewriter"></div>
+        <p>मेरी एडवांस कोडिंग जर्नी में आपका स्वागत है। मैं यहाँ नए वेब डिज़ाइन और डेवलपमेंट स्किल्स का प्रदर्शन कर रहा हूँ।</p>
+        <a href="#" class="neon-btn">मुझसे जुड़ें</a>
     </div>
+
+    <script>
+        const texts = ["भावी कंप्यूटर अनुदेशक...", "वेब डेवलपर...", "कोडिंग एंथूसियास्ट..."];
+        let count = 0;
+        let index = 0;
+        let currentText = "";
+        let letter = "";
+
+        function type() {
+            if (count === texts.length) { count = 0; }
+            currentText = texts[count];
+            letter = currentText.slice(0, ++index);
+            
+            document.getElementById("typewriter").textContent = letter + "|";
+
+            if (letter.length === currentText.length) {
+                count++;
+                index = 0;
+                setTimeout(type, 2000); // नया शब्द शुरू होने से पहले रुकेगा
+            } else {
+                setTimeout(type, 100); // टाइपिंग की स्पीड
+            }
+        }
+        type();
+    </script>
 
 </body>
 </html>
