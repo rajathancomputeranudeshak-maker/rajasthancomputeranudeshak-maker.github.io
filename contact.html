@@ -5,25 +5,40 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Vishal Vaishnav</title>
     <style>
-        /* वही डार्क थीम स्टाइल */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: sans-serif; }
-        body { background: #0b0f19; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .card { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 400px; }
-        h1 { color: #00f2fe; margin-bottom: 20px; }
-        p { color: #ccc; margin-bottom: 10px; font-size: 16px; }
-        .btn { display: inline-block; margin-top: 20px; padding: 10px 20px; color: #fff; background: #333; text-decoration: none; border-radius: 5px; border: 1px solid #555; }
-        .btn:hover { background: #555; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: #0b0f19; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
+        
+        /* नेविगेशन बार */
+        .navbar { position: absolute; top: 0; width: 100%; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); z-index: 100; }
+        .logo { color: #00f2fe; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links li a { color: #ccc; text-decoration: none; font-size: 16px; transition: 0.3s; font-weight: 600; }
+        .nav-links li a:hover { color: #00f2fe; text-shadow: 0 0 10px #00f2fe; }
+        @media (max-width: 600px) { .navbar { flex-direction: column; padding: 15px; } .nav-links { gap: 15px; margin-top: 10px; } }
+
+        .card { background: rgba(255, 255, 255, 0.05); padding: 40px; border-radius: 20px; text-align: center; border: 1px solid rgba(255, 255, 255, 0.1); width: 90%; max-width: 400px; margin-top: 60px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        h1 { color: #00f2fe; margin-bottom: 20px; font-size: 28px; }
+        p { color: #ccc; margin-bottom: 15px; font-size: 16px; }
+        strong { color: white; }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="logo">Vishal ji sidhpura wale.</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="quiz.html">Quiz</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
+
     <div class="card">
-        <h1>मुझसे संपर्क करें 📞</h1>
-        <p><strong>नाम:</strong> vishal vaishnav</p>
+        <h1>संपर्क करें 📞</h1>
+        <p><strong>नाम:</strong> विशाल वैष्णव</p>
         <p><strong>लक्ष्य:</strong> कंप्यूटर अनुदेशक 2026</p>
         <p><strong>मोबाइल:</strong> 6367180391</p>
-        <p><strong>ईमेल:</strong> vishalvaishnav@gmail.com</p>
-        
-        <a href="index.html" class="btn">🔙 वापस होमपेज पर जाएँ</a>
+        <p><strong>ईमेल:</strong> vishalvaishnav7023@gmail.com</p>
     </div>
 </body>
 </html>
