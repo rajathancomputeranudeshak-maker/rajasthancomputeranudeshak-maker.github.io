@@ -3,84 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Quiz - Vishal Vaishnav</title>
+    <title>Vishal Quiz Pro - Computer Instructor Special</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #0b0f19; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
-        
-        /* नेविगेशन बार */
-        .navbar { position: absolute; top: 0; width: 100%; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); z-index: 100; }
-        .logo { color: #00f2fe; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
-        .nav-links { list-style: none; display: flex; gap: 30px; }
-        .nav-links li a { color: #ccc; text-decoration: none; font-size: 16px; transition: 0.3s; font-weight: 600; }
-        .nav-links li a:hover { color: #00f2fe; text-shadow: 0 0 10px #00f2fe; }
-        @media (max-width: 600px) { .navbar { flex-direction: column; padding: 15px; } .nav-links { gap: 15px; margin-top: 10px; } }
+        body { background: #0b0f19; color: white; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; }
 
-        .quiz-container { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 60px; }
-        h2 { color: #00f2fe; margin-bottom: 20px; font-size: 22px; }
-        .option-btn { background: transparent; color: white; border: 2px solid #00f2fe; padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; cursor: pointer; font-size: 16px; transition: 0.3s; }
-        .option-btn:hover { background: #00f2fe; color: #0b0f19; font-weight: bold; }
-        #result { margin-top: 20px; font-size: 18px; font-weight: bold; height: 25px; }
+        /* --- Quiz Container --- */
+        .quiz-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(0, 242, 254, 0.3); padding: 40px; border-radius: 20px; width: 90%; max-width: 700px; box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); position: relative; }
+        
+        /* Progress Bar */
+        .progress-container { width: 100%; height: 8px; background: #333; border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
+        .progress-bar { height: 100%; background: #00f2fe; width: 0%; transition: 0.5s; }
+
+        h2 { font-size: 24px; margin-bottom: 25px; color: #00f2fe; line-height: 1.4; }
+
+        /* Options Style */
+        .options-grid { display: grid; gap: 15px; }
+        .option-btn { background: rgba(255, 255, 255, 0.05); border: 2px solid rgba(0, 242, 254, 0.5); padding: 15px; border-radius: 10px; color: white; cursor: pointer; font-size: 16px; text-align: left; transition: 0.3s; }
+        .option-btn:hover { background: rgba(0, 242, 254, 0.2); transform: translateX(10px); }
+        .option-btn.correct { background: #25D366; border-color: #25D366; color: #000; font-weight: bold; }
+        .option-btn.wrong { background: #ff4757; border-color: #ff4757; color: #fff; }
+
+        /* Footer Info */
+        .footer-info { display: flex; justify-content: space-between; margin-top: 30px; font-size: 14px; color: #ccc; }
+        .back-home { position: absolute; top: -50px; left: 0; color: #00f2fe; text-decoration: none; font-weight: bold; }
+
+        /* Result View */
+        .result-view { text-align: center; display: none; }
+        .score-circle { width: 150px; height: 150px; border: 5px solid #00f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 20px; color: #00f2fe; box-shadow: 0 0 20px #00f2fe; }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">Vishal.</div>
-        <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="quiz.html">Quiz</a></li>
-    <li><a href="contact.html">Contact</a></li>
-</ul>
-            <li><a href="index.html">Home</a></li>
-            <li><a href="quiz.html">Quiz</a></li>
-            <li><a href="contact.html">Contact</a></li>
-        </ul>
-    </nav>
 
-    <div class="quiz-container">
-        <h2 id="question">प्रश्न लोड हो रहा है...</h2>
-        <div id="options-box"></div>
-        <p id="result"></p>
+    <div class="quiz-card">
+        <a href="index.html" class="back-home">🔙 Exit to Home</a>
+        
+        <div id="quiz-box">
+            <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+            <h2 id="question">Loading Awesome Question...</h2>
+            <div class="options-grid" id="options"></div>
+            <div class="footer-info">
+                <span>Question: <span id="q-count">1</span>/5</span>
+                <span>Category: Computer Science</span>
+            </div>
+        </div>
+
+        <div id="result-box" class="result-view">
+            <div class="score-circle" id="final-score">0</div>
+            <h1 id="result-msg">Quiz Finished!</h1>
+            <p id="result-desc" style="margin: 20px 0; color: #ccc;"></p>
+            <button onclick="location.reload()" style="background:#00f2fe; border:none; padding:12px 30px; border-radius:30px; font-weight:bold; cursor:pointer;">Restart Quiz</button>
+            <a href="index.html" style="display:block; margin-top:15px; color:#aaa; text-decoration:none;">Go back home</a>
+        </div>
     </div>
 
     <script>
         const quizData = [
-            { question: "वेबसाइट का स्ट्रक्चर बनाने के लिए किस भाषा का उपयोग होता है?", options: ["Python", "HTML", "C++", "Java"], answer: "HTML" },
-            { question: "CSS का फुल फॉर्म क्या है?", options: ["Computer Style Sheet", "Cascading Style Sheet", "Creative Style System", "Color Style Sheet"], answer: "Cascading Style Sheet" },
-            { question: "वेब पेज को इंटरैक्टिव (Interactive) कौन सी भाषा बनाती है?", options: ["HTML", "CSS", "JavaScript", "SQL"], answer: "JavaScript" },
-            { question: "कंप्यूटर का दिमाग किसे कहा जाता है?", options: ["RAM", "Monitor", "CPU", "Keyboard"], answer: "CPU" }
+            { q: "Computer Instructor exam ki fix date kya hai?", a: ["23 July 2026", "23 August 2026", "15 August 2026", "23 Sept 2026"], correct: 1 },
+            { q: "HTML mein sabse bada heading tag kaunsa hota hai?", a: ["&lt;h6&gt;", "&lt;head&gt;", "&lt;h1&gt;", "&lt;header&gt;"], correct: 2 },
+            { q: "Inme se kaunsa Operating System nahi hai?", a: ["Windows", "Linux", "Oracle", "macOS"], correct: 2 },
+            { q: "RAM ka full form kya hota hai?", a: ["Read Access Memory", "Random Access Memory", "Ready Auto Memory", "Random Active Mode"], correct: 1 },
+            { q: "Javascript mein variables declare karne ke liye kya use hota hai?", a: ["var", "let", "const", "All of the above"], correct: 3 }
         ];
-        let currentQIndex = 0; let score = 0;
-        function loadQuestion() {
-            if(currentQIndex >= quizData.length) {
-                document.getElementById('question').innerText = `क्विज़ खत्म! 🎉 आपका स्कोर: ${score} / ${quizData.length}`;
-                document.getElementById('options-box').innerHTML = "";
-                document.getElementById('result').innerText = "";
-                return;
-            }
-            document.getElementById('question').innerText = quizData[currentQIndex].question;
-            document.getElementById('options-box').innerHTML = "";
-            document.getElementById('result').innerText = "";
-            quizData[currentQIndex].options.forEach(opt => {
-                let btn = document.createElement('button');
-                btn.innerText = opt; btn.className = 'option-btn';
-                btn.onclick = () => checkAnswer(opt);
-                document.getElementById('options-box').appendChild(btn);
+
+        let currentIdx = 0;
+        let score = 0;
+
+        function loadQuiz() {
+            const currentQ = quizData[currentIdx];
+            document.getElementById('question').innerHTML = currentQ.q;
+            document.getElementById('q-count').innerText = currentIdx + 1;
+            document.getElementById('progress').style.width = ((currentIdx + 1) / quizData.length) * 100 + "%";
+            
+            const optionsDiv = document.getElementById('options');
+            optionsDiv.innerHTML = "";
+            currentQ.a.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => checkAns(index, btn);
+                optionsDiv.appendChild(btn);
             });
         }
-        function checkAnswer(selectedOption) {
-            let correctOption = quizData[currentQIndex].answer;
-            let resultText = document.getElementById('result');
-            if(selectedOption === correctOption) {
-                resultText.innerText = "✅ बिल्कुल सही जवाब!"; resultText.style.color = "#00ea8d"; score++;
+
+        function checkAns(idx, btn) {
+            const correctIdx = quizData[currentIdx].correct;
+            const allBtns = document.querySelectorAll('.option-btn');
+            
+            allBtns.forEach(b => b.style.pointerEvents = 'none'); // Stop multi-clicks
+
+            if(idx === correctIdx) {
+                btn.classList.add('correct');
+                score++;
             } else {
-                resultText.innerText = `❌ गलत! सही जवाब था: ${correctOption}`; resultText.style.color = "#ff4757";
+                btn.classList.add('wrong');
+                allBtns[correctIdx].classList.add('correct');
             }
-            setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
+
+            setTimeout(() => {
+                currentIdx++;
+                if(currentIdx < quizData.length) {
+                    loadQuiz();
+                } else {
+                    showResult();
+                }
+            }, 1500);
         }
-        loadQuestion();
+
+        function showResult() {
+            document.getElementById('quiz-box').style.display = 'none';
+            document.getElementById('result-box').style.display = 'block';
+            document.getElementById('final-score').innerText = `${score}/${quizData.length}`;
+            
+            let msg = "";
+            if(score === quizData.length) msg = "Aap to computer ke king ho! 👑";
+            else if(score >= 3) msg = "Great job! Exam ki taiyari achi hai. 🚀";
+            else msg = "Thodi aur mehnat chahiye Vishal bhai! 👍";
+            
+            document.getElementById('result-desc').innerText = msg;
+        }
+
+        loadQuiz();
     </script>
 </body>
 </html>
