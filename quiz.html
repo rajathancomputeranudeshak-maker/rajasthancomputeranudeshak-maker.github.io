@@ -5,113 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Computer Quiz - Vishal Vaishnav</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background: #0b0f19; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; }
         
-        .quiz-container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        /* नेविगेशन बार */
+        .navbar { position: absolute; top: 0; width: 100%; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); z-index: 100; }
+        .logo { color: #00f2fe; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links li a { color: #ccc; text-decoration: none; font-size: 16px; transition: 0.3s; font-weight: 600; }
+        .nav-links li a:hover { color: #00f2fe; text-shadow: 0 0 10px #00f2fe; }
+        @media (max-width: 600px) { .navbar { flex-direction: column; padding: 15px; } .nav-links { gap: 15px; margin-top: 10px; } }
 
+        .quiz-container { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-top: 60px; }
         h2 { color: #00f2fe; margin-bottom: 20px; font-size: 22px; }
-        
-        .option-btn {
-            background: transparent;
-            color: white;
-            border: 2px solid #00f2fe;
-            padding: 12px;
-            margin: 8px 0;
-            width: 100%;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
-        }
-        
+        .option-btn { background: transparent; color: white; border: 2px solid #00f2fe; padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; cursor: pointer; font-size: 16px; transition: 0.3s; }
         .option-btn:hover { background: #00f2fe; color: #0b0f19; font-weight: bold; }
-        
         #result { margin-top: 20px; font-size: 18px; font-weight: bold; height: 25px; }
-        
-        .home-link { display: inline-block; margin-top: 20px; color: #ccc; text-decoration: none; font-size: 14px; border-bottom: 1px solid #ccc; }
-        .home-link:hover { color: white; border-bottom: 1px solid white; }
     </style>
 </head>
 <body>
+    <nav class="navbar">
+        <div class="logo">Vishal.</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="quiz.html">Quiz</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
 
     <div class="quiz-container">
         <h2 id="question">प्रश्न लोड हो रहा है...</h2>
-        <div id="options-box">
-            </div>
+        <div id="options-box"></div>
         <p id="result"></p>
     </div>
-    
-    <a href="index.html" class="home-link">🔙 वापस होमपेज पर जाएँ</a>
 
     <script>
-        // यहाँ आप कंप्यूटर एग्जाम के लिए अपने खुद के सवाल डाल सकते हैं!
         const quizData = [
             { question: "वेबसाइट का स्ट्रक्चर बनाने के लिए किस भाषा का उपयोग होता है?", options: ["Python", "HTML", "C++", "Java"], answer: "HTML" },
             { question: "CSS का फुल फॉर्म क्या है?", options: ["Computer Style Sheet", "Cascading Style Sheet", "Creative Style System", "Color Style Sheet"], answer: "Cascading Style Sheet" },
             { question: "वेब पेज को इंटरैक्टिव (Interactive) कौन सी भाषा बनाती है?", options: ["HTML", "CSS", "JavaScript", "SQL"], answer: "JavaScript" },
             { question: "कंप्यूटर का दिमाग किसे कहा जाता है?", options: ["RAM", "Monitor", "CPU", "Keyboard"], answer: "CPU" }
         ];
-
-        let currentQIndex = 0;
-        let score = 0;
-
+        let currentQIndex = 0; let score = 0;
         function loadQuestion() {
-            // अगर सारे सवाल खत्म हो गए
             if(currentQIndex >= quizData.length) {
                 document.getElementById('question').innerText = `क्विज़ खत्म! 🎉 आपका स्कोर: ${score} / ${quizData.length}`;
                 document.getElementById('options-box').innerHTML = "";
                 document.getElementById('result').innerText = "";
                 return;
             }
-
-            // सवाल और ऑप्शन दिखाओ
             document.getElementById('question').innerText = quizData[currentQIndex].question;
             document.getElementById('options-box').innerHTML = "";
             document.getElementById('result').innerText = "";
-
             quizData[currentQIndex].options.forEach(opt => {
                 let btn = document.createElement('button');
-                btn.innerText = opt;
-                btn.className = 'option-btn';
+                btn.innerText = opt; btn.className = 'option-btn';
                 btn.onclick = () => checkAnswer(opt);
                 document.getElementById('options-box').appendChild(btn);
             });
         }
-
         function checkAnswer(selectedOption) {
             let correctOption = quizData[currentQIndex].answer;
             let resultText = document.getElementById('result');
-
             if(selectedOption === correctOption) {
-                resultText.innerText = "✅ बिल्कुल सही जवाब!";
-                resultText.style.color = "#00ea8d";
-                score++;
+                resultText.innerText = "✅ बिल्कुल सही जवाब!"; resultText.style.color = "#00ea8d"; score++;
             } else {
-                resultText.innerText = `❌ गलत! सही जवाब था: ${correctOption}`;
-                resultText.style.color = "#ff4757";
+                resultText.innerText = `❌ गलत! सही जवाब था: ${correctOption}`; resultText.style.color = "#ff4757";
             }
-
-            // 1.5 सेकंड बाद अगला सवाल लाओ
-            setTimeout(() => {
-                currentQIndex++;
-                loadQuestion();
-            }, 1500);
+            setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
         }
-
-        // क्विज़ शुरू करें
         loadQuestion();
     </script>
-
 </body>
 </html>
