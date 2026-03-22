@@ -5,138 +5,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Vishal Vaishnav - Pro Portfolio</title>
     <style>
-        /* गूगल से एक शानदार फॉन्ट इम्पोर्ट किया है */
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
-        
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        body {
-            background: #0b0f19; /* हैकर्स वाला डार्क बैकग्राउंड */
-            color: white;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+        body { background: #0b0f19; color: white; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-        /* बैकग्राउंड में तैरते हुए चमकते गोले (Animated Background) */
-        .circle1, .circle2 {
+        /* --- नया नेविगेशन बार (Menu) का शानदार डिज़ाइन --- */
+        .navbar {
             position: absolute;
-            border-radius: 50%;
-            filter: blur(80px); /* इसे धुंधला किया है ताकि अच्छी चमक आए */
-            z-index: -1;
-        }
-        .circle1 { 
-            width: 300px; height: 300px; background: #00f2fe; 
-            top: -50px; left: -50px; 
-            animation: float 6s infinite alternate; 
-        }
-        .circle2 { 
-            width: 400px; height: 400px; background: #4facfe; 
-            bottom: -100px; right: -50px; 
-            animation: float 8s infinite alternate-reverse; 
-        }
-        @keyframes float { 
-            0% { transform: translateY(0); } 
-            100% { transform: translateY(50px); } 
-        }
-
-        /* ग्लासमॉर्फिज़्म कार्ड (कांच जैसा इफ़ेक्ट) */
-        .card {
-            background: rgba(255, 255, 255, 0.05); /* हल्का पारदर्शी */
-            backdrop-filter: blur(15px); /* पीछे का हिस्सा धुंधला करेगा */
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
-            width: 90%;
-            max-width: 450px;
-            box-shadow: 0 25px 45px rgba(0,0,0,0.3);
-            transition: 0.5s;
-        }
-        .card:hover { 
-            transform: translateY(-10px); 
-            border: 1px solid rgba(255, 255, 255, 0.3); 
-        }
-
-        /* प्रोफाइल फोटो की जगह चमकता हुआ गोला */
-        .profile-pic {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(45deg, #00f2fe, #4facfe);
-            border-radius: 50%;
-            margin: 0 auto 20px;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            font-size: 50px;
-            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
         }
+        .logo { color: #00f2fe; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-links { list-style: none; display: flex; gap: 30px; }
+        .nav-links li a { color: #ccc; text-decoration: none; font-size: 16px; transition: 0.3s; font-weight: 600; }
+        .nav-links li a:hover { color: #00f2fe; text-shadow: 0 0 10px #00f2fe; }
+        
+        /* मोबाइल स्क्रीन के लिए मेनू की सेटिंग */
+        @media (max-width: 600px) {
+            .navbar { flex-direction: column; padding: 15px; }
+            .nav-links { gap: 15px; margin-top: 10px; }
+        }
+        /* -------------------------------------- */
 
+        .circle1, .circle2 { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; }
+        .circle1 { width: 300px; height: 300px; background: #00f2fe; top: -50px; left: -50px; animation: float 6s infinite alternate; }
+        .circle2 { width: 400px; height: 400px; background: #4facfe; bottom: -100px; right: -50px; animation: float 8s infinite alternate-reverse; }
+        @keyframes float { 0% { transform: translateY(0); } 100% { transform: translateY(50px); } }
+
+        .card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 450px; box-shadow: 0 25px 45px rgba(0,0,0,0.3); transition: 0.5s; z-index: 10; margin-top: 60px; }
+        .card:hover { transform: translateY(-10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+
+        .profile-pic { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; object-fit: cover; padding: 3px; background: linear-gradient(45deg, #00f2fe, #4facfe); }
         h1 { font-size: 32px; font-weight: 600; margin-bottom: 5px; letter-spacing: 1px; }
-        
-        /* टाइपिंग टेक्स्ट का रंग */
         .typing-text { color: #00f2fe; font-size: 18px; font-weight: 400; height: 25px; margin-bottom: 20px; }
-        
         p { color: #ccc; font-size: 14px; line-height: 1.6; margin-bottom: 30px; }
-
-        /* नियॉन बटन (Neon Glow Button) */
-        .neon-btn {
-            display: inline-block;
-            padding: 12px 30px;
-            color: #00f2fe;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-size: 14px;
-            font-weight: 600;
-            border: 2px solid #00f2fe;
-            border-radius: 30px;
-            transition: 0.3s;
-        }
-        .neon-btn:hover {
-            background: #00f2fe;
-            color: #0b0f19;
-            box-shadow: 0 0 10px #00f2fe, 0 0 40px #00f2fe, 0 0 80px #00f2fe; /* बटन पर माउस ले जाने पर लाइट जलेगी */
-        }
+        
+        .neon-btn { display: inline-block; padding: 12px 25px; color: #00f2fe; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; font-weight: 600; border: 2px solid #00f2fe; border-radius: 30px; transition: 0.3s; margin: 5px; }
+        .neon-btn:hover { background: #00f2fe; color: #0b0f19; box-shadow: 0 0 10px #00f2fe, 0 0 40px #00f2fe; }
     </style>
 </head>
 <body>
+
+    <nav class="navbar">
+        <div class="logo">Vishal.</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="quiz.html">Quiz</a></li>
+            <li><a href="contact.html">Contact</a></li>
+        </ul>
+    </nav>
 
     <div class="circle1"></div>
     <div class="circle2"></div>
 
     <div class="card">
-        <img src="vishalnew.jpg" alt="Vishal Vaishnav" class="profile-pic" style="object-fit: cover; padding: 3px; background: linear-gradient(45deg, #00f2fe, #4facfe);">
+        <img src="vishalnew.jpg" alt="Vishal Vaishnav" class="profile-pic">
+        
         <h1>विशाल वैष्णव</h1>
         <div class="typing-text" id="typewriter"></div>
         <p>मेरी एडवांस कोडिंग जर्नी में आपका स्वागत है। मैं यहाँ नए वेब डिज़ाइन और डेवलपमेंट स्किल्स का प्रदर्शन कर रहा हूँ।</p>
+        
         <a href="contact.html" class="neon-btn">मुझसे जुड़ें</a>
-        <a href="quiz.html" class="neon-btn" style="margin-top: 15px; background: #00f2fe; color: #0b0f19;">लाइव कंप्यूटर क्विज़ खेलें 🚀</a>
+        <a href="quiz.html" class="neon-btn" style="background: #00f2fe; color: #0b0f19;">लाइव क्विज़ 🚀</a>
     </div>
 
     <script>
         const texts = ["भावी कंप्यूटर अनुदेशक...", "वेब डेवलपर...", "कोडिंग एंथूसियास्ट..."];
-        let count = 0;
-        let index = 0;
-        let currentText = "";
-        let letter = "";
-
+        let count = 0; let index = 0; let currentText = ""; let letter = "";
         function type() {
             if (count === texts.length) { count = 0; }
             currentText = texts[count];
             letter = currentText.slice(0, ++index);
-            
             document.getElementById("typewriter").textContent = letter + "|";
-
             if (letter.length === currentText.length) {
-                count++;
-                index = 0;
-                setTimeout(type, 2000); // नया शब्द शुरू होने से पहले रुकेगा
-            } else {
-                setTimeout(type, 100); // टाइपिंग की स्पीड
-            }
+                count++; index = 0; setTimeout(type, 2000);
+            } else { setTimeout(type, 100); }
         }
         type();
     </script>
