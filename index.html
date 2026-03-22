@@ -199,21 +199,46 @@
         .chat-input-area button { background: #00f2fe; color: #0b0f19; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
     </style>
 
-    <div class="chat-btn" onclick="toggleChat()">🤖</div>
-    <div class="chat-box" id="aiChatBox">
-        <div class="chat-header">
-            <span>विशाल का AI असिस्टेंट</span>
-            <span class="close-chat" onclick="toggleChat()">✖</span>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="msg bot-msg">नमस्ते! मैं विशाल का AI असिस्टेंट हूँ। आप मुझसे विशाल या कोडिंग के बारे में कुछ भी पूछ सकते हैं।</div>
-        </div>
-        <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="सवाल टाइप करें..." onkeypress="handleEnter(event)">
-            <button onclick="sendMessage()">Send</button>
-        </div>
-    </div>
+   // AI Chatbot Logic
+function toggleChat() {
+    const chatBox = document.getElementById("aiChatBox");
+    // Toggle display between flex and none
+    chatBox.style.display = (chatBox.style.display === "flex") ? "none" : "flex";
+}
 
+function handleEnter(event) {
+    if (event.key === "Enter") sendMessage();
+}
+
+function sendMessage() {
+    const input = document.getElementById("userInput");
+    const message = input.value.trim();
+    if (!message) return;
+
+    const chatMessages = document.getElementById("chatMessages");
+
+    // 1. User Message Show
+    chatMessages.innerHTML += `<div class="msg user-msg">${message}</div>`;
+    input.value = "";
+    chatMessages.scrollTop = chatMessages.scrollHeight; // Auto scroll
+
+    // 2. Bot Response Logic
+    setTimeout(() => {
+        let reply = "मैं अभी सीख रहा हूँ, लेकिन आप विशाल से WhatsApp पर संपर्क कर सकते हैं!";
+        let lowerMessage = message.toLowerCase();
+
+        if(lowerMessage.includes("exam") || lowerMessage.includes("अनुदेशक") || lowerMessage.includes("तैयारी")) {
+            reply = "विशाल 23 अगस्त 2026 को होने वाले राजस्थान कंप्यूटर अनुदेशक एग्जाम की जोरदार तैयारी कर रहे हैं!";
+        } else if (lowerMessage.includes("skills") || lowerMessage.includes("कोडिंग")) {
+            reply = "विशाल को HTML, CSS, JavaScript और मॉडर्न वेब डेवलपमेंट का शौक है।";
+        } else if (lowerMessage.includes("address") || lowerMessage.includes("कहाँ") || lowerMessage.includes("रहते")) {
+            reply = "विशाल प्रतापगढ़, राजस्थान के एक छोटे से गाँव सिद्धपुरा से हैं।";
+        }
+
+        chatMessages.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 800);
+}
     <script>
     
 </body>
