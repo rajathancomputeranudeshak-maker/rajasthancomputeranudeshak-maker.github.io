@@ -3,56 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishal Vaishnav - Pro Portfolio</title>
+    <title>Vishal Vaishnav - Advanced Portfolio</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        body { background: #0b0f19; color: white; height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        
+        /* बैकग्राउंड और कैनवास सेटिंग */
+        body { background: #0b0f19; color: white; height: 100vh; overflow: hidden; position: relative; }
+        #canvas1 { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; } /* यह कैनवास तारों का जाल बनाएगा */
 
-        /* --- नया नेविगेशन बार (Menu) का शानदार डिज़ाइन --- */
-        .navbar {
-            position: absolute;
-            top: 0;
-            width: 100%;
-            padding: 20px 50px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 100;
-        }
+        /* नेविगेशन बार */
+        .navbar { position: absolute; top: 0; width: 100%; padding: 20px 50px; display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-bottom: 1px solid rgba(255, 255, 255, 0.1); z-index: 100; }
         .logo { color: #00f2fe; font-size: 24px; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
         .nav-links { list-style: none; display: flex; gap: 30px; }
         .nav-links li a { color: #ccc; text-decoration: none; font-size: 16px; transition: 0.3s; font-weight: 600; }
         .nav-links li a:hover { color: #00f2fe; text-shadow: 0 0 10px #00f2fe; }
+        @media (max-width: 600px) { .navbar { flex-direction: column; padding: 15px; } .nav-links { gap: 15px; margin-top: 10px; } }
+
+        /* मेन कार्ड सेंटर में लाने के लिए एक कंटेनर */
+        .container { display: flex; justify-content: center; align-items: center; height: 100vh; width: 100%; position: absolute; pointer-events: none; }
         
-        /* मोबाइल स्क्रीन के लिए मेनू की सेटिंग */
-        @media (max-width: 600px) {
-            .navbar { flex-direction: column; padding: 15px; }
-            .nav-links { gap: 15px; margin-top: 10px; }
-        }
-        /* -------------------------------------- */
-
-        .circle1, .circle2 { position: absolute; border-radius: 50%; filter: blur(80px); z-index: -1; }
-        .circle1 { width: 300px; height: 300px; background: #00f2fe; top: -50px; left: -50px; animation: float 6s infinite alternate; }
-        .circle2 { width: 400px; height: 400px; background: #4facfe; bottom: -100px; right: -50px; animation: float 8s infinite alternate-reverse; }
-        @keyframes float { 0% { transform: translateY(0); } 100% { transform: translateY(50px); } }
-
-        .card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 450px; box-shadow: 0 25px 45px rgba(0,0,0,0.3); transition: 0.5s; z-index: 10; margin-top: 60px; }
-        .card:hover { transform: translateY(-10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); padding: 40px; border-radius: 20px; text-align: center; width: 90%; max-width: 450px; box-shadow: 0 25px 45px rgba(0,0,0,0.5); transition: 0.5s; z-index: 10; pointer-events: auto; }
+        .card:hover { transform: translateY(-10px); border: 1px solid rgba(0, 242, 254, 0.4); box-shadow: 0 0 30px rgba(0, 242, 254, 0.2); }
 
         .profile-pic { width: 120px; height: 120px; border-radius: 50%; margin: 0 auto 20px; object-fit: cover; padding: 3px; background: linear-gradient(45deg, #00f2fe, #4facfe); }
         h1 { font-size: 32px; font-weight: 600; margin-bottom: 5px; letter-spacing: 1px; }
         .typing-text { color: #00f2fe; font-size: 18px; font-weight: 400; height: 25px; margin-bottom: 20px; }
         p { color: #ccc; font-size: 14px; line-height: 1.6; margin-bottom: 30px; }
         
-        .neon-btn { display: inline-block; padding: 12px 25px; color: #00f2fe; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; font-weight: 600; border: 2px solid #00f2fe; border-radius: 30px; transition: 0.3s; margin: 5px; }
-        .neon-btn:hover { background: #00f2fe; color: #0b0f19; box-shadow: 0 0 10px #00f2fe, 0 0 40px #00f2fe; }
+        .neon-btn { display: inline-block; padding: 12px 25px; color: #00f2fe; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; font-weight: 600; border: 2px solid #00f2fe; border-radius: 30px; transition: 0.3s; margin: 5px; cursor: pointer; }
+        .neon-btn:hover { background: #00f2fe; color: #0b0f19; box-shadow: 0 0 15px #00f2fe, 0 0 40px #00f2fe; }
     </style>
 </head>
 <body>
+
+    <canvas id="canvas1"></canvas>
 
     <nav class="navbar">
         <div class="logo">Vishal.</div>
@@ -63,34 +48,118 @@
         </ul>
     </nav>
 
-    <div class="circle1"></div>
-    <div class="circle2"></div>
-
-    <div class="card">
-        <img src="vishalnew.jpg" alt="Vishal Vaishnav" class="profile-pic">
-        
-        <h1>विशाल वैष्णव</h1>
-        <div class="typing-text" id="typewriter"></div>
-        <p>मेरी एडवांस कोडिंग जर्नी में आपका स्वागत है। मैं यहाँ नए वेब डिज़ाइन और डेवलपमेंट स्किल्स का प्रदर्शन कर रहा हूँ।</p>
-        
-        <a href="contact.html" class="neon-btn">मुझसे जुड़ें</a>
-        <a href="quiz.html" class="neon-btn" style="background: #00f2fe; color: #0b0f19;">लाइव क्विज़ 🚀</a>
+    <div class="container">
+        <div class="card">
+            <img src="vishalnew.jpg" alt="Vishal Vaishnav" class="profile-pic">
+            
+            <h1>विशाल वैष्णव</h1>
+            <div class="typing-text" id="typewriter"></div>
+            <p>HTML5 Canvas और Advanced JavaScript से बनी मेरी इस इंटरैक्टिव वेबसाइट में आपका स्वागत है।</p>
+            
+            <a href="contact.html" class="neon-btn">मुझसे जुड़ें</a>
+            <a href="quiz.html" class="neon-btn" style="background: #00f2fe; color: #0b0f19;">लाइव क्विज़ 🚀</a>
+        </div>
     </div>
 
     <script>
-        const texts = ["भावी कंप्यूटर अनुदेशक...", "वेब डेवलपर...", "कोडिंग एंथूसियास्ट..."];
+        // 1. टाइपिंग एनीमेशन स्क्रिप्ट
+        const texts = ["भावी कंप्यूटर अनुदेशक...", "एडवांस वेब डेवलपर...", "कोडिंग एक्सपर्ट..."];
         let count = 0; let index = 0; let currentText = ""; let letter = "";
         function type() {
-            if (count === texts.length) { count = 0; }
+            if (count === texts.length) count = 0;
             currentText = texts[count];
             letter = currentText.slice(0, ++index);
             document.getElementById("typewriter").textContent = letter + "|";
-            if (letter.length === currentText.length) {
-                count++; index = 0; setTimeout(type, 2000);
-            } else { setTimeout(type, 100); }
+            if (letter.length === currentText.length) { count++; index = 0; setTimeout(type, 2000); } 
+            else { setTimeout(type, 100); }
         }
         type();
-    </script>
 
+        // 2. एडवांस पार्टिकल नेटवर्क (जादुई जाल) स्क्रिप्ट
+        const canvas = document.getElementById("canvas1");
+        const ctx = canvas.getContext("2d");
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray;
+        // माउस की पोजीशन ट्रैक करना
+        let mouse = { x: null, y: null, radius: (canvas.height/80) * (canvas.width/80) };
+        window.addEventListener('mousemove', function(event) {
+            mouse.x = event.x; mouse.y = event.y;
+        });
+        // माउस हटाने पर इफ़ेक्ट नॉर्मल करना
+        window.addEventListener('mouseout', function() { mouse.x = undefined; mouse.y = undefined; });
+
+        // पार्टिकल (बिंदु) बनाने का क्लास
+        class Particle {
+            constructor(x, y, directionX, directionY, size, color) {
+                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
+            }
+            draw() {
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false); ctx.fillStyle = '#00f2fe'; ctx.fill();
+            }
+            update() {
+                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
+                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
+                
+                // माउस से दूर भागने का इफ़ेक्ट (Collision Detection)
+                let dx = mouse.x - this.x; let dy = mouse.y - this.y;
+                let distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance < mouse.radius + this.size){
+                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) this.x += 10;
+                    if (mouse.x > this.x && this.x > this.size * 10) this.x -= 10;
+                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) this.y += 10;
+                    if (mouse.y > this.y && this.y > this.size * 10) this.y -= 10;
+                }
+                this.x += this.directionX; this.y += this.directionY;
+                this.draw();
+            }
+        }
+
+        // जाल तैयार करना
+        function init() {
+            particlesArray = [];
+            let numberOfParticles = (canvas.height * canvas.width) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                let size = (Math.random() * 2) + 1;
+                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                let directionX = (Math.random() * 2) - 1; let directionY = (Math.random() * 2) - 1;
+                let color = '#00f2fe';
+                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+            }
+        }
+
+        // एनीमेशन चलाना और लाइनें जोड़ना
+        function animate() {
+            requestAnimationFrame(animate);
+            ctx.clearRect(0, 0, innerWidth, innerHeight);
+            for (let i = 0; i < particlesArray.length; i++) { particlesArray[i].update(); }
+            connect();
+        }
+
+        // डॉट्स के बीच लाइन खींचना
+        function connect() {
+            let opacityValue = 1;
+            for (let a = 0; a < particlesArray.length; a++) {
+                for (let b = a; b < particlesArray.length; b++) {
+                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                    if (distance < (canvas.width/7) * (canvas.height/7)) {
+                        opacityValue = 1 - (distance/20000);
+                        ctx.strokeStyle = 'rgba(0, 242, 254,' + opacityValue + ')';
+                        ctx.lineWidth = 1; ctx.beginPath();
+                        ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                        ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // स्क्रीन साइज़ बदलने पर कैनवास सेट करना
+        window.addEventListener('resize', function(){ canvas.width = innerWidth; canvas.height = innerHeight; init(); });
+
+        init(); animate();
+    </script>
 </body>
 </html>
