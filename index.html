@@ -259,6 +259,56 @@
             else if (input.includes("एग्जाम") || input.includes("exam")) return "विशाल का कंप्यूटर अनुदेशक का एग्जाम 23 अगस्त 2026 को है। उनकी तैयारी बहुत शानदार चल रही है!";
             else return "माफ़ करें, मैं अभी सीख रहा हूँ। आप मुझसे विशाल, उनके एग्जाम या बेसिक कोडिंग के बारे में पूछ सकते हैं।";
         }
+        // --- Typing Test Logic (सिर्फ यह हिस्सा पेस्ट करें) ---
+const textDisplay = document.getElementById('text-display');
+const typingInput = document.getElementById('typing-input');
+const wpmDisplay = document.getElementById('wpm');
+const accuracyDisplay = document.getElementById('accuracy');
+const timerDisplay = document.getElementById('timer');
+
+let timer = 60; let interval = null; let isStarting = false; let charIndex = 0; let mistakes = 0;
+const sampleText = "Rajasthan Computer Instructor exam is a great opportunity. Coding is the future.";
+
+function initTest() {
+    if(!textDisplay) return; // सुरक्षा के लिए
+    textDisplay.innerHTML = "";
+    sampleText.split("").forEach(char => { textDisplay.innerHTML += `<span>${char}</span>`; });
+    let firstSpan = textDisplay.querySelectorAll('span')[0];
+    if(firstSpan) firstSpan.classList.add('current');
+}
+
+if(typingInput) {
+    typingInput.addEventListener('input', () => {
+        const chars = textDisplay.querySelectorAll('span');
+        let typedChar = typingInput.value.split("")[charIndex];
+        if (!isStarting) { 
+            interval = setInterval(() => {
+                if (timer > 0) { timer--; timerDisplay.innerText = timer; } 
+                else { clearInterval(interval); typingInput.disabled = true; }
+            }, 1000);
+            isStarting = true; 
+        }
+        if (typedChar == null) { 
+            if (charIndex > 0) { charIndex--; chars[charIndex].classList.remove('correct', 'incorrect'); } 
+        } else {
+            if (chars[charIndex].innerText === typedChar) { chars[charIndex].classList.add('correct'); } 
+            else { mistakes++; chars[charIndex].classList.add('incorrect'); }
+            charIndex++;
+        }
+        chars.forEach(span => span.classList.remove('current'));
+        if(charIndex < chars.length) chars[charIndex].classList.add('current');
+        let wpm = Math.round(((charIndex - mistakes) / 5) / ((60 - timer) / 60));
+        wpmDisplay.innerText = wpm > 0 ? wpm : 0;
+    });
+}
+
+function resetTest() {
+    clearInterval(interval); timer = 60; charIndex = 0; mistakes = 0; isStarting = false;
+    typingInput.value = ""; typingInput.disabled = false; timerDisplay.innerText = timer;
+    wpmDisplay.innerText = 0; accuracyDisplay.innerText = 100; initTest();
+}
+initTest();
     </script>
+    
 </body>
 </html>
