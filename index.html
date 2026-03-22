@@ -2,11 +2,82 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>Vishal Vaishnav - My First Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vishal Vaishnav - Portfolio</title>
+    <style>
+        /* यहाँ से CSS की स्टाइलिंग शुरू होती है */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            /* यह पेज के बैकग्राउंड में दो रंगों का मिक्स (Gradient) बनाएगा */
+            background: linear-gradient(135deg, #74ebd5, #9face6);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .card {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-10px); /* माउस ले जाने पर कार्ड थोड़ा ऊपर उठेगा */
+        }
+        .profile-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            font-size: 16px;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #7f8c8d;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #2980b9; /* माउस ले जाने पर बटन का रंग गहरा होगा */
+        }
+    </style>
 </head>
 <body>
-    <h1>नमस्ते, मेरा नाम विशाल वैष्णव है!</h1>
-    <p>मैं राजस्थान कंप्यूटर अनुदेशक (Computer Instructor) की तैयारी कर रहा हूँ।</p>
-    <p>यह मेरी पहली प्रैक्टिस वेबसाइट है, जिसे मैंने HTML से बनाया है। आगे चलकर मैं इसमें CSS से अच्छा डिज़ाइन भी जोड़ूंगा।</p>
+
+    <div class="card">
+        <div class="profile-icon">👨‍💻</div>
+        <h1>विशाल वैष्णव</h1>
+        <h2>भावी कंप्यूटर अनुदेशक | वेब डेवलपर</h2>
+        <p>यह मेरी एडवांस प्रैक्टिस वेबसाइट है। 23 अगस्त के एग्जाम की तैयारी के साथ-साथ मैं यहाँ अपनी कोडिंग स्किल्स को भी निखार रहा हूँ।</p>
+        <a href="#" class="btn">मेरा रेज़्यूमे देखें</a>
+    </div>
+
 </body>
 </html>
