@@ -216,27 +216,5 @@
 
     <script>
     
-    <div id="exam-timer-box" style="border: 3px solid #ff0000; padding: 20px; background: rgba(255,0,0,0.1); margin: 30px auto; max-width: 600px; color: #ff0000; font-family: 'Courier New', monospace; text-align: center; box-shadow: 0 0 20px #ff0000;">
-    <h2 style="margin: 0; font-size: 1.2rem; letter-spacing: 2px;">⚠️ COUNTDOWN TO AUGUST 23, 2026 ⚠️</h2>
-    <div id="live-timer" style="font-size: 3rem; font-weight: bold; margin: 10px 0;">00d 00h 00m 00s</div>
-    <div style="font-size: 0.8rem;">[ MISSION STATUS: TIME CRITICAL ]</div>
-</div>
-
-    // Exam Target Date: August 23, 2026
-    const target = new Date("Aug 23, 2026 09:00:00").getTime();
-
-    setInterval(function() {
-        const now = new Date().getTime();
-        const gap = target - now;
-
-        const days = Math.floor(gap / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((gap % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((gap % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((gap % (1000 * 60)) / 1000);
-
-        document.getElementById("live-timer").innerHTML = 
-            days + "d " + hours + "h " + minutes + "m " + seconds + "s";
-    }, 1000);
-</script>
 </body>
 </html>
