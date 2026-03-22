@@ -166,5 +166,109 @@
 
         init(); animate();
     </script>
+    <style>
+        /* चैट बटन */
+        .chat-btn { position: fixed; bottom: 30px; right: 30px; background: #00f2fe; color: #0b0f19; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; cursor: pointer; box-shadow: 0 0 20px #00f2fe; z-index: 1000; transition: 0.3s; }
+        .chat-btn:hover { transform: scale(1.1); }
+        
+        /* चैट बॉक्स (विंडो) */
+        .chat-box { position: fixed; bottom: 100px; right: 30px; width: 320px; height: 400px; background: rgba(11, 15, 25, 0.95); border: 2px solid #00f2fe; border-radius: 15px; display: none; flex-direction: column; z-index: 1000; box-shadow: 0 0 30px rgba(0, 242, 254, 0.3); backdrop-filter: blur(10px); }
+        
+        /* चैट का हेडर */
+        .chat-header { background: #00f2fe; color: #0b0f19; padding: 15px; font-weight: bold; border-top-left-radius: 12px; border-top-right-radius: 12px; display: flex; justify-content: space-between; }
+        .close-chat { cursor: pointer; font-weight: bold; }
+        
+        /* जहाँ मैसेज दिखेंगे */
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; color: white; display: flex; flex-direction: column; gap: 10px; font-size: 14px; }
+        .msg { padding: 8px 12px; border-radius: 10px; max-width: 80%; }
+        .user-msg { background: #333; align-self: flex-end; border-bottom-right-radius: 0; }
+        .bot-msg { background: rgba(0, 242, 254, 0.2); border: 1px solid #00f2fe; align-self: flex-start; border-bottom-left-radius: 0; }
+        
+        /* टाइपिंग एरिया */
+        .chat-input-area { display: flex; padding: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
+        .chat-input-area input { flex: 1; padding: 10px; background: transparent; border: 1px solid #ccc; border-radius: 5px; color: white; outline: none; }
+        .chat-input-area button { background: #00f2fe; color: #0b0f19; border: none; padding: 10px 15px; margin-left: 10px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+
+    <div class="chat-btn" onclick="toggleChat()">🤖</div>
+    
+    <div class="chat-box" id="aiChatBox">
+        <div class="chat-header">
+            <span>विशाल का AI असिस्टेंट</span>
+            <span class="close-chat" onclick="toggleChat()">✖</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="msg bot-msg">नमस्ते! मैं विशाल का AI असिस्टेंट हूँ। आप मुझसे विशाल या कोडिंग के बारे में कुछ भी पूछ सकते हैं।</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="userInput" placeholder="सवाल टाइप करें..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            let chatBox = document.getElementById("aiChatBox");
+            chatBox.style.display = (chatBox.style.display === "flex") ? "none" : "flex";
+        }
+
+        function handleEnter(event) {
+            if (event.key === "Enter") sendMessage();
+        }
+
+        function sendMessage() {
+            let inputField = document.getElementById("userInput");
+            let userText = inputField.value.trim().toLowerCase();
+            if (userText === "") return;
+
+            // यूज़र का मैसेज स्क्रीन पर दिखाएं
+            addMessage(inputField.value, "user-msg");
+            inputField.value = ""; // बॉक्स खाली करें
+
+            // AI के जवाब में 1 सेकंड का नाटक (Delay) ताकि असली लगे
+            setTimeout(() => {
+                let botReply = getBotResponse(userText);
+                addMessage(botReply, "bot-msg");
+            }, 800);
+        }
+
+        function addMessage(text, className) {
+            let chatBox = document.getElementById("chatMessages");
+            let newDiv = document.createElement("div");
+            newDiv.className = "msg " + className;
+            newDiv.innerText = text;
+            chatBox.appendChild(newDiv);
+            chatBox.scrollTop = chatBox.scrollHeight; // ऑटोमेटिक नीचे स्क्रॉल
+        }
+
+        // === AI का दिमाग (यहाँ आप और भी सवाल-जवाब जोड़ सकते हैं) ===
+        function getBotResponse(input) {
+            if (input.includes("hi") || input.includes("hello") || input.includes("नमस्ते")) {
+                return "नमस्ते! मैं आपकी क्या मदद कर सकता हूँ?";
+            } else if (input.includes("तुम्हारा नाम") || input.includes("your name")) {
+                return "मेरा नाम 'विशाल-AI' है। मुझे विशाल वैष्णव ने बनाया है!";
+            } else if (input.includes("विशाल कौन है") || input.includes("who is vishal")) {
+                return "विशाल एक वेब डेवलपर हैं और राजस्थान कंप्यूटर अनुदेशक एग्जाम की तैयारी कर रहे हैं।";
+            } else if (input.includes("एग्जाम") || input.includes("exam")) {
+                return "विशाल का कंप्यूटर अनुदेशक का एग्जाम 23 अगस्त को है। उनकी तैयारी बहुत शानदार चल रही है!";
+            } else if (input.includes("संपर्क") || input.includes("contact")) {
+                return "आप विशाल से वेबसाइट के 'Contact' या 'About' पेज पर जाकर सीधे WhatsApp पर बात कर सकते हैं।";
+            } else if (input.includes("html") || input.includes("css")) {
+                return "HTML वेबसाइट का स्ट्रक्चर बनाता है, और CSS उसमें रंग और डिज़ाइन डालता है।";
+            } else {
+                return "माफ़ करें, मैं अभी सीख रहा हूँ। आप मुझसे विशाल, उनके एग्जाम या बेसिक कोडिंग के बारे में पूछ सकते हैं।";
+            }
+        }
+    </script>
+    ```
+
+### स्टेप 2: सेव करें और टेस्ट करें!
+इसे पेस्ट करके हरे रंग का **"Commit changes"** बटन दबा दें। 
+
+2 मिनट बाद वेबसाइट रिफ्रेश करें। आपको नीचे दाईं तरफ एक चमकता हुआ रोबोट 🤖 का गोल बटन दिखेगा। उस पर क्लिक करते ही एक शानदार चैट विंडो खुल जाएगी!
+
+उसमें टाइप करके पूछें: **"विशाल कौन है?"** या **"एग्जाम कब है?"**। यह असिस्टेंट आपको तुरंत वही जवाब देगा जो हमने कोड में सेट किया है। 
+
+**इसे चलाकर देखिए भाई! अगर आप चाहें तो इस 'getBotResponse' वाले हिस्से में हम कंप्यूटर सिलेबस के 10-15 और सवाल डाल सकते हैं, जिससे यह और भी ज़्यादा असली लगेगा!**
 </body>
 </html>
