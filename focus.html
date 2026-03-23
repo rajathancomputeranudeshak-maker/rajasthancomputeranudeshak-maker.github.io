@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Mode - Vishal Vaishnav</title>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        h1 { margin-top: 0; color: #4facfe; font-size: 2.5rem; letter-spacing: 2px; }
+        p { color: #a0aabf; font-size: 1.1rem; margin-bottom: 30px; }
+
+        #timer-display {
+            font-size: 6rem;
+            font-weight: bold;
+            color: #00f2fe;
+            text-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .btn-group { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; }
+
+        button {
+            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-transform: uppercase;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        button#reset-btn {
+            background: transparent;
+            color: #ff4b2b;
+            border: 2px solid #ff4b2b;
+        }
+        button#reset-btn:hover { background: #ff4b2b; color: #fff; box-shadow: 0 10px 20px rgba(255, 75, 43, 0.4); }
+
+        #quote-box {
+            font-size: 1.2rem;
+            font-style: italic;
+            color: #e0e0e0;
+            min-height: 80px;
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #4facfe;
+            text-decoration: none;
+            font-size: 1.1rem;
+            border-bottom: 1px solid transparent;
+            transition: 0.3s;
+        }
+        .back-link:hover { border-color: #4facfe; }
+
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel">
+        <h1>DEEP FOCUS</h1>
+        <p>Target: Computer Anudeshak 2026</p>
+
+        <div id="timer-display">25:00</div>
+
+        <div class="btn-group">
+            <button id="start-btn" onclick="startTimer()">▶ Start Focus</button>
+            <button id="reset-btn" onclick="resetTimer()">🔄 Reset</button>
+        </div>
+
+        <div id="quote-box">
+            "पढ़ाई शुरू करने के लिए महान होने की ज़रूरत नहीं, पर महान होने के लिए शुरुआत करनी पड़ती है।"
+        </div>
+    </div>
+
+    <a href="index.html" class="back-link">← Back to Portfolio</a>
+
+<script>
+    let timerInterval;
+    let timeLeft = 1500; // 25 minutes
+    let isRunning = false;
+
+    // 10 High-Energy Motivational Quotes (Hindi/Hinglish)
+    const quotes = [
+        "सपने तुम्हारे हैं, तो मेहनत भी तुम्हें ही करनी पड़ेगी। कोई और तुम्हारे लिए नहीं पढ़ेगा!",
+        "आज का दर्द, कल की जीत है। 23 अगस्त 2026 याद रखना!",
+        "सक्सेस की कोई लिफ्ट नहीं होती, सीढ़ियों से ही जाना पड़ता है।",
+        "जितना बड़ा संघर्ष होगा, जीत उतनी ही शानदार होगी।",
+        "जब लोग सो रहे हों, तब तुम्हारा जागकर पढ़ना ही तुम्हें उनसे आगे ले जाएगा।",
+        "कंपटीशन बहुत है, पर तुम्हारा मुकाबला सिर्फ खुद के कल वाले वर्ज़न से है।",
+        "थक गए हो तो आराम कर लो, लेकिन हार मत मानो।",
+        "एक-एक मिनट कीमती है। जो समय बर्बाद कर रहा है, वो अपना भविष्य बर्बाद कर रहा है।",
+        "इरादे इतने मजबूत रखो कि मुश्किलें भी घुटने टेक दें।",
+        "यह 25 मिनट तय करेंगे कि तुम भीड़ का हिस्सा बनोगे या भीड़ का कारण!"
+    ];
+
+    function updateDisplay() {
+        let m = Math.floor(timeLeft / 60);
+        let s = timeLeft % 60;
+        document.getElementById("timer-display").innerText = 
+            (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+    }
+
+    function changeQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        document.getElementById("quote-box").innerText = '"' + quotes[randomIndex] + '"';
+    }
+
+    function startTimer() {
+        if (isRunning) return; // Prevent multiple clicks
+        isRunning = true;
+        document.getElementById("start-btn").innerText = "⏳ Focusing...";
+        
+        // Change quote immediately when started
+        changeQuote();
+
+        timerInterval = setInterval(function() {
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                document.getElementById("timer-display").innerText = "00:00";
+                document.getElementById("start-btn").innerText = "▶ Start Again";
+                document.getElementById("quote-box").innerText = "शानदार! आपने 25 मिनट का फोकस पूरा कर लिया है। अब 5 मिनट का ब्रेक लें।";
+                
+                // Play a simple alert sound
+                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
+                audio.play();
+                return;
+            }
+            timeLeft--;
+            updateDisplay();
+
+            // Change quote every 5 minutes (300 seconds) to keep motivation high
+            if (timeLeft % 300 === 0) {
+                changeQuote();
+            }
+
+        }, 1000);
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        isRunning = false;
+        timeLeft = 1500;
+        updateDisplay();
+        document.getElementById("start-btn").innerText = "▶ Start Focus";
+        document.getElementById("quote-box").innerText = "रीसेट हो गया। जब तैयार हों, तो फिर से शुरू करें!";
+    }
+</script>
+
+</body>
+</html>
