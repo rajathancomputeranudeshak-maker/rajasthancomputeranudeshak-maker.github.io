@@ -1,212 +1,279 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishal Typing Pro - Advanced Test</title>
+    <title>Advanced Typing Tutor - Vishal Vaishnav</title>
     <style>
-        /* --- गूगल फॉन्ट्स --- */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&family=Roboto+Mono:wght@400;700&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        
-        body { background: #f0f4f8; color: #2c3e50; height: 100vh; display: flex; flex-direction: column; }
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-        /* --- हेडर/नेवबार (बैनर) --- */
-        .navbar { background: #0084ff; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .logo { font-size: 22px; font-weight: bold; letter-spacing: 1px; }
-        .home-btn { background: rgba(255,255,255,0.2); color: white; text-decoration: none; padding: 8px 15px; border-radius: 5px; font-size: 14px; transition: 0.3s; }
-        .home-btn:hover { background: rgba(255,255,255,0.4); }
+        h1 { color: #58a6ff; margin-bottom: 5px; text-transform: uppercase; }
+        .sub-title { color: #8b949e; font-size: 0.9rem; margin-bottom: 30px; }
 
-        /* --- स्टेट्स बार (Timer, WPM, Accuracy) - एकदम typing.com जैसा --- */
-        .stats-bar { background: #0073e6; color: white; padding: 10px 30px; display: flex; justify-content: space-around; font-weight: bold; font-size: 1.1rem; border-bottom: 2px solid #0056b3; }
-        .stat-item span { color: #ccf2ff; /* स्टेट्स का रंग थोड़ा हल्का */ }
+        .container {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 10px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
-        /* --- मेन टाइपिंग एरिया (Full Screen) --- */
-        .test-container { flex: 1; padding: 50px 20px; display: flex; justify-content: center; align-items: center; position: relative; }
-        
-        .type-box { background: white; width: 95%; max-width: 1100px; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid #e1e8ed; position: relative; overflow: hidden; }
+        /* Stats Bar */
+        .stats-bar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #0d1117;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #30363d;
+        }
+        .stat-item { text-align: center; }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #58a6ff; }
+        .stat-label { font-size: 0.8rem; color: #8b949e; text-transform: uppercase; }
 
-        /* --- रेफरेंस टेक्स्ट का स्टाइल (सबसे ज़रूरी) --- */
-        #text-display { font-family: 'Roboto Mono', monospace; /* टाइपिंग के लिए हमेशा monospace फॉन्ट */ font-size: 1.8rem; color: #657786; text-align: left; line-height: 1.8; user-select: none; /* टेक्स्ट सेलेक्ट न हो */ word-wrap: break-word; }
-        
-        /* सही, गलत और वर्तमान अक्षर के इफ़ेक्ट */
-        .char { position: relative; color: #aab8c2; /* डिफ़ॉल्ट अक्षर का रंग हल्का धुंधला */ }
-        .char.correct { color: #32a852; /* सही अक्षर हरा */ }
-        .char.incorrect { color: #d93025; background: rgba(217, 48, 37, 0.1); /* गलत अक्षर लाल और बैकग्राउंड लाल */ }
-        .char.current { color: #0084ff; font-weight: bold; border-bottom: 3px solid #0084ff; /* वर्तमान अक्षर के नीचे ब्लू लाइन */ }
+        /* Text Display Area */
+        #text-display {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            user-select: none;
+            position: relative;
+            text-align: left;
+        }
 
-        /* --- छुपा हुआ इनपुट बॉक्स (Invisible Input) --- */
-        /* typing.com पर आप इनपुट बॉक्स नहीं देखते, सिर्फ़ अक्षर बदलते हुए देखते हैं। हम भी वही करेंगे। */
-        #typing-input { position: absolute; opacity: 0; pointer-events: none; }
+        #text-display span {
+            position: relative;
+        }
 
-        /* रीस्टार्ट बटन */
-        .restart-btn { display: block; margin: 30px auto 0; padding: 12px 30px; background: #0084ff; color: white; border: none; border-radius: 50px; cursor: pointer; font-size: 16px; font-weight: 600; box-shadow: 0 4px 10px rgba(0, 132, 255, 0.3); transition: 0.3s; }
-        .restart-btn:hover { background: #0066cc; box-shadow: 0 6px 15px rgba(0, 132, 255, 0.4); }
+        /* Standard Monospace Caret (High Level feel) */
+        .caret {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            height: 1.2em;
+            background-color: #58a6ff;
+            animation: blink 1s infinite;
+        }
 
-        /* मोबाइल के लिए */
-        @media (max-width: 768px) { #text-display { font-size: 1.3rem; } .type-box { padding: 20px; } .logo { font-size: 18px; } }
+        @keyframes blink { 50% { opacity: 0; } }
+
+        /* Character Highlighting */
+        .char.correct { color: #3fb950; }
+        .char.incorrect { color: #f85149; background-color: rgba(248, 81, 73, 0.1); }
+        .char.current { color: #58a6ff; text-decoration: underline; }
+
+        /* Hidden Input Field (Better than standard textarea) */
+        #typing-input {
+            position: absolute;
+            opacity: 0;
+            z-index: -1;
+        }
+
+        button {
+            background-color: #238636;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            margin-top: 20px;
+            transition: 0.2s;
+        }
+        button:hover { background-color: #2ea043; transform: scale(1.05); }
+
+        .difficulty-btns {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        .difficulty-btn {
+            background-color: transparent;
+            color: #8b949e;
+            border: 1px solid #30363d;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        .difficulty-btn.active {
+            background-color: #58a6ff;
+            color: #0d1117;
+            border-color: #58a6ff;
+        }
+
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="logo">VISHAL TYPING PRO</div>
-        <a href="index.html" class="home-btn">🔙 मुख्य वेबसाइट पर जाएँ</a>
-    </nav>
+    <h1>COMMAND-LINE TYPING TUTOR</h1>
+    <p class="sub-title">[ TARGET: ANUDESHAK 2026 ] [ DEVELOPER: VISHAL VAISHNAV ]</p>
 
-    <div class="stats-bar">
-        <div class="stat-item">समय: <span id="timer">1:00</span></div>
-        <div class="stat-item">स्पीड (WPM): <span id="wpm">0</span></div>
-        <div class="stat-item">एक्यूरेसी: <span id="accuracy">100</span>%</div>
+    <div class="container">
+        
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="time-left">60s</div>
+                <div class="stat-label">Time</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="wpm-display">00</div>
+                <div class="stat-label">WPM</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="accuracy-display">0%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+        </div>
+
+        <div id="text-display">
+            <div class="caret" id="caret"></div>
+        </div>
+
+        <input type="text" id="typing-input" autocomplete="off" autofocus>
+
+        <button onclick="resetGame()">🔄 Reset / Next Test</button>
     </div>
 
-    <main class="test-container">
-        <input type="text" id="typing-input" autofocus>
+    <a href="index.html" style="margin-top: 20px; color: #8b949e; text-decoration: none; font-size: 0.9rem;">← Back to Command Center</a>
+
+<script>
+    // Anudeshak Exam Relevant Texts
+    const textOptions = [
+        "The Central Processing Unit (CPU) is often referred to as the brain of the computer. It executes instructions.",
+        "Random Access Memory (RAM) is a type of computer memory that can be accessed randomly. It is volatile.",
+        "An Operating System (OS) is software that manages computer hardware and software resources.",
+        "Database Management Systems (DBMS) like SQL are crucial for managing large amounts of data efficiently."
+    ];
+
+    let timer;
+    let maxTime = 60;
+    let timeLeft = maxTime;
+    let charIndex = 0;
+    let mistakes = 0;
+    let isTyping = false;
+    let currentText = "";
+
+    const textDisplay = document.getElementById("text-display");
+    const typingInput = document.getElementById("typing-input");
+    const timeLeftTag = document.getElementById("time-left");
+    const wpmTag = document.getElementById("wpm-display");
+    const accuracyTag = document.getElementById("accuracy-display");
+
+    function loadText() {
+        // Pick a random text
+        currentText = textOptions[Math.floor(Math.random() * textOptions.length)];
+        textDisplay.innerHTML = "";
         
-        <div class="type-box" id="typing-box-ui">
-            <div id="text-display">प्रश्न लोड हो रहा है...</div>
-            <button class="restart-btn" onclick="resetTest()">🔄 फिर से शुरू करें</button>
-        </div>
-    </main>
-
-    <script>
-        const textDisplay = document.getElementById('text-display');
-        const typingInput = document.getElementById('typing-input');
-        const wpmDisplay = document.getElementById('wpm');
-        const accuracyDisplay = document.getElementById('accuracy');
-        const timerDisplay = document.getElementById('timer');
-        const typingBoxUI = document.getElementById('typing-box-ui');
-
-        let originalText = "Rajasthan Computer Instructor exam requires patience and hard work. Mastering web development tools like HTML, CSS, and JavaScript is a core part of the syllabus. Keep practicing to achieve great speed and accuracy.";
-        let words = originalText.split(""); // टेक्स्ट को अक्षरों में तोड़ें
+        // Wrap each character in a span for dynamic highlighting
+        currentText.split("").forEach(char => {
+            let span = `<span>${char}</span>`;
+            textDisplay.innerHTML += span;
+        });
         
-        let timer = 60; // 1 मिनट का टेस्ट
-        let interval = null;
-        let isStarting = false;
-        let charIndex = 0; // वर्तमान अक्षर का नंबर
-        let mistakes = 0; // गलतियां
-        let totalTypedChars = 0; // कुल कितने अक्षर टाइप किए
+        // Add the caret
+        textDisplay.innerHTML += `<div class="caret" id="caret"></div>`;
+        textDisplay.querySelectorAll("span")[0].classList.add("current");
+    }
 
-        // १. टेक्स्ट को स्क्रीन पर लोड करें (हर अक्षर को एक <span> में डालकर)
-        function initText() {
-            textDisplay.innerHTML = "";
-            words.forEach(char => {
-                let span = `<span class="char">${char}</span>`;
-                textDisplay.innerHTML += span;
-            });
-            // पहले अक्षर पर फोकस दिखाओ
-            if(textDisplay.querySelectorAll('span').length > 0) textDisplay.querySelectorAll('span')[0].classList.add('current');
-        }
+    function initTyping() {
+        let chars = textDisplay.querySelectorAll("span");
+        let typedChar = typingInput.value.split("")[charIndex];
 
-        // २. जब यूजर टाइप करे (असली लॉजिक)
-        typingInput.addEventListener('input', () => {
-            const spans = textDisplay.querySelectorAll('span');
-            let typedChar = typingInput.value.split("")[charIndex]; // जो अक्षर यूजर ने टाइप किया
+        if (charIndex < chars.length && timeLeft > 0) {
             
-            // अगर आख़िरी अक्षर टाइप हो गया, तो इनपुट रोक दो
-            if(charIndex >= spans.length) {
-                 clearInterval(interval);
-                 typingInput.disabled = true;
-                 return;
+            // Start timer on first character
+            if (!isTyping) {
+                timer = setInterval(initTimer, 1000);
+                isTyping = true;
             }
 
-            // पहली बार टाइप करने पर टाइमर शुरू करें
-            if (!isStarting) {
-                interval = setInterval(updateTimer, 1000);
-                isStarting = true;
-            }
-
-            totalTypedChars++; // कुल टाइप किए गए अक्षर बढ़ाएं (चाहे सही हो या गलत)
-
-            if (typedChar == null) { // बैकस्पेस (Delete) दबाया
-                if (charIndex > 0) {
-                    charIndex--;
-                    spans[charIndex].classList.remove('correct', 'incorrect');
-                }
+            // Highlighting logic
+            if (typedChar === null) { // Handle backspace if allowed, but high-level usually doesn't
+                charIndex--; // Simplified backspace logic
+                chars[charIndex].classList.remove("correct", "incorrect");
             } else {
-                // चेक करें कि टाइप किया गया अक्षर सही है या नहीं
-                if (spans[charIndex].innerText === typedChar) {
-                    spans[charIndex].classList.add('correct');
+                if (chars[charIndex].innerText === typedChar) {
+                    chars[charIndex].classList.add("correct");
                 } else {
-                    mistakes++; // गलती नोट करें
-                    spans[charIndex].classList.add('incorrect');
+                    mistakes++;
+                    chars[charIndex].classList.add("incorrect");
                 }
                 charIndex++;
             }
-
-            // 'करंट' अक्षर की ब्लू लाइन अपडेट करें
-            spans.forEach(span => span.classList.remove('current'));
-            if(charIndex < spans.length) spans[charIndex].classList.add('current');
-
-            updateStats(); // लाइव स्टेट्स अपडेट करें
-        });
-
-        // ३. टाइमर फंक्शन
-        function updateTimer() {
-            if (timer > 0) {
-                timer--;
-                let min = Math.floor(timer / 60);
-                let sec = timer % 60;
-                timerDisplay.innerText = `${min}:${sec < 10 ? '0' : ''}${sec}`;
-            } else {
-                // समय समाप्त
-                clearInterval(interval);
-                typingInput.disabled = true;
-                showResults();
+            
+            // Move 'current' class for underline
+            chars.forEach(span => span.classList.remove("current"));
+            if(charIndex < chars.length) {
+                chars[charIndex].classList.add("current");
             }
+
+            // Real-time WPM & Accuracy calculation
+            let wpm = Math.round(((charIndex - mistakes) / 5) / (maxTime - timeLeft) * 60);
+            wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+            wpmTag.innerText = wpm < 10 ? "0" + wpm : wpm;
+
+            let accuracy = Math.round(((charIndex - mistakes) / charIndex) * 100);
+            accuracy = isNaN(accuracy) ? 0 : accuracy;
+            accuracyTag.innerText = accuracy + "%";
         }
+    }
 
-        // ४. स्टेट्स की कैलकुलेशन (असली WPM)
-        function updateStats() {
-            if(totalTypedChars === 0 || timer === 60) return;
-
-            // --- असली WPM कैलकुलेशन का नियम ---
-            // 1 Word = 5 characters (अक्षर)
-            // Gross WPM = (कुल टाइप किए गए अक्षर / 5) / बीता हुआ समय (मिनट में)
-            // Net WPM = ((कुल अक्षर - गलतियां) / 5) / बीता हुआ समय (मिनट में)
-            
-            let timeElapsed = (60 - timer) / 60; // बीता हुआ समय मिनट में
-
-            // १. Net WPM (गलतियां हटाकर)
-            let correctChars = charIndex - mistakes;
-            let netWords = correctChars / 5;
-            let wpm = Math.round(netWords / timeElapsed);
-            wpmDisplay.innerText = wpm > 0 ? wpm : 0; // 0 से कम न दिखाएँ
-
-            // २. Accuracy (एक्यूरेसी)
-            let acc = Math.round((correctChars / charIndex) * 100);
-            accuracyDisplay.innerText = charIndex > 0 ? acc : 100;
+    function initTimer() {
+        if (timeLeft > 0) {
+            timeLeft--;
+            timeLeftTag.innerText = timeLeft + "s";
+        } else {
+            clearInterval(timer);
+            isTyping = false;
+            typingInput.disabled = true;
+            // Optionally: save score to local storage or show an alert
+            alert(`Great Job! Final WPM: ${wpmTag.innerText}`);
         }
+    }
 
-        // ५. टेस्ट खत्म होने पर रिजल्ट
-        function showResults() {
-            textDisplay.innerHTML = `<h1 style="color:#0084ff; font-size: 40px; margin-bottom: 20px;">🎉 टेस्ट पूरा हुआ!</h1>
-            <p style="font-size: 20px; color: #2c3e50;">आपकी अंतिम स्पीड है: <strong style="font-size: 30px;">${wpmDisplay.innerText} WPM</strong></p>
-            <p style="font-size: 18px; color: #657786;">एक्यूरेसी: ${accuracyDisplay.innerText}% | गलतियां: ${mistakes}</p>`;
-            
-            // इनपुट बॉक्स को साफ़ करें ताकि यूज़र क्लिक करे
-            typingInput.value = "";
-            typingInput.focus();
-        }
-
-        // ६. रीस्टार्ट बटन
-        function resetTest() {
-            clearInterval(interval);
-            timer = 60;
-            charIndex = 0;mistakes = 0; totalTypedChars = 0; isStarting = false;
-            typingInput.value = ""; typingInput.disabled = false; typingInput.focus();
-            timerDisplay.innerText = "1:00"; wpmDisplay.innerText = "0"; accuracyDisplay.innerText = "100";
-            initText();
-        }
-
-        // सबसे पहले टेक्स्ट लोड करें और इनपुट बॉक्स को सेलेक्ट करें
-        initTest();
+    function resetGame() {
+        clearInterval(timer);
+        loadText();
+        timeLeft = maxTime;
+        charIndex = 0;
+        mistakes = 0;
+        isTyping = false;
+        typingInput.value = "";
+        typingInput.disabled = false;
+        timeLeftTag.innerText = timeLeft + "s";
+        wpmTag.innerText = "00";
+        accuracyTag.innerText = "0%";
         typingInput.focus();
-        
-        // अगर यूज़र कंटेनर पर क्लिक करे, तो इनपुट बॉक्स को फिर से फोकस करें (जैसे typing.com पर होता है)
-        typingBoxUI.addEventListener('click', () => typingInput.focus());
+    }
 
-    </script>
+    // Event Listeners
+    typingInput.addEventListener("input", initTyping);
+    textDisplay.addEventListener("click", () => typingInput.focus()); // Focus hidden input when clicked anywhere
+    document.addEventListener("keydown", () => typingInput.focus()); // Focus on any keypress (High-level feel)
+
+    // Initial load
+    loadText();
+    resetGame(); // Ensure everything is fresh
+
+</script>
+
 </body>
 </html>
