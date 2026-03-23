@@ -72,6 +72,9 @@
            <li><a href="typing.html">Typing Test</a></li>
             <li><a href="quiz.html">Quiz</a></li>
             <li><a href="#contact">Contact</a></li>
+            <button onclick="window.location.href='tracker.html'" style="background: #001100; border: 2px solid #00ff41; color: #00ff41; box-shadow: 0 0 15px #00ff41; margin-top: 15px; font-size: 1.1rem;">
+    📅 DAILY ATTENDANCE MATRIX
+</button>
         </ul>
     </nav>
 
@@ -179,7 +182,7 @@
             let correctOption = quizData[currentQIndex].answer;
             let resultText = document.getElementById('result');
             if(selectedOption === correctOption) { resultText.innerText = "✅ सही!"; resultText.style.color = "#00ea8d"; score++; } 
-            else { resultText.innerText = `❌ गलत! सही: ${correctOption}`; resultText.style.color = "#ff4757"; }
+            else { resultText.innerText = `❌ गलत he na bhosdike! सही: ${correctOption}`; resultText.style.color = "#ff4757"; }
             setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
         }
         loadQuestion();
