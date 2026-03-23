@@ -5,130 +5,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attendance Matrix - Anudeshak 2026</title>
     <style>
-        body {
-            background-color: #050505;
-            color: #00ff41;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px #00ff41;
-        }
-        .info-panel {
-            margin-bottom: 30px;
-            font-size: 0.9rem;
-            color: #ccc;
-        }
-        /* Grid Layout for Calendar */
-        #calendar-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            justify-content: center;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px dashed #00ff41;
-            background: rgba(0, 20, 0, 0.5);
-        }
-        /* Individual Day Box */
-        .day-box {
-            width: 40px;
-            height: 40px;
-            border: 1px solid #333;
-            background-color: #111;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-            transition: 0.2s;
-        }
-        .day-box:hover {
-            border-color: #00ff41;
-            transform: scale(1.1);
-        }
+        body { background-color: #050505; color: #00ff41; font-family: 'Courier New', monospace; text-align: center; padding: 20px; margin: 0; }
+        h1 { letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 10px #00ff41; margin-bottom: 5px; }
+        
+        /* Today's Date Style */
+        #today-date { font-size: 1.5rem; color: #fff; margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 15px #ffffff; background: rgba(255, 255, 255, 0.1); display: inline-block; padding: 10px 20px; border: 1px solid #fff; border-radius: 5px; }
+        
+        .info-panel { margin-bottom: 30px; font-size: 0.9rem; color: #ccc; }
+        
+        /* Grid Layout */
+        #calendar-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 800px; margin: 0 auto; padding: 20px; border: 1px dashed #00ff41; background: rgba(0, 20, 0, 0.5); }
+        
+        /* Box Style */
+        .day-box { width: 40px; height: 40px; border: 1px solid #333; background-color: #111; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+        .day-box:hover { border-color: #00ff41; transform: scale(1.1); }
+        
         /* States */
         .present { background-color: #00ff41; color: #000; border-color: #00ff41; box-shadow: 0 0 10px #00ff41; }
         .absent { background-color: #ff0000; color: #fff; border-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
         
-        button.back-btn {
-            margin-top: 30px;
-            padding: 10px 20px;
-            background: transparent;
-            color: #00ff41;
-            border: 1px solid #00ff41;
-            cursor: pointer;
-            font-family: inherit;
-        }
-        button.back-btn:hover { background: #00ff41; color: #000; }
+        button.back-btn { margin-top: 30px; padding: 12px 25px; background: transparent; color: #00ff41; border: 2px solid #00ff41; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
+        button.back-btn:hover { background: #00ff41; color: #000; box-shadow: 0 0 15px #00ff41; }
     </style>
 </head>
 <body>
 
     <h1>TARGET: 23 AUG 2026</h1>
+    
+    <div id="today-date">[ LOADING DATE... ]</div>
+
     <div class="info-panel">
-        [ CLICK ONCE: <span style="color:#00ff41;">PRESENT</span> ] | [ CLICK TWICE: <span style="color:#ff0000;">ABSENT</span> ] | [ CLICK THRICE: RESET ]
+        [ CLICK ONCE: <span style="color:#00ff41;">PRESENT (GREEN)</span> ] | [ CLICK TWICE: <span style="color:#ff0000;">ABSENT (RED)</span> ]
     </div>
 
-    <div id="calendar-grid">
-        </div>
+    <div id="calendar-grid"></div>
 
     <button class="back-btn" onclick="window.location.href='index.html'">🔙 BACK TO MAIN DASHBOARD</button>
 
 <script>
-    // 23 March 2026 से 23 August 2026 तक लगभग 153 दिन होते हैं।
+    // --- SHOW TODAY's DATE ---
+    const todayDateElement = document.getElementById('today-date');
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const currentDate = new Date().toLocaleDateString('en-IN', options);
+    todayDateElement.innerText = "📅 TODAY: " + currentDate.toUpperCase();
+
+    // --- CALENDAR LOGIC ---
     const totalDays = 153; 
     const grid = document.getElementById('calendar-grid');
-    
-    // लोकल स्टोरेज से पुराना डेटा लाएं (अगर है तो)
     let attendanceData = JSON.parse(localStorage.getItem('anudeshak_attendance')) || {};
 
-    // 153 दिनों के लिए बॉक्स बनाएं
     for (let i = 1; i <= totalDays; i++) {
         let box = document.createElement('div');
         box.className = 'day-box';
-        box.innerText = i; // बॉक्स पर दिन का नंबर (1, 2, 3...)
+        box.innerText = i;
         box.dataset.day = i;
 
-        // पेज लोड होने पर सेव किया हुआ रंग लगाएं
-        if (attendanceData[i] === 'present') {
-            box.classList.add('present');
-        } else if (attendanceData[i] === 'absent') {
-            box.classList.add('absent');
-        }
-
-        // क्लिक करने पर रंग बदलने का लॉजिक
-        box.addEventListener('click', function() {
-            let dayNum = this.dataset.day;
-
-            if (this.classList.contains('present')) {
-                // अगर हरा है, तो लाल (Absent) कर दो
-                this.classList.remove('present');
-                this.classList.add('absent');
-                attendanceData[dayNum] = 'absent';
-            } else if (this.classList.contains('absent')) {
-                // अगर लाल है, तो वापस नार्मल कर दो (Reset)
-                this.classList.remove('absent');
-                delete attendanceData[dayNum];
-            } else {
-                // अगर नार्मल है, तो हरा (Present) कर दो
-                this.classList.add('present');
-                attendanceData[dayNum] = 'present';
-            }
-
-            // बदलाव को ब्राउज़र में सेव करें
-            localStorage.setItem('anudeshak_attendance', JSON.stringify(attendanceData));
-        });
-
-        grid.appendChild(box);
-    }
-</script>
-
-</body>
-</html>
+        if (attendanceData
