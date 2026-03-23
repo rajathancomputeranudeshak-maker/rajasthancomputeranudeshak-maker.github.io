@@ -69,9 +69,55 @@
             <li><a href="#home">Home</a></li>
             <li><a href="#about">About</a></li>
             <li><a href="#photos">Photos</a></li>
-           <li><a href="typing.html">Typing Test</a></li>
             <li><a href="quiz.html">Quiz</a></li>
               <li><a href="#contact">Contact</a></li>
+            <style>
+    .typing-pro-btn {
+        position: relative;
+        display: inline-block;
+        padding: 15px 35px;
+        background: rgba(0, 255, 65, 0.1);
+        color: #00ff41;
+        font-family: 'Courier New', monospace;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        border: 2px solid #00ff41;
+        border-radius: 5px;
+        box-shadow: 0 0 10px #00ff41, inset 0 0 10px #00ff41;
+        transition: all 0.3s ease;
+        margin: 15px;
+    }
+    .typing-pro-btn:hover {
+        background: #00ff41;
+        color: #000;
+        box-shadow: 0 0 30px #00ff41, inset 0 0 20px #00ff41;
+        transform: translateY(-5px);
+    }
+    .new-badge {
+        position: absolute;
+        top: -15px;
+        right: -20px;
+        background: #ff0000;
+        color: #fff;
+        font-size: 0.8rem;
+        padding: 5px 12px;
+        border-radius: 20px;
+        border: 2px solid #fff;
+        box-shadow: 0 0 15px #ff0000;
+        animation: pulse-badge 1s infinite alternate;
+    }
+    @keyframes pulse-badge {
+        0% { transform: scale(1); box-shadow: 0 0 10px #ff0000; }
+        100% { transform: scale(1.2); box-shadow: 0 0 25px #ff0000; }
+    }
+</style>
+
+<a href="typing.html" class="typing-pro-btn">
+    ⌨️ COMMAND-LINE TYPING
+    <span class="new-badge">🔥 NEW UPDATE</span>
+</a>
             <a href="focus.html" style="display: inline-block; padding: 12px 25px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; font-family: sans-serif; margin: 10px;">⏱️ Deep Focus Mode</a>
             <button onclick="window.location.href='tracker.html'" style="background: #001100; border: 2px solid #00ff41; color: #00ff41; box-shadow: 0 0 15px #00ff41; margin-top: 15px; font-size: 1.1rem;">
     📅 DAILY ATTENDANCE MATRIX
