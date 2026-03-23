@@ -40,10 +40,7 @@
 
         /* Letters Style */
         #text-display span {
-            position: relative;
-            padding: 2px 0px;
-            border-radius: 2px;
-            transition: 0.1s;
+            position: relative; padding: 2px 0px; border-radius: 2px; transition: 0.1s;
         }
         
         /* Correct & Incorrect Colors */
@@ -52,9 +49,7 @@
         
         /* THE MOVING BLINKING CURSOR */
         #text-display span.current {
-            background-color: #58a6ff;
-            color: #0d1117;
-            box-shadow: 0 0 10px #58a6ff;
+            background-color: #58a6ff; color: #0d1117; box-shadow: 0 0 10px #58a6ff;
             animation: blink 1s infinite;
         }
 
@@ -96,7 +91,26 @@
     <a href="index.html" style="margin-top: 20px; color: #8b949e; text-decoration: none; font-size: 0.9rem;">← TERMINATE SESSION (BACK)</a>
 
 <script>
-    // Exam Syllabus Related Text
+    // --- KEYBOARD SOUND GENERATOR (NO EXTERNAL FILES NEEDED) ---
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+
+    function playTypeSound() {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'square'; // Mechanical sound type
+        osc.frequency.setValueAtTime(150, audioCtx.currentTime); 
+        osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.05, audioCtx.currentTime); // Volume
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+    }
+
+    // --- TYPING LOGIC ---
     const textOptions = [
         "The Central Processing Unit (CPU) is the brain of the computer. It executes all instructions and processes data efficiently.",
         "Random Access Memory (RAM) is temporary storage. When the computer turns off, all data stored in RAM is completely lost.",
@@ -104,10 +118,7 @@
         "Network topology refers to the arrangement of different elements in a computer network, like star, ring, or mesh topologies."
     ];
 
-    let timer;
-    let maxTime = 60;
-    let timeLeft = maxTime;
-    let isTyping = false;
+    let timer; let maxTime = 60; let timeLeft = maxTime; let isTyping = false;
 
     const textDisplay = document.getElementById("text-display");
     const typingInput = document.getElementById("typing-input");
@@ -115,106 +126,70 @@
     const wpmTag = document.getElementById("wpm-display");
     const accuracyTag = document.getElementById("accuracy-display");
 
-    // Load New Text
     function loadText() {
         let currentText = textOptions[Math.floor(Math.random() * textOptions.length)];
         textDisplay.innerHTML = "";
-        
-        // Har letter ko span me dalna
         currentText.split("").forEach(char => {
-            let span = document.createElement("span");
-            span.innerText = char;
+            let span = document.createElement("span"); span.innerText = char;
             textDisplay.appendChild(span);
         });
-        
-        // Phele letter par cursor set karna
         textDisplay.querySelectorAll("span")[0].classList.add("current");
     }
 
-    // Main Typing Logic
     typingInput.addEventListener("input", () => {
+        playTypeSound(); // PLAY SOUND ON EVERY KEYPRESS
+
         let chars = textDisplay.querySelectorAll("span");
         let typedText = typingInput.value.split("");
         
-        if (!isTyping) {
-            timer = setInterval(initTimer, 1000);
-            isTyping = true;
-        }
+        if (!isTyping) { timer = setInterval(initTimer, 1000); isTyping = true; }
 
         let mistakes = 0;
-        
         chars.forEach((span, index) => {
             let typedChar = typedText[index];
-            
-            // Pura color reset
             span.classList.remove("correct", "incorrect", "current");
 
-            // Check correct or incorrect
-            if (typedChar == null) {
-                // Abhi type nahi hua
-            } else if (typedChar === span.innerText) {
-                span.classList.add("correct");
-            } else {
-                span.classList.add("incorrect");
-                mistakes++;
-            }
+            if (typedChar == null) { } 
+            else if (typedChar === span.innerText) { span.classList.add("correct"); } 
+            else { span.classList.add("incorrect"); mistakes++; }
         });
 
-        // CURSOR KO AAGE BADHANA
         let currentIndex = typedText.length;
         if (currentIndex < chars.length) {
-            chars[currentIndex].classList.add("current"); // Yaha cursor shift ho raha hai
+            chars[currentIndex].classList.add("current");
         } else {
-            // Text pura hone par
-            clearInterval(timer);
-            typingInput.value = ""; 
+            clearInterval(timer); typingInput.value = ""; 
             alert(`Mission Passed! WPM: ${wpmTag.innerText} | Accuracy: ${accuracyTag.innerText}%`);
             resetGame();
         }
 
-        // Live WPM aur Accuracy calculation
         let correctChars = currentIndex - mistakes;
         let wpm = Math.round(((correctChars / 5) / (maxTime - timeLeft)) * 60);
         wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
         wpmTag.innerText = wpm < 10 ? "0" + wpm : wpm;
 
         let accuracy = Math.round((correctChars / currentIndex) * 100);
-        accuracy = isNaN(accuracy) || currentIndex === 0 ? 100 : accuracy;
-        accuracyTag.innerText = accuracy;
+        accuracyTag.innerText = isNaN(accuracy) || currentIndex === 0 ? 100 : accuracy;
     });
 
-    // Timer Function
     function initTimer() {
-        if (timeLeft > 0) {
-            timeLeft--;
-            timeLeftTag.innerText = timeLeft;
-        } else {
-            clearInterval(timer);
-            isTyping = false;
-            typingInput.disabled = true;
+        if (timeLeft > 0) { timeLeft--; timeLeftTag.innerText = timeLeft; } 
+        else {
+            clearInterval(timer); isTyping = false; typingInput.disabled = true;
             alert(`Time Over! Final WPM: ${wpmTag.innerText}`);
         }
     }
 
-    // Reset Function
     function resetGame() {
-        clearInterval(timer);
-        loadText();
-        timeLeft = maxTime;
-        isTyping = false;
-        typingInput.value = "";
-        typingInput.disabled = false;
-        timeLeftTag.innerText = timeLeft;
-        wpmTag.innerText = "00";
-        accuracyTag.innerText = "100";
+        clearInterval(timer); loadText(); timeLeft = maxTime; isTyping = false;
+        typingInput.value = ""; typingInput.disabled = false;
+        timeLeftTag.innerText = timeLeft; wpmTag.innerText = "00"; accuracyTag.innerText = "100";
         typingInput.focus();
     }
 
-    // Kahi bhi click/type karne par input focus ho jaye
     document.addEventListener("keydown", () => typingInput.focus());
     textDisplay.addEventListener("click", () => typingInput.focus());
 
-    // Start Game
     loadText();
 </script>
 
