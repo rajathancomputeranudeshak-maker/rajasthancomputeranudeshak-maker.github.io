@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anudeshak Dashboard | Vishal</title>
+    <title>Anudeshak Dashboard | Command Center</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -20,8 +20,8 @@
                 <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
                 <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
                 <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
-                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes (New)</a></li>
-                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do (New)</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
             </ul>
         </aside>
 
@@ -36,16 +36,18 @@
                         <i class="fa-solid fa-moon"></i>
                     </button>
                     <div class="user-profile" style="display: flex; align-items: center; gap: 10px;">
-                        <img src="vishalnew.jpg" alt="Profile" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
-                        <span style="font-weight: 500; font-size: 14px;">Vishal V.</span>
+                        <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold; font-size: 18px;">
+                            <i class="fa-solid fa-user-astronaut"></i>
+                        </div>
+                        <span style="font-weight: 500; font-size: 14px;">Aspirant</span>
                     </div>
                 </div>
             </nav>
 
             <div class="dashboard-content">
                 <div class="welcome-section">
-                    <h1>वेलकम बैक, विशाल! 👋</h1>
-                    <p>तुम्हारी कंप्यूटर अनुदेशक की तैयारी का स्टेटस यहाँ है।</p>
+                    <h1>वेलकम बैक, एस्पिरेंट! 🚀</h1>
+                    <p>कंप्यूटर अनुदेशक की तैयारी का आपका पर्सनल कमांड सेंटर।</p>
                 </div>
 
                 <div class="quote-card">
@@ -64,38 +66,37 @@
                     <div class="stat-card">
                         <div class="stat-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);"><i class="fa-solid fa-fire"></i></div>
                         <div class="stat-info">
-                            <h3>12 Days</h3>
+                            <h3>Ready</h3>
                             <p>Study Streak</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);"><i class="fa-solid fa-keyboard"></i></div>
                         <div class="stat-info">
-                            <h3>45 WPM</h3>
+                            <h3>Test</h3>
                             <p>Typing Speed</p>
                         </div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-icon" style="color: #8b5cf6; background: rgba(139, 92, 246, 0.1);"><i class="fa-solid fa-bullseye"></i></div>
                         <div class="stat-info">
-                            <h3>14</h3>
-                            <p>Focus Sessions</p>
+                            <h3>Focus</h3>
+                            <p>Pomodoro</p>
                         </div>
                     </div>
                 </div>
-
-                </div>
+            </div>
         </main>
     </div>
 
     <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
     <div class="chat-box" id="aiChatBox">
         <div class="chat-header">
-            <span><i class="fa-solid fa-robot"></i> Assistant</span>
+            <span><i class="fa-solid fa-robot"></i> Study Assistant</span>
             <i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="msg bot-msg">नमस्ते विशाल! मैं तुम्हारा पर्सनल असिस्टेंट हूँ।</div>
+            <div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ। मैं आपकी कैसे मदद कर सकता हूँ?</div>
         </div>
         <div class="chat-input-area">
             <input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)">
