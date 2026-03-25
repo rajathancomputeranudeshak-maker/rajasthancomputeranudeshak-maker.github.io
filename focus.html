@@ -3,49 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Mode | Command Center</title>
+    <title>Focus Mode | Anudeshak OS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .focus-container { text-align: center; background: var(--card-bg); padding: 50px 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 500px; margin: 0 auto; }
-        .timer-circle { width: 250px; height: 250px; margin: 0 auto 30px; border-radius: 50%; border: 8px solid rgba(0, 242, 254, 0.1); display: flex; justify-content: center; align-items: center; box-shadow: inset 0 0 30px rgba(0, 242, 254, 0.1); }
-        .timer-display { font-size: 60px; font-weight: 800; color: var(--accent); }
-        .timer-controls button { margin: 5px; padding: 12px 25px; font-size: 16px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; color: #fff; }
-        .btn-start { background: #10b981; } .btn-pause { background: #f59e0b; } .btn-reset { background: #ef4444; }
-        .status-text { margin-bottom: 20px; color: var(--text-muted); font-size: 18px; font-weight: 500; }
+        .focus-container { text-align: center; background: var(--card-bg); padding: 40px 30px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 550px; margin: 0 auto; backdrop-filter: blur(10px); }
+        
+        /* Audio Player Controls */
+        .audio-controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        .audio-btn { background: rgba(0,0,0,0.4); color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 25px; cursor: pointer; font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .audio-btn:hover { border-color: var(--accent); color: var(--text-main); }
+        .audio-btn.active { background: rgba(0, 242, 254, 0.15); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
+
+        .timer-circle { width: 260px; height: 260px; margin: 0 auto 30px; border-radius: 50%; border: 6px solid rgba(0, 242, 254, 0.1); display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: inset 0 0 40px rgba(0, 242, 254, 0.05), 0 0 30px rgba(0, 0, 0, 0.5); position: relative; transition: 0.5s ease; background: radial-gradient(circle, rgba(17,24,39,0.8) 0%, rgba(7,9,15,1) 100%); }
+        .timer-display { font-size: 70px; font-weight: 800; color: var(--text-main); letter-spacing: 2px; text-shadow: 0 0 20px rgba(0,242,254,0.4); transition: 0.3s; }
+        .session-type { font-size: 14px; color: var(--accent); text-transform: uppercase; letter-spacing: 2px; font-weight: bold; margin-bottom: -10px; }
+        
+        .timer-controls button { margin: 8px; padding: 15px 30px; font-size: 16px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; color: #fff; min-width: 130px; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-start { background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3); } 
+        .btn-start:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.5); }
+        .btn-pause { background: linear-gradient(135deg, #f59e0b, #d97706); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.3); } 
+        .btn-pause:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(245, 158, 11, 0.5); }
+        .btn-reset { background: linear-gradient(135deg, #ef4444, #dc2626); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3); } 
+        .btn-reset:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.5); }
+        
+        .status-text { margin-bottom: 25px; color: var(--text-muted); font-size: 16px; font-weight: 500; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-microchip"></i> Anudeshak OS</h2></div>
+            
+            <div class="user-game-profile" style="padding: 0 20px 20px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--bg-color); box-shadow: 0 0 15px var(--accent);"><i class="fa-solid fa-user-astronaut"></i></div>
+                <h4 style="color: var(--text-main); font-size: 16px;">Aspirant</h4>
+                <div style="color: var(--accent); font-size: 12px; font-weight: bold; margin: 5px 0;" id="user-level">Level 1: Noob</div>
+                <div style="background: var(--bg-color); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; border: 1px solid var(--border-color);"><div id="xp-progress" style="background: var(--accent); height: 100%; width: 0%; transition: 0.5s;"></div></div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;"><span id="user-xp">0</span> / 100 XP</div>
+            </div>
+
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
                 <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
                 <li><a href="focus.html" class="nav-item active"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
-                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
-                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Flashcards & Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Smart Notes</a></li>
                 <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
-                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Developer</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <nav class="top-navbar">
                 <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
-                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-stopwatch"></i> <span style="font-size: 14px; margin-left: 5px;">Pomodoro Timer</span></div>
-                <div class="nav-actions">
-                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
-                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
-                </div>
+                <div style="color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-headphones"></i> <span>Pomodoro + Lo-Fi</span></div>
+                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section" style="text-align: center;"><h1>Deep Focus Mode ⏱️</h1></div>
+                <div class="welcome-section" style="text-align: center;">
+                    <h1 style="background: linear-gradient(to right, #8b5cf6, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Deep Focus Mode 🎧</h1>
+                    <p>किताबें खोलें, बैकग्राउंड म्यूजिक प्ले करें, और दुनिया को म्यूट कर दें।</p>
+                </div>
+
                 <div class="focus-container">
+                    
+                    <div class="audio-controls">
+                        <button class="audio-btn" onclick="toggleAudio('rain', this)"><i class="fa-solid fa-cloud-rain"></i> Rain</button>
+                        <button class="audio-btn" onclick="toggleAudio('cafe', this)"><i class="fa-solid fa-mug-hot"></i> Cafe</button>
+                        <button class="audio-btn" onclick="toggleAudio('lofi', this)"><i class="fa-solid fa-music"></i> Lo-Fi Beats</button>
+                    </div>
+
                     <div class="status-text" id="statusText">रेडी टू फोकस?</div>
-                    <div class="timer-circle" id="timerCircle"><div class="timer-display" id="timeDisplay">25:00</div></div>
+                    
+                    <div class="timer-circle" id="timerCircle">
+                        <div class="session-type" id="sessionType">Focus</div>
+                        <div class="timer-display" id="timeDisplay">25:00</div>
+                    </div>
+                    
                     <div class="timer-controls">
                         <button class="btn-start" onclick="startTimer()"><i class="fa-solid fa-play"></i> Start</button>
                         <button class="btn-pause" onclick="pauseTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
@@ -56,20 +93,153 @@
         </main>
     </div>
 
-    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
-    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
-    
-    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+    <audio id="audio-rain" loop src="https://assets.mixkit.co/sfx/preview/mixkit-light-rain-loop-2393.mp3"></audio>
+    <audio id="audio-cafe" loop src="https://assets.mixkit.co/sfx/preview/mixkit-restaurant-crowd-talking-ambient-443.mp3"></audio>
+    <audio id="audio-lofi" loop src="https://assets.mixkit.co/sfx/preview/mixkit-hazy-after-hours-132.mp3"></audio>
+
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-box glass-box">
+            <div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> Developer</h3><i class="fa-solid fa-xmark close-modal" id="close-modal-btn"></i></div>
+            <div class="contact-body">
+                <div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div>
+                <div class="contact-links-list">
+                    <a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a>
+                    <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a>
+                    <a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <script>
-        let timeLeft = 25 * 60, timerInterval, isRunning = false;
-        const timeDisplay = document.getElementById('timeDisplay'), statusText = document.getElementById('statusText'), timerCircle = document.getElementById('timerCircle');
-        function updateDisplay() { let minutes = Math.floor(timeLeft / 60); let seconds = timeLeft % 60; timeDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; }
-        function startTimer() { if (!isRunning) { isRunning = true; statusText.innerText = "फोकस मोड ऑन है!"; statusText.style.color = "#10b981"; timerInterval = setInterval(() => { if (timeLeft > 0) { timeLeft--; updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; statusText.innerText = "सेशन पूरा हुआ!"; alert("फोकस सेशन कम्पलीट!"); } }, 1000); } }
-        function pauseTimer() { if (isRunning) { clearInterval(timerInterval); isRunning = false; statusText.innerText = "टाइमर पॉज्ड है।"; statusText.style.color = "#f59e0b"; } }
-        function resetTimer() { clearInterval(timerInterval); isRunning = false; timeLeft = 25 * 60; updateDisplay(); statusText.innerText = "रेडी टू फोकस?"; statusText.style.color = "var(--text-muted)"; }
-        updateDisplay();
+        // --- Ambient Audio Logic ---
+        let currentAudio = null;
+        function toggleAudio(type, btn) {
+            const allBtns = document.querySelectorAll('.audio-btn');
+            const allAudios = document.querySelectorAll('audio');
+            
+            // Pause all audios
+            allAudios.forEach(a => a.pause());
+            
+            // If clicking the already active button, just turn it off
+            if (btn.classList.contains('active')) {
+                btn.classList.remove('active');
+                currentAudio = null;
+                return;
+            }
+
+            // Remove active from all, add to clicked
+            allBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Play selected
+            const audioToPlay = document.getElementById(`audio-${type}`);
+            if(audioToPlay) {
+                audioToPlay.volume = 0.5; // Set volume to 50% so it's not too loud
+                audioToPlay.play();
+                currentAudio = audioToPlay;
+            }
+        }
+
+        // --- Timer Logic ---
+        let focusTime = 25 * 60; // 25 Minutes
+        let breakTime = 5 * 60;  // 5 Minutes
+        let timeLeft = focusTime;
+        let timerInterval;
+        let isRunning = false;
+        let isFocusMode = true;
+        
+        const timeDisplay = document.getElementById('timeDisplay');
+        const statusText = document.getElementById('statusText');
+        const timerCircle = document.getElementById('timerCircle');
+        const sessionType = document.getElementById('sessionType');
+
+        function updateDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timeDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                statusText.innerText = isFocusMode ? "डिस्ट्रैक्शन फ्री पढ़ाई जारी है..." : "5 मिनट का ब्रेक लें। रिलैक्स!";
+                statusText.style.color = isFocusMode ? "#10b981" : "#00f2fe";
+                timerCircle.style.borderColor = isFocusMode ? "rgba(16, 185, 129, 0.5)" : "rgba(0, 242, 254, 0.5)";
+                timerCircle.style.boxShadow = isFocusMode ? "0 0 40px rgba(16, 185, 129, 0.2)" : "0 0 40px rgba(0, 242, 254, 0.2)";
+                timeDisplay.style.color = isFocusMode ? "#10b981" : "#00f2fe";
+                
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateDisplay();
+                    } else {
+                        // Timer Finished!
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        
+                        if (isFocusMode) {
+                            // Focus Session Complete! Reward XP & Save Stats
+                            let currentSessions = parseInt(localStorage.getItem('anudeshak_focus') || '0');
+                            localStorage.setItem('anudeshak_focus', currentSessions + 1);
+                            
+                            if(typeof addXP === "function") {
+                                addXP(50); // 50 XP for 25 mins of study!
+                            }
+                            
+                            alert("फोकस सेशन कम्पलीट! शानदार काम कमांडर। आपको +50 XP मिले! 🔥 अब 5 मिनट का ब्रेक लें।");
+                            
+                            // Switch to Break Mode
+                            isFocusMode = false;
+                            timeLeft = breakTime;
+                            sessionType.innerText = "Break";
+                            sessionType.style.color = "#00f2fe";
+                        } else {
+                            // Break Complete
+                            alert("ब्रेक खत्म! वापस किताबों की तरफ लौटें।");
+                            isFocusMode = true;
+                            timeLeft = focusTime;
+                            sessionType.innerText = "Focus";
+                            sessionType.style.color = "var(--accent)";
+                        }
+                        
+                        updateDisplay();
+                        resetTimer(); // Reset UI state
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                isRunning = false;
+                statusText.innerText = "टाइमर पॉज्ड है। जल्दी वापस आएं!";
+                statusText.style.color = "#f59e0b";
+                timerCircle.style.borderColor = "rgba(245, 158, 11, 0.5)";
+                timerCircle.style.boxShadow = "0 0 40px rgba(245, 158, 11, 0.2)";
+                timeDisplay.style.color = "#f59e0b";
+            }
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            isFocusMode = true;
+            timeLeft = focusTime;
+            updateDisplay();
+            
+            sessionType.innerText = "Focus";
+            sessionType.style.color = "var(--accent)";
+            statusText.innerText = "रेडी टू फोकस?";
+            statusText.style.color = "var(--text-muted)";
+            timerCircle.style.borderColor = "rgba(0, 242, 254, 0.1)";
+            timerCircle.style.boxShadow = "inset 0 0 40px rgba(0, 242, 254, 0.05), 0 0 30px rgba(0, 0, 0, 0.5)";
+            timeDisplay.style.color = "var(--text-main)";
+        }
+
+        updateDisplay(); // Initial call
     </script>
 </body>
 </html>
