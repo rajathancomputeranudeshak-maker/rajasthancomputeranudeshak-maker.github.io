@@ -32,7 +32,6 @@ if (menuBtn && sidebar) {
         sidebar.classList.toggle('active');
     });
 
-    // Close sidebar when clicking outside on mobile
     document.addEventListener('click', (e) => {
         if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
             sidebar.classList.remove('active');
@@ -40,7 +39,83 @@ if (menuBtn && sidebar) {
     });
 }
 
-// --- 3. Exam Countdown Timer (Only on Dashboard) ---
+// --- 3. Dynamic Greetings (Based on Time) ---
+function updateGreeting() {
+    const greetingEl = document.getElementById('dynamic-greeting');
+    if (!greetingEl) return;
+
+    const hour = new Date().getHours();
+    let greeting = "वेलकम बैक, एस्पिरेंट! 🚀";
+
+    if (hour >= 5 && hour < 12) {
+        greeting = "सुप्रभात, कमांडर! ☀️ नया दिन, नया टारगेट।";
+    } else if (hour >= 12 && hour < 17) {
+        greeting = "गुड आफ्टरनून! ☕ फोकस बनाए रखें।";
+    } else if (hour >= 17 && hour < 22) {
+        greeting = "गुड इवनिंग! 🌇 आज का रिवीजन किया?";
+    } else {
+        greeting = "लेट नाईट ग्राइंडिंग, कमांडर? 🌙";
+    }
+    greetingEl.innerText = greeting;
+}
+
+// --- 4. Gamification System (XP & Levels) ---
+function updateGamification() {
+    const xpDisplay = document.getElementById('user-xp');
+    const levelDisplay = document.getElementById('user-level');
+    const xpProgress = document.getElementById('xp-progress');
+    
+    if (!xpDisplay || !levelDisplay || !xpProgress) return;
+
+    // Get XP from LocalStorage (Default 0)
+    let currentXP = parseInt(localStorage.getItem('anudeshak_xp')) || 0;
+    
+    // Calculate Level (Every 100 XP = 1 Level)
+    let currentLevel = Math.floor(currentXP / 100) + 1;
+    let xpInCurrentLevel = currentXP % 100;
+    let progressPercentage = xpInCurrentLevel + "%";
+
+    // Update UI
+    xpDisplay.innerText = xpInCurrentLevel;
+    xpProgress.style.width = progressPercentage;
+
+    // Rank Names
+    let rankName = "Noob";
+    if(currentLevel >= 5 && currentLevel < 10) rankName = "Rookie";
+    else if(currentLevel >= 10 && currentLevel < 25) rankName = "Pro Coder";
+    else if(currentLevel >= 25 && currentLevel < 50) rankName = "System Admin";
+    else if(currentLevel >= 50) rankName = "Anudeshak Master";
+
+    levelDisplay.innerText = `Level ${currentLevel}: ${rankName}`;
+}
+
+// Global Function to Add XP (Call this from focus.html, quiz.html etc.)
+function addXP(points) {
+    let currentXP = parseInt(localStorage.getItem('anudeshak_xp')) || 0;
+    localStorage.setItem('anudeshak_xp', currentXP + points);
+    updateGamification();
+}
+
+// --- 5. REAL Dashboard Stats Fetcher ---
+function loadDashboardStats() {
+    // 1. Fetch Streak
+    const trackerData = JSON.parse(localStorage.getItem('anudeshak_tracker')) || [];
+    const streakCount = trackerData.filter(day => day).length;
+    const dashStreak = document.getElementById('dash-streak');
+    if(dashStreak) dashStreak.innerText = streakCount + " Days";
+
+    // 2. Fetch Latest Typing Speed
+    const latestWpm = localStorage.getItem('anudeshak_wpm') || '0';
+    const dashWpm = document.getElementById('dash-wpm');
+    if(dashWpm) dashWpm.innerText = latestWpm + " WPM";
+
+    // 3. Fetch Focus Sessions
+    const focusSessions = localStorage.getItem('anudeshak_focus') || '0';
+    const dashFocus = document.getElementById('dash-focus');
+    if(dashFocus) dashFocus.innerText = focusSessions;
+}
+
+// --- 6. Exam Countdown Timer ---
 const countdownTimer = document.getElementById("countdown-timer");
 if (countdownTimer) {
     const targetDate = new Date("August 23, 2026 00:00:00").getTime();
@@ -60,65 +135,10 @@ if (countdownTimer) {
     updateCountdown();
 }
 
-// --- 4. Dynamic Quotes (Only on Dashboard) ---
-const quoteElement = document.getElementById('daily-quote');
-const quotes = [
-    "सफलता पहले से की गई तैयारी पर निर्भर करती है।",
-    "कंसिस्टेंसी (Consistency) ही कंप्यूटर अनुदेशक बनने की चाबी है।",
-    "आज का दर्द, कल की जीत है।",
-    "कोड जितना साफ़ होगा, दिमाग उतना ही शांत रहेगा।"
-];
-if (quoteElement) {
-    quoteElement.innerText = quotes[Math.floor(Math.random() * quotes.length)];
-}
-
-// --- 5. Universal Chatbot Logic ---
-function toggleChat() {
-    const chatBox = document.getElementById("aiChatBox");
-    if (chatBox) {
-        chatBox.style.display = (chatBox.style.display === "flex") ? "none" : "flex";
-    }
-}
-
-function handleEnter(event) {
-    if (event.key === "Enter") sendMessage();
-}
-
-function sendMessage() {
-    const input = document.getElementById("userInput");
-    const message = input.value.trim().toLowerCase();
-    if (!message) return;
-
-    const chatMessages = document.getElementById("chatMessages");
-    chatMessages.innerHTML += `<div class="msg user-msg">${message}</div>`;
-    input.value = "";
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-
-    setTimeout(() => {
-        let reply = "मैं अभी सीख रहा हूँ। कृपया 'exam', 'motivation', 'typing' या 'focus' टाइप करें।";
-        
-        if(message.includes("exam") || message.includes("अनुदेशक")) {
-            reply = "हमारा मुख्य लक्ष्य 23 अगस्त 2026, राजस्थान कंप्यूटर अनुदेशक एग्जाम है! लगन से तैयारी करते रहें।";
-        } else if (message.includes("time") || message.includes("समय")) {
-            reply = `अभी का समय: ${new Date().toLocaleTimeString('hi-IN')}`;
-        } else if (message.includes("motivation") || message.includes("मोटिवेशन")) {
-            reply = quotes[Math.floor(Math.random() * quotes.length)];
-        } else if (message.includes("study tip") || message.includes("टिप")) {
-            reply = "पोमोडोरो (Pomodoro) तकनीक का इस्तेमाल करें: 25 मिनट फोकस के साथ पढ़ाई और 5 मिनट का ब्रेक।";
-        } else if (message.includes("typing") || message.includes("टाइपिंग")) {
-            reply = "टाइपिंग टूल साइडबार में उपलब्ध है। रोज़ कम से कम 15 मिनट अभ्यास करें।";
-        } else if (message.includes("hello") || message.includes("hi") || message.includes("नमस्ते")) {
-            reply = "नमस्कार! मैं Anudeshak Study AI हूँ। आपकी तैयारी कैसी चल रही है?";
-        }
-
-        chatMessages.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }, 600);
-}
-
-// --- 6. Contact Developer Modal Logic ---
+// --- 7. Contact Developer Modal Logic ---
 const contactLink = document.getElementById('contact-link');
 const contactModal = document.getElementById('contactModal');
+const closeModalBtn = document.getElementById('close-modal-btn');
 
 function toggleContactModal() {
     if (sidebar && sidebar.classList.contains('active')) {
@@ -136,6 +156,10 @@ if (contactLink) {
     });
 }
 
+if (closeModalBtn) {
+    closeModalBtn.addEventListener('click', toggleContactModal);
+}
+
 if (contactModal) {
     contactModal.addEventListener('click', (e) => {
         if (e.target === contactModal) {
@@ -143,3 +167,31 @@ if (contactModal) {
         }
     });
 }
+
+// --- 8. Initialize Particles.js (Only if container exists) ---
+if (document.getElementById('particles-js')) {
+    particlesJS("particles-js", {
+        particles: {
+            number: { value: 50, density: { enable: true, value_area: 800 } },
+            color: { value: ["#00f2fe", "#4facfe"] },
+            shape: { type: "circle" },
+            opacity: { value: 0.3, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: true, distance: 150, color: "#00f2fe", opacity: 0.1, width: 1 },
+            move: { enable: true, speed: 1, direction: "none", random: true, out_mode: "out" }
+        },
+        interactivity: {
+            detect_on: "canvas",
+            events: { onhover: { enable: true, mode: "grab" }, resize: true },
+            modes: { grab: { distance: 140, line_linked: { opacity: 0.5 } } }
+        },
+        retina_detect: true
+    });
+}
+
+// --- RUN ON LOAD ---
+document.addEventListener('DOMContentLoaded', () => {
+    updateGreeting();
+    updateGamification();
+    loadDashboardStats();
+});
