@@ -7,19 +7,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        /* क्विज़ के बटन्स का डिज़ाइन */
         .quiz-box { background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 600px; margin: 0 auto; text-align: center; }
         .option-btn { background: var(--bg-color); color: var(--text-main); border: 1px solid var(--accent); padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 16px; }
-        .option-btn:hover { background: var(--accent); color: #fff; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3); transform: translateY(-2px); }
-        .option-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+        .option-btn:hover { background: var(--accent); color: #fff; }
+        .option-btn:disabled { opacity: 0.5; cursor: not-allowed; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
-            </div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
@@ -28,112 +25,46 @@
                 <li><a href="quiz.html" class="nav-item active"><i class="fa-solid fa-brain"></i> Quiz</a></li>
                 <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
                 <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <nav class="top-navbar">
                 <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
-                <div class="search-bar" style="color: var(--text-muted);">
-                    <i class="fa-solid fa-brain"></i> <span style="font-size: 14px; margin-left: 5px;">Computer Quiz</span>
-                </div>
+                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-brain"></i> <span style="font-size: 14px; margin-left: 5px;">Computer Quiz</span></div>
                 <div class="nav-actions">
                     <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
                 </div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section" style="text-align: center;">
-                    <h1>कंप्यूटर क्विज़ चैलेंज 🧠</h1>
-                    <p>हर सवाल के लिए 10 सेकंड का समय है।</p>
-                </div>
-
+                <div class="welcome-section" style="text-align: center;"><h1>कंप्यूटर क्विज़ चैलेंज 🧠</h1></div>
                 <div class="quiz-box">
                     <div id="timer" style="color: #ef4444; font-weight: bold; font-size: 20px; margin-bottom: 15px;">समय: 10s</div>
                     <h2 id="question" style="margin-bottom: 20px; color: var(--accent);">प्रश्न लोड हो रहा है...</h2>
                     <div id="options-box"></div>
                     <p id="result" style="margin-top: 20px; font-weight: bold; font-size: 18px; height: 25px;"></p>
                 </div>
-
             </div>
         </main>
     </div>
 
+    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
+    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
+    
+    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+
     <script src="script.js"></script>
     <script>
-        // क्विज़ का लॉजिक (तुम्हारा पुराना टाइमर वाला कोड)
-        const quizData = [
-            { question: "वेबसाइट का स्ट्रक्चर बनाने के लिए किस भाषा का उपयोग होता है?", options: ["Python", "HTML", "C++", "Java"], answer: "HTML" },
-            { question: "CSS का फुल फॉर्म क्या है?", options: ["Computer Style Sheet", "Cascading Style Sheet", "Creative Style System", "Color Style Sheet"], answer: "Cascading Style Sheet" },
-            { question: "वेब पेज को इंटरैक्टिव कौन सी भाषा बनाती है?", options: ["HTML", "CSS", "JavaScript", "SQL"], answer: "JavaScript" },
-            { question: "कंप्यूटर का दिमाग किसे कहा जाता है?", options: ["RAM", "Monitor", "CPU", "Keyboard"], answer: "CPU" }
-        ];
-
-        let currentQIndex = 0; let score = 0; let timeLeft = 10; let timerInterval;
-
-        function startTimer() {
-            timeLeft = 10;
-            document.getElementById('timer').innerText = `समय: ${timeLeft}s`;
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                document.getElementById('timer').innerText = `समय: ${timeLeft}s`;
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    handleTimeout();
-                }
-            }, 1000);
-        }
-
-        function handleTimeout() {
-            let resultText = document.getElementById('result');
-            resultText.innerText = `⏳ समय समाप्त! सही उत्तर: ${quizData[currentQIndex].answer}`;
-            resultText.style.color = "#f59e0b";
-            disableOptions();
-            setTimeout(() => { currentQIndex++; loadQuestion(); }, 2000);
-        }
-
-        function disableOptions() {
-            let buttons = document.querySelectorAll('.option-btn');
-            buttons.forEach(btn => btn.disabled = true);
-        }
-
-        function loadQuestion() {
-            if(currentQIndex >= quizData.length) {
-                document.getElementById('question').innerText = `क्विज़ खत्म! 🎉 स्कोर: ${score}/${quizData.length}`;
-                document.getElementById('options-box').innerHTML = ""; 
-                document.getElementById('result').innerText = "";
-                document.getElementById('timer').style.display = "none";
-                clearInterval(timerInterval);
-                return;
-            }
-            document.getElementById('question').innerText = quizData[currentQIndex].question;
-            document.getElementById('options-box').innerHTML = ""; 
-            document.getElementById('result').innerText = "";
-            startTimer();
-
-            quizData[currentQIndex].options.forEach(opt => {
-                let btn = document.createElement('button'); 
-                btn.innerText = opt; btn.className = 'option-btn';
-                btn.onclick = () => checkAnswer(opt); 
-                document.getElementById('options-box').appendChild(btn);
-            });
-        }
-
-        function checkAnswer(selectedOption) {
-            clearInterval(timerInterval);
-            disableOptions();
-            let correctOption = quizData[currentQIndex].answer;
-            let resultText = document.getElementById('result');
-            
-            if(selectedOption === correctOption) { 
-                resultText.innerText = "✅ सही!"; resultText.style.color = "#10b981"; score++; 
-            } else { 
-                resultText.innerText = `❌ गलत! सही: ${correctOption}`; resultText.style.color = "#ef4444"; 
-            }
-            setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500);
-        }
-
+        const quizData = [ { question: "वेबसाइट का स्ट्रक्चर बनाने के लिए किस भाषा का उपयोग होता है?", options: ["Python", "HTML", "C++", "Java"], answer: "HTML" }, { question: "CSS का फुल फॉर्म क्या है?", options: ["Computer Style Sheet", "Cascading Style Sheet", "Creative Style System", "Color Style Sheet"], answer: "Cascading Style Sheet" }, { question: "वेब पेज को इंटरैक्टिव कौन सी भाषा बनाती है?", options: ["HTML", "CSS", "JavaScript", "SQL"], answer: "JavaScript" }, { question: "कंप्यूटर का दिमाग किसे कहा जाता है?", options: ["RAM", "Monitor", "CPU", "Keyboard"], answer: "CPU" } ];
+        let currentQIndex = 0, score = 0, timeLeft = 10, timerInterval;
+        function startTimer() { timeLeft = 10; document.getElementById('timer').innerText = `समय: ${timeLeft}s`; clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer').innerText = `समय: ${timeLeft}s`; if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeout(); } }, 1000); }
+        function handleTimeout() { let resultText = document.getElementById('result'); resultText.innerText = `⏳ समय समाप्त! सही: ${quizData[currentQIndex].answer}`; resultText.style.color = "#f59e0b"; disableOptions(); setTimeout(() => { currentQIndex++; loadQuestion(); }, 2000); }
+        function disableOptions() { document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true); }
+        function loadQuestion() { if(currentQIndex >= quizData.length) { document.getElementById('question').innerText = `क्विज़ खत्म! 🎉 स्कोर: ${score}/${quizData.length}`; document.getElementById('options-box').innerHTML = ""; document.getElementById('result').innerText = ""; document.getElementById('timer').style.display = "none"; clearInterval(timerInterval); return; } document.getElementById('question').innerText = quizData[currentQIndex].question; document.getElementById('options-box').innerHTML = ""; document.getElementById('result').innerText = ""; startTimer(); quizData[currentQIndex].options.forEach(opt => { let btn = document.createElement('button'); btn.innerText = opt; btn.className = 'option-btn'; btn.onclick = () => checkAnswer(opt); document.getElementById('options-box').appendChild(btn); }); }
+        function checkAnswer(selectedOption) { clearInterval(timerInterval); disableOptions(); let correctOption = quizData[currentQIndex].answer; let resultText = document.getElementById('result'); if(selectedOption === correctOption) { resultText.innerText = "✅ सही!"; resultText.style.color = "#10b981"; score++; } else { resultText.innerText = `❌ गलत! सही: ${correctOption}`; resultText.style.color = "#ef4444"; } setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500); }
         loadQuestion();
     </script>
 </body>
