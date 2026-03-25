@@ -3,27 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anudeshak OS | Ultimate Command Center</title>
-    
+    <title>Anudeshak OS | Command Center</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
-    
     <link rel="stylesheet" href="style.css">
 </head>
-<body data-theme="dark">
-    
+<body>
     <div id="particles-js"></div>
 
-    <div id="app-root">
-        <div style="height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; color: var(--accent, #00f2fe);">
-            <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 40px; margin-bottom: 15px;"></i>
-            <h2 style="font-family: 'Courier New', Courier, monospace; letter-spacing: 2px;">Booting Anudeshak OS...</h2>
-            <p style="color: #6b7280; font-size: 14px; margin-top: 10px;">Initializing Core Modules</p>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-microchip"></i> Anudeshak OS</h2>
+            </div>
+            
+            <div class="user-game-profile" style="padding: 0 20px 20px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--bg-color); box-shadow: 0 0 15px var(--accent);"><i class="fa-solid fa-user-astronaut"></i></div>
+                <h4 style="color: var(--text-main); font-size: 16px;">Aspirant</h4>
+                <div style="color: var(--accent); font-size: 12px; font-weight: bold; margin: 5px 0;" id="user-level">Level 1: Noob</div>
+                <div style="background: var(--bg-color); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; border: 1px solid var(--border-color);">
+                    <div id="xp-progress" style="background: var(--accent); height: 100%; width: 0%; transition: 0.5s;"></div>
+                </div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;"><span id="user-xp">0</span> / 100 XP</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Flashcards & Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Smart Notes</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Developer</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div style="color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-bolt"></i> <span id="streak-freeze-status">Streak Freeze: Active 🧊</span></div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                </div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1 id="dynamic-greeting">वेलकम बैक, एस्पिरेंट! 🚀</h1>
+                    <p>तैयारी को गेम बनाओ। XP कमाओ और अपनी रैंक बढ़ाओ।</p>
+                </div>
+                
+                <div class="quote-card" data-tilt data-tilt-glare data-tilt-max-glare="0.2">
+                    <i class="fa-solid fa-quote-left"></i>
+                    <p id="daily-quote">सफलता पहले से की गई तैयारी पर निर्भर करती है।</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card" data-tilt data-tilt-scale="1.05">
+                        <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                        <div class="stat-info"><h3 id="countdown-timer">--</h3><p>Exam Countdown</p></div>
+                    </div>
+                    <div class="stat-card" data-tilt data-tilt-scale="1.05">
+                        <div class="stat-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);"><i class="fa-solid fa-fire"></i></div>
+                        <div class="stat-info"><h3 id="dash-streak">0 Days</h3><p>Study Streak</p></div>
+                    </div>
+                    <div class="stat-card" data-tilt data-tilt-scale="1.05">
+                        <div class="stat-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);"><i class="fa-solid fa-keyboard"></i></div>
+                        <div class="stat-info"><h3 id="dash-wpm">0 WPM</h3><p>Typing Speed</p></div>
+                    </div>
+                    <div class="stat-card" data-tilt data-tilt-scale="1.05">
+                        <div class="stat-icon" style="color: #8b5cf6; background: rgba(139, 92, 246, 0.1);"><i class="fa-solid fa-bullseye"></i></div>
+                        <div class="stat-info"><h3 id="dash-focus">0</h3><p>Focus Sessions</p></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-box glass-box">
+            <div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> Developer</h3><i class="fa-solid fa-xmark close-modal" id="close-modal-btn"></i></div>
+            <div class="contact-body">
+                <div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div>
+                <div class="contact-links-list">
+                    <a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a>
+                    <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a>
+                    <a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a>
+                </div>
+            </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
