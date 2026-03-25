@@ -3,69 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>To-Do List | Command Center</title>
+    <title>To-Do List | Anudeshak OS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .todo-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
-        .todo-input-group input { flex: 1; padding: 12px 15px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; outline: none; }
-        .todo-input-group button { background: var(--accent); color: #fff; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .todo-list { list-style: none; }
-        .todo-item { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); }
-        .todo-item.completed span { text-decoration: line-through; color: var(--text-muted); }
-        .todo-actions button { background: none; border: none; cursor: pointer; font-size: 16px; margin-left: 10px; }
-        .btn-check { color: #10b981; } .btn-delete { color: #ef4444; }
+        .todo-container { background: var(--card-bg); padding: 35px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(10px); max-width: 700px; margin: 0 auto; }
+        
+        /* Input Group */
+        .todo-input-group { display: flex; gap: 15px; margin-bottom: 30px; }
+        .todo-input-group input { flex: 1; padding: 15px 20px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 10px; outline: none; font-size: 16px; transition: 0.3s; }
+        .todo-input-group input:focus { border-color: var(--accent); box-shadow: inset 0 0 10px rgba(0, 242, 254, 0.1); }
+        .todo-input-group button { background: var(--accent); color: #000; border: none; padding: 0 25px; border-radius: 10px; cursor: pointer; font-weight: 800; font-size: 16px; transition: 0.3s; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        .todo-input-group button:hover { background: var(--text-main); transform: translateY(-2px); }
+
+        /* Active Task List */
+        .todo-list { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
+        .todo-item { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); padding: 15px 20px; border-radius: 10px; border: 1px solid var(--border-color); transition: 0.3s; }
+        .todo-item:hover { transform: translateX(5px); border-color: var(--accent); background: rgba(0, 242, 254, 0.05); }
+        .todo-item.completed { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); opacity: 0.7; }
+        .todo-item.completed span { text-decoration: line-through; color: #10b981; }
+        
+        .todo-text { font-size: 16px; font-weight: 500; color: var(--text-main); transition: 0.3s; word-break: break-word; }
+        .todo-actions { display: flex; gap: 10px; }
+        .todo-actions button { width: 35px; height: 35px; border-radius: 8px; border: none; cursor: pointer; font-size: 16px; display: flex; justify-content: center; align-items: center; transition: 0.3s; }
+        
+        .btn-check { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+        .btn-check:hover, .todo-item.completed .btn-check { background: #10b981; color: #fff; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .btn-delete:hover { background: #ef4444; color: #fff; box-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+
+        /* Task History Section */
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; cursor: pointer; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; }
+        .history-header h3 { font-size: 16px; color: var(--text-muted); }
+        .history-header i { color: var(--text-muted); transition: 0.3s; }
+        .history-list { list-style: none; display: none; flex-direction: column; gap: 8px; max-height: 200px; overflow-y: auto; padding-right: 5px; }
+        .history-list.active { display: flex; }
+        .history-item { display: flex; justify-content: space-between; background: rgba(0,0,0,0.1); padding: 10px 15px; border-radius: 8px; border: 1px dashed var(--border-color); font-size: 14px; color: var(--text-muted); }
+        .history-date { font-size: 11px; color: var(--accent); font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-microchip"></i> Anudeshak OS</h2></div>
+            
+            <div class="user-game-profile" style="padding: 0 20px 20px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--bg-color); box-shadow: 0 0 15px var(--accent);"><i class="fa-solid fa-user-astronaut"></i></div>
+                <h4 style="color: var(--text-main); font-size: 16px;">Aspirant</h4>
+                <div style="color: var(--accent); font-size: 12px; font-weight: bold; margin: 5px 0;" id="user-level">Level 1: Noob</div>
+                <div style="background: var(--bg-color); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; border: 1px solid var(--border-color);"><div id="xp-progress" style="background: var(--accent); height: 100%; width: 0%; transition: 0.5s;"></div></div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;"><span id="user-xp">0</span> / 100 XP</div>
+            </div>
+
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
                 <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
                 <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
-                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
-                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Flashcards & Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Smart Notes</a></li>
                 <li><a href="todo.html" class="nav-item active"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
-                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Developer</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <nav class="top-navbar">
                 <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
-                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-list-check"></i> <span style="font-size: 14px; margin-left: 5px;">Task Manager</span></div>
-                <div class="nav-actions">
-                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
-                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
-                </div>
+                <div style="color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-list-check"></i> <span>Daily Target Manager</span></div>
+                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section"><h1>डेली टारगेट्स ✅</h1><p>आज क्या पढ़ना है? अपना टास्क ऐड करें।</p></div>
-                <div style="max-width: 600px;">
-                    <div class="todo-input-group"><input type="text" id="taskInput" placeholder="नया टास्क लिखें..." onkeypress="if(event.key === 'Enter') addTask()"><button onclick="addTask()">Add</button></div>
-                    <ul class="todo-list" id="taskList"></ul>
+                <div class="welcome-section" style="text-align: center;">
+                    <h1 style="background: linear-gradient(to right, #10b981, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Mission Objectives ✅</h1>
+                    <p>आज के टारगेट सेट करें। रात 12 बजे कम्पलीट टास्क अपने आप 'History' में सेव हो जाएंगे।</p>
+                </div>
+
+                <div class="todo-container">
+                    <div class="todo-input-group">
+                        <input type="text" id="taskInput" placeholder="जैसे: PGDCA Unit 1 रिवीजन..." onkeypress="if(event.key === 'Enter') addTask()">
+                        <button onclick="addTask()">Add Task</button>
+                    </div>
+                    
+                    <ul class="todo-list" id="taskList">
+                        </ul>
+
+                    <div style="border-top: 1px solid var(--border-color); padding-top: 20px; margin-top: 10px;">
+                        <div class="history-header" onclick="toggleHistory()">
+                            <h3><i class="fa-solid fa-clock-rotate-left"></i> Task History (Archived)</h3>
+                            <i class="fa-solid fa-chevron-down" id="historyIcon"></i>
+                        </div>
+                        <ul class="history-list" id="historyList">
+                            </ul>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
-    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
-    
-    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-box glass-box">
+            <div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> Developer</h3><i class="fa-solid fa-xmark close-modal" id="close-modal-btn"></i></div>
+            <div class="contact-body">
+                <div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div>
+                <div class="contact-links-list">
+                    <a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a>
+                    <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a>
+                    <a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <script>
+        // --- Smart To-Do Logic & Midnight Reset ---
         let tasks = JSON.parse(localStorage.getItem('anudeshak_tasks')) || [];
-        function renderTasks() { const list = document.getElementById('taskList'); list.innerHTML = ''; tasks.forEach((t, i) => { list.innerHTML += `<li class="todo-item ${t.completed ? 'completed' : ''}"><span>${t.text}</span><div class="todo-actions"><button class="btn-check" onclick="toggleTask(${i})"><i class="fa-solid fa-check"></i></button><button class="btn-delete" onclick="deleteTask(${i})"><i class="fa-solid fa-trash"></i></button></div></li>`; }); localStorage.setItem('anudeshak_tasks', JSON.stringify(tasks)); }
-        function addTask() { const input = document.getElementById('taskInput'); if (input.value.trim() === '') return; tasks.push({ text: input.value.trim(), completed: false }); input.value = ''; renderTasks(); }
-        function toggleTask(i) { tasks[i].completed = !tasks[i].completed; renderTasks(); }
-        function deleteTask(i) { tasks.splice(i, 1); renderTasks(); }
+        let taskHistory = JSON.parse(localStorage.getItem('anudeshak_task_history')) || [];
+        let lastLoginDate = localStorage.getItem('anudeshak_last_date') || new Date().toLocaleDateString('hi-IN');
+
+        // Check Midnight Reset
+        function checkMidnightReset() {
+            let today = new Date().toLocaleDateString('hi-IN');
+            if (today !== lastLoginDate) {
+                // Move completed tasks to history
+                let completedTasks = tasks.filter(t => t.completed);
+                completedTasks.forEach(t => {
+                    taskHistory.push({ text: t.text, date: lastLoginDate });
+                });
+                
+                // Keep only uncompleted tasks for the new day
+                tasks = tasks.filter(t => !t.completed);
+                
+                localStorage.setItem('anudeshak_tasks', JSON.stringify(tasks));
+                localStorage.setItem('anudeshak_task_history', JSON.stringify(taskHistory));
+                localStorage.setItem('anudeshak_last_date', today);
+                lastLoginDate = today;
+            }
+        }
+
+        // Run reset check on load
+        checkMidnightReset();
+
+        function renderTasks() { 
+            const list = document.getElementById('taskList'); 
+            list.innerHTML = ''; 
+            
+            if(tasks.length === 0) {
+                list.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:14px; padding: 20px;">कोई पेंडिंग टास्क नहीं है। नया टारगेट सेट करें!</div>`;
+            }
+
+            tasks.forEach((t, i) => { 
+                list.innerHTML += `
+                <li class="todo-item ${t.completed ? 'completed' : ''}">
+                    <span class="todo-text">${t.text}</span>
+                    <div class="todo-actions">
+                        <button class="btn-check" onclick="toggleTask(${i})" title="Mark Complete"><i class="fa-solid fa-check"></i></button>
+                        <button class="btn-delete" onclick="deleteTask(${i})" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                </li>`; 
+            }); 
+            localStorage.setItem('anudeshak_tasks', JSON.stringify(tasks)); 
+        }
+
+        function renderHistory() {
+            const hList = document.getElementById('historyList');
+            hList.innerHTML = '';
+            
+            if(taskHistory.length === 0) {
+                hList.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; padding: 10px;">अभी कोई हिस्ट्री नहीं है।</div>`;
+                return;
+            }
+
+            // Show newest first
+            let revHistory = [...taskHistory].reverse();
+            revHistory.forEach(h => {
+                hList.innerHTML += `
+                <li class="history-item">
+                    <span><i class="fa-solid fa-check-double" style="color:#10b981; margin-right:8px;"></i> ${h.text}</span>
+                    <span class="history-date">${h.date}</span>
+                </li>`;
+            });
+        }
+
+        function addTask() { 
+            const input = document.getElementById('taskInput'); 
+            if (input.value.trim() === '') return; 
+            
+            tasks.push({ text: input.value.trim(), completed: false }); 
+            input.value = ''; 
+            renderTasks(); 
+        }
+
+        function toggleTask(i) { 
+            tasks[i].completed = !tasks[i].completed; 
+            
+            // Gamification: Give XP when task is checked (only if turning from false to true)
+            if(tasks[i].completed && typeof addXP === "function") {
+                addXP(10); // +10 XP for completing a task!
+            }
+            
+            renderTasks(); 
+        }
+
+        function deleteTask(i) { 
+            tasks.splice(i, 1); 
+            renderTasks(); 
+        }
+
+        function toggleHistory() {
+            const hList = document.getElementById('historyList');
+            const icon = document.getElementById('historyIcon');
+            hList.classList.toggle('active');
+            if(hList.classList.contains('active')) {
+                icon.style.transform = "rotate(180deg)";
+            } else {
+                icon.style.transform = "rotate(0deg)";
+            }
+        }
+
+        // Initialize Render
         renderTasks();
+        renderHistory();
     </script>
 </body>
 </html>
