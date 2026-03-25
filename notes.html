@@ -1,1 +1,67 @@
-00000
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notes | Command Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
+                <li><a href="notes.html" class="nav-item active"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-book"></i> <span style="font-size: 14px; margin-left: 5px;">Quick Notes</span></div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                </div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>स्टडी नोट्स 📝</h1>
+                    <p>यहाँ अपने इम्पोर्टेन्ट पॉइंट्स सेव करें। यह डेटा आपके ब्राउज़र में सुरक्षित रहेगा।</p>
+                </div>
+                
+                <div style="background: var(--card-bg); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow);">
+                    <textarea id="noteArea" style="width: 100%; height: 300px; background: transparent; color: var(--text-main); border: none; outline: none; font-size: 16px; resize: none;" placeholder="यहाँ टाइप करना शुरू करें..."></textarea>
+                    <div style="text-align: right; margin-top: 15px;">
+                        <button onclick="saveNote()" style="background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: 0.3s;"><i class="fa-solid fa-floppy-disk"></i> Save Notes</button>
+                        <span id="save-msg" style="color: #10b981; margin-left: 10px; opacity: 0; transition: 0.3s;">Saved!</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Load notes from Local Storage
+        const noteArea = document.getElementById('noteArea');
+        noteArea.value = localStorage.getItem('anudeshak_notes') || "";
+
+        function saveNote() {
+            localStorage.setItem('anudeshak_notes', noteArea.value);
+            const msg = document.getElementById('save-msg');
+            msg.style.opacity = 1;
+            setTimeout(() => msg.style.opacity = 0, 2000);
+        }
+    </script>
+</body>
+</html>
