@@ -1,191 +1,136 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Focus Mode - Vishal Vaishnav</title>
+    <title>Focus Mode | Command Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #fff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            text-align: center;
+        .focus-container { text-align: center; background: var(--card-bg); padding: 50px 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 500px; margin: 0 auto; }
+        .timer-circle { 
+            width: 250px; height: 250px; margin: 0 auto 30px; border-radius: 50%; 
+            border: 8px solid rgba(0, 242, 254, 0.1); display: flex; justify-content: center; align-items: center; 
+            box-shadow: inset 0 0 30px rgba(0, 242, 254, 0.1), 0 0 30px rgba(0, 242, 254, 0.1);
+            position: relative;
         }
-        
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            max-width: 500px;
-            width: 90%;
-        }
-
-        h1 { margin-top: 0; color: #4facfe; font-size: 2.5rem; letter-spacing: 2px; }
-        p { color: #a0aabf; font-size: 1.1rem; margin-bottom: 30px; }
-
-        #timer-display {
-            font-size: 6rem;
-            font-weight: bold;
-            color: #00f2fe;
-            text-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
-            margin: 20px 0;
-            font-family: 'Courier New', monospace;
-        }
-
-        .btn-group { display: flex; gap: 15px; justify-content: center; margin-bottom: 30px; }
-
-        button {
-            background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 30px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            text-transform: uppercase;
-        }
-
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 242, 254, 0.4);
-        }
-
-        button#reset-btn {
-            background: transparent;
-            color: #ff4b2b;
-            border: 2px solid #ff4b2b;
-        }
-        button#reset-btn:hover { background: #ff4b2b; color: #fff; box-shadow: 0 10px 20px rgba(255, 75, 43, 0.4); }
-
-        #quote-box {
-            font-size: 1.2rem;
-            font-style: italic;
-            color: #e0e0e0;
-            min-height: 80px;
-            padding: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            margin-top: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            color: #4facfe;
-            text-decoration: none;
-            font-size: 1.1rem;
-            border-bottom: 1px solid transparent;
-            transition: 0.3s;
-        }
-        .back-link:hover { border-color: #4facfe; }
-
+        .timer-display { font-size: 60px; font-weight: 800; color: var(--accent); letter-spacing: 2px; text-shadow: 0 0 15px rgba(0,242,254,0.4); }
+        .timer-controls button { margin: 5px; padding: 12px 25px; font-size: 16px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; color: #fff; min-width: 120px; }
+        .btn-start { background: #10b981; } .btn-start:hover { box-shadow: 0 0 15px #10b981; transform: translateY(-2px); }
+        .btn-pause { background: #f59e0b; } .btn-pause:hover { box-shadow: 0 0 15px #f59e0b; transform: translateY(-2px); }
+        .btn-reset { background: #ef4444; } .btn-reset:hover { box-shadow: 0 0 15px #ef4444; transform: translateY(-2px); }
+        .status-text { margin-bottom: 20px; color: var(--text-muted); font-size: 18px; font-weight: 500; }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item active"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+            </ul>
+        </aside>
 
-    <div class="glass-panel">
-        <h1>DEEP FOCUS</h1>
-        <p>Target: Computer Anudeshak 2026</p>
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-stopwatch"></i> <span style="font-size: 14px; margin-left: 5px;">Pomodoro Timer</span></div>
+                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
+            </nav>
 
-        <div id="timer-display">25:00</div>
+            <div class="dashboard-content">
+                <div class="welcome-section" style="text-align: center;">
+                    <h1>Deep Focus Mode ⏱️</h1>
+                    <p>25 मिनट तक डिस्ट्रैक्शन फ्री पढ़ाई करें।</p>
+                </div>
 
-        <div class="btn-group">
-            <button id="start-btn" onclick="startTimer()">▶ Start Focus</button>
-            <button id="reset-btn" onclick="resetTimer()">🔄 Reset</button>
-        </div>
-
-        <div id="quote-box">
-            "पढ़ाई शुरू करने के लिए महान होने की ज़रूरत नहीं, पर महान होने के लिए शुरुआत करनी पड़ती है।"
-        </div>
+                <div class="focus-container">
+                    <div class="status-text" id="statusText">रेडी टू फोकस?</div>
+                    
+                    <div class="timer-circle" id="timerCircle">
+                        <div class="timer-display" id="timeDisplay">25:00</div>
+                    </div>
+                    
+                    <div class="timer-controls">
+                        <button class="btn-start" onclick="startTimer()"><i class="fa-solid fa-play"></i> Start</button>
+                        <button class="btn-pause" onclick="pauseTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
+                        <button class="btn-reset" onclick="resetTimer()"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <a href="index.html" class="back-link">← Back to Portfolio</a>
-
-<script>
-    let timerInterval;
-    let timeLeft = 1500; // 25 minutes
-    let isRunning = false;
-
-    // 10 High-Energy Motivational Quotes (Hindi/Hinglish)
-    const quotes = [
-        "सपने तुम्हारे हैं, तो मेहनत भी तुम्हें ही करनी पड़ेगी। कोई और तुम्हारे लिए नहीं पढ़ेगा!",
-        "आज का दर्द, कल की जीत है। 23 अगस्त 2026 याद रखना!",
-        "सक्सेस की कोई लिफ्ट नहीं होती, सीढ़ियों से ही जाना पड़ता है।",
-        "जितना बड़ा संघर्ष होगा, जीत उतनी ही शानदार होगी।",
-        "जब लोग सो रहे हों, तब तुम्हारा जागकर पढ़ना ही तुम्हें उनसे आगे ले जाएगा।",
-        "कंपटीशन बहुत है, पर तुम्हारा मुकाबला सिर्फ खुद के कल वाले वर्ज़न से है।",
-        "थक गए हो तो आराम कर लो, लेकिन हार मत मानो।",
-        "एक-एक मिनट कीमती है। जो समय बर्बाद कर रहा है, वो अपना भविष्य बर्बाद कर रहा है।",
-        "इरादे इतने मजबूत रखो कि मुश्किलें भी घुटने टेक दें।",
-        "यह 25 मिनट तय करेंगे कि तुम भीड़ का हिस्सा बनोगे या भीड़ का कारण!"
-    ];
-
-    function updateDisplay() {
-        let m = Math.floor(timeLeft / 60);
-        let s = timeLeft % 60;
-        document.getElementById("timer-display").innerText = 
-            (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
-    }
-
-    function changeQuote() {
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        document.getElementById("quote-box").innerText = '"' + quotes[randomIndex] + '"';
-    }
-
-    function startTimer() {
-        if (isRunning) return; // Prevent multiple clicks
-        isRunning = true;
-        document.getElementById("start-btn").innerText = "⏳ Focusing...";
+    <script src="script.js"></script>
+    <script>
+        let timeLeft = 25 * 60; // 25 Minutes in seconds
+        let timerInterval;
+        let isRunning = false;
         
-        // Change quote immediately when started
-        changeQuote();
+        const timeDisplay = document.getElementById('timeDisplay');
+        const statusText = document.getElementById('statusText');
+        const timerCircle = document.getElementById('timerCircle');
 
-        timerInterval = setInterval(function() {
-            if (timeLeft <= 0) {
+        function updateDisplay() {
+            let minutes = Math.floor(timeLeft / 60);
+            let seconds = timeLeft % 60;
+            timeDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+                statusText.innerText = "फोकस मोड ऑन है... पढ़ते रहें!";
+                statusText.style.color = "#10b981";
+                timerCircle.style.borderColor = "rgba(16, 185, 129, 0.5)";
+                timerCircle.style.boxShadow = "0 0 30px rgba(16, 185, 129, 0.2)";
+                
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateDisplay();
+                    } else {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        statusText.innerText = "सेशन पूरा हुआ! 5 मिनट का ब्रेक लें।";
+                        statusText.style.color = "#00f2fe";
+                        alert("फोकस सेशन कम्पलीट! शानदार काम विशाल।");
+                    }
+                }, 1000);
+            }
+        }
+
+        function pauseTimer() {
+            if (isRunning) {
                 clearInterval(timerInterval);
                 isRunning = false;
-                document.getElementById("timer-display").innerText = "00:00";
-                document.getElementById("start-btn").innerText = "▶ Start Again";
-                document.getElementById("quote-box").innerText = "शानदार! आपने 25 मिनट का फोकस पूरा कर लिया है। अब 5 मिनट का ब्रेक लें।";
-                
-                // Play a simple alert sound
-                let audio = new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg');
-                audio.play();
-                return;
+                statusText.innerText = "टाइमर पॉज्ड है। जल्दी वापस आएं!";
+                statusText.style.color = "#f59e0b";
+                timerCircle.style.borderColor = "rgba(245, 158, 11, 0.5)";
+                timerCircle.style.boxShadow = "0 0 30px rgba(245, 158, 11, 0.2)";
             }
-            timeLeft--;
+        }
+
+        function resetTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            timeLeft = 25 * 60;
             updateDisplay();
+            statusText.innerText = "रेडी टू फोकस?";
+            statusText.style.color = "var(--text-muted)";
+            timerCircle.style.borderColor = "rgba(0, 242, 254, 0.1)";
+            timerCircle.style.boxShadow = "inset 0 0 30px rgba(0, 242, 254, 0.1), 0 0 30px rgba(0, 242, 254, 0.1)";
+        }
 
-            // Change quote every 5 minutes (300 seconds) to keep motivation high
-            if (timeLeft % 300 === 0) {
-                changeQuote();
-            }
-
-        }, 1000);
-    }
-
-    function resetTimer() {
-        clearInterval(timerInterval);
-        isRunning = false;
-        timeLeft = 1500;
-        updateDisplay();
-        document.getElementById("start-btn").innerText = "▶ Start Focus";
-        document.getElementById("quote-box").innerText = "रीसेट हो गया। जब तैयार हों, तो फिर से शुरू करें!";
-    }
-</script>
-
+        updateDisplay(); // Initial call
+    </script>
 </body>
 </html>
