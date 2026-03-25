@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Notes | Anudeshak OS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .notes-wrapper { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; align-items: flex-start; }
+        
+        /* Notes Sidebar (List) */
+        .notes-list-container { flex: 1; min-width: 250px; background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(10px); max-height: 600px; display: flex; flex-direction: column; }
+        .add-note-btn { background: rgba(0, 242, 254, 0.1); color: var(--accent); border: 1px dashed var(--accent); padding: 12px; width: 100%; border-radius: 10px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 15px; display: flex; justify-content: center; align-items: center; gap: 8px; }
+        .add-note-btn:hover { background: var(--accent); color: #000; box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); }
+        .notes-list { margin-top: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; }
+        .note-item { background: rgba(0,0,0,0.2); border: 1px solid transparent; padding: 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; color: var(--text-main); }
+        .note-item:hover { background: rgba(255,255,255,0.05); border-color: var(--border-color); }
+        .note-item.active { background: rgba(0, 242, 254, 0.1); border-color: var(--accent); border-left: 4px solid var(--accent); }
+        .note-item-title { font-weight: 600; font-size: 15px; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .note-item-date { font-size: 11px; color: var(--text-muted); }
+
+        /* Note Editor */
+        .note-editor-container { flex: 2; min-width: 320px; background: var(--card-bg); padding: 25px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); backdrop-filter: blur(10px); display: flex; flex-direction: column; gap: 15px; height: 600px; }
+        .note-title-input { background: transparent; border: none; border-bottom: 2px solid var(--border-color); color: var(--text-main); font-size: 22px; font-weight: 700; padding: 10px 5px; outline: none; transition: 0.3s; width: 100%; }
+        .note-title-input:focus { border-color: var(--accent); }
+        .note-content-input { flex: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-main); font-size: 16px; padding: 15px; border-radius: 10px; outline: none; resize: none; line-height: 1.6; transition: 0.3s; font-family: inherit; }
+        .note-content-input:focus { border-color: var(--accent); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        
+        .editor-actions { display: flex; justify-content: flex-end; gap: 15px; margin-top: 10px; }
+        .btn-action { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; }
+        .btn-delete:hover { background: #ef4444; color: #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        .btn-save { background: var(--accent); color: #000; box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        .btn-save:hover { background: var(--text-main); box-shadow: 0 0 20px rgba(255,255,255,0.4); }
+
+        /* Custom Scrollbar for Textarea & List */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header"><h2><i class="fa-solid fa-microchip"></i> Anudeshak OS</h2></div>
+            
+            <div class="user-game-profile" style="padding: 0 20px 20px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--bg-color); box-shadow: 0 0 15px var(--accent);"><i class="fa-solid fa-user-astronaut"></i></div>
+                <h4 style="color: var(--text-main); font-size: 16px;">Aspirant</h4>
+                <div style="color: var(--accent); font-size: 12px; font-weight: bold; margin: 5px 0;" id="user-level">Level 1: Noob</div>
+                <div style="background: var(--bg-color); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; border: 1px solid var(--border-color);"><div id="xp-progress" style="background: var(--accent); height: 100%; width: 0%; transition: 0.5s;"></div></div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;"><span id="user-xp">0</span> / 100 XP</div>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Flashcards & Quiz</a></li>
+                <li><a href="notes.html" class="nav-item active"><i class="fa-solid fa-book"></i> Smart Notes</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Developer</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div style="color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-book-open"></i> <span>Smart Digital Vault</span></div>
+                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1 style="background: linear-gradient(to right, #f59e0b, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Study Notes 📝</h1>
+                    <p>अपने इम्पोर्टेन्ट पॉइंट्स यहाँ सेव करें। आपका डेटा ब्राउज़र में सुरक्षित है।</p>
+                </div>
+
+                <div class="notes-wrapper">
+                    <div class="notes-list-container">
+                        <button class="add-note-btn" onclick="createNewNote()"><i class="fa-solid fa-plus"></i> New Note</button>
+                        <div class="notes-list" id="notesList">
+                            </div>
+                    </div>
+
+                    <div class="note-editor-container">
+                        <input type="text" id="noteTitle" class="note-title-input" placeholder="Title (e.g., PGDCA DBMS Notes)...">
+                        <textarea id="noteContent" class="note-content-input" placeholder="यहाँ टाइप करना शुरू करें..."></textarea>
+                        
+                        <div class="editor-actions">
+                            <button class="btn-action btn-delete" onclick="deleteNote()" id="btnDelete" style="display: none;"><i class="fa-solid fa-trash"></i> Delete</button>
+                            <button class="btn-action btn-save" onclick="saveNote()"><i class="fa-solid fa-floppy-disk"></i> Save Note</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-box glass-box">
+            <div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> Developer</h3><i class="fa-solid fa-xmark close-modal" id="close-modal-btn"></i></div>
+            <div class="contact-body">
+                <div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div>
+                <div class="contact-links-list">
+                    <a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a>
+                    <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a>
+                    <a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // --- Multi-Notes Logic ---
+        let notesData = JSON.parse(localStorage.getItem('anudeshak_multinotes')) || [];
+        let currentNoteId = null;
+
+        // Auto-migrate old plain text note if exists
+        let oldSingleNote = localStorage.getItem('anudeshak_notes');
+        if (oldSingleNote && notesData.length === 0) {
+            notesData.push({ id: Date.now(), title: "My First Note", content: oldSingleNote, date: new Date().toLocaleDateString() });
+            localStorage.setItem('anudeshak_multinotes', JSON.stringify(notesData));
+            localStorage.removeItem('anudeshak_notes'); // Clean up old data
+        }
+
+        const notesListEl = document.getElementById('notesList');
+        const titleInput = document.getElementById('noteTitle');
+        const contentInput = document.getElementById('noteContent');
+        const btnDelete = document.getElementById('btnDelete');
+
+        function renderNotesList() {
+            notesListEl.innerHTML = '';
+            
+            if(notesData.length === 0) {
+                notesListEl.innerHTML = `<div style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:20px;">अभी कोई नोट्स नहीं हैं। नया नोट बनाएं!</div>`;
+                return;
+            }
+
+            // Sort by newest first
+            let sortedNotes = [...notesData].sort((a,b) => b.id - a.id);
+
+            sortedNotes.forEach(note => {
+                let div = document.createElement('div');
+                div.className = `note-item ${currentNoteId === note.id ? 'active' : ''}`;
+                div.innerHTML = `
+                    <div class="note-item-title">${note.title || "Untitled Note"}</div>
+                    <div class="note-item-date"><i class="fa-regular fa-clock"></i> ${note.date}</div>
+                `;
+                div.onclick = () => openNote(note.id);
+                notesListEl.appendChild(div);
+            });
+        }
+
+        function createNewNote() {
+            currentNoteId = null;
+            titleInput.value = "";
+            contentInput.value = "";
+            btnDelete.style.display = "none";
+            renderNotesList();
+            titleInput.focus();
+        }
+
+        function openNote(id) {
+            currentNoteId = id;
+            let note = notesData.find(n => n.id === id);
+            if(note) {
+                titleInput.value = note.title;
+                contentInput.value = note.content;
+                btnDelete.style.display = "flex";
+            }
+            renderNotesList(); // update active class
+        }
+
+        function saveNote() {
+            let title = titleInput.value.trim() || "Untitled Note";
+            let content = contentInput.value.trim();
+            let today = new Date().toLocaleDateString('hi-IN');
+
+            if (content === "") {
+                alert("कृपया नोट्स में कुछ लिखें!");
+                return;
+            }
+
+            if (currentNoteId) {
+                // Update existing
+                let noteIndex = notesData.findIndex(n => n.id === currentNoteId);
+                if(noteIndex !== -1) {
+                    notesData[noteIndex].title = title;
+                    notesData[noteIndex].content = content;
+                    notesData[noteIndex].date = today;
+                }
+            } else {
+                // Create new
+                let newNote = { id: Date.now(), title: title, content: content, date: today };
+                notesData.push(newNote);
+                currentNoteId = newNote.id;
+                btnDelete.style.display = "flex";
+                
+                // Reward XP for creating a new note
+                if(typeof addXP === "function") {
+                    addXP(5); 
+                }
+            }
+
+            localStorage.setItem('anudeshak_multinotes', JSON.stringify(notesData));
+            renderNotesList();
+            
+            // Show saved effect
+            const saveBtn = document.querySelector('.btn-save');
+            let originalText = saveBtn.innerHTML;
+            saveBtn.innerHTML = `<i class="fa-solid fa-check"></i> Saved!`;
+            saveBtn.style.background = "#10b981";
+            setTimeout(() => {
+                saveBtn.innerHTML = originalText;
+                saveBtn.style.background = "var(--accent)";
+            }, 1500);
+        }
+
+        function deleteNote() {
+            if(!currentNoteId) return;
+            if(confirm("क्या आप सच में इस नोट को डिलीट करना चाहते हैं?")) {
+                notesData = notesData.filter(n => n.id !== currentNoteId);
+                localStorage.setItem('anudeshak_multinotes', JSON.stringify(notesData));
+                createNewNote(); // Reset editor
+            }
+        }
+
+        // Initialize
+        if(notesData.length > 0) {
+            // Open the most recent note by default
+            let latestNote = [...notesData].sort((a,b) => b.id - a.id)[0];
+            openNote(latestNote.id);
+        } else {
+            createNewNote();
+        }
+    </script>
+</body>
+</html>
