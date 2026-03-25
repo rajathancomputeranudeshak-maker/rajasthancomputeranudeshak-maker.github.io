@@ -3,148 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishal Vaishnav - Command Center</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Anudeshak Dashboard | Vishal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="particles-js"></div>
 
-    <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3"></audio>
-
-    <nav class="navbar">
-        <div class="logo"><i class="fa-solid fa-terminal"></i> Vishal.</div>
-        <ul class="nav-links">
-            <li><a href="#home" class="nav-item">Dashboard</a></li>
-            <li><a href="#stats" class="nav-item">Stats</a></li>
-            <li><a href="#about" class="nav-item">About</a></li>
-            <li><a href="#photos" class="nav-item">Photos</a></li>
-            <li><a href="#contact" class="nav-item">Contact</a></li>
-        </ul>
-    </nav>
-
-    <section id="home">
-        <div class="profile-glow">
-            <img src="vishalnew.jpg" alt="Vishal Vaishnav" class="profile-pic">
-        </div>
-        <h1>विशाल वैष्णव</h1>
-        <div class="typing-text" id="typewriter"></div>
-        
-        <div class="countdown-container">
-            <h3><i class="fa-solid fa-hourglass-half"></i> Computer Anudeshak Exam</h3>
-            <p class="target-date">23 August 2026</p>
-            <div id="countdown" class="neon-text">Loading Timer...</div>
-        </div>
-
-        <div class="app-grid">
-            <a href="typing.html" class="app-card play-sound">
-                <div class="badge">PRO</div>
-                <i class="fa-solid fa-keyboard app-icon"></i>
-                <div class="app-title">Terminal Typing</div>
-                <div class="app-desc">Live accuracy tracking with syllabus text.</div>
-            </a>
-            <a href="tracker.html" class="app-card play-sound">
-                <i class="fa-regular fa-calendar-check app-icon"></i>
-                <div class="app-title">Attendance Matrix</div>
-                <div class="app-desc">Maintain the green streak until exam day.</div>
-            </a>
-            <a href="focus.html" class="app-card play-sound">
-                <i class="fa-solid fa-stopwatch app-icon"></i>
-                <div class="app-title">Deep Focus Mode</div>
-                <div class="app-desc">25-Min Pomodoro timer with dynamic quotes.</div>
-            </a>
-            <a href="quiz.html" class="app-card play-sound">
-                <i class="fa-solid fa-brain app-icon"></i>
-                <div class="app-title">Computer Quiz</div>
-                <div class="app-desc">Test fundamentals with interactive MCQs.</div>
-            </a>
-        </div>
-    </section>
-
-    <section id="stats">
-        <h2 class="section-title">Preparation Stats</h2>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <i class="fa-solid fa-fire"></i>
-                <h3 id="streak-count">0</h3>
-                <p>Day Streak</p>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
             </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-code"></i>
-                <h3>HTML/CSS/JS</h3>
-                <p>Core Skills</p>
-            </div>
-            <div class="stat-card">
-                <i class="fa-solid fa-crosshairs"></i>
-                <h3>100%</h3>
-                <p>Focus Level</p>
-            </div>
-        </div>
-    </section>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item active"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes (New)</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do (New)</a></li>
+            </ul>
+        </aside>
 
-    <section id="about">
-        <h2 class="section-title">About Commander</h2>
-        <div class="glass-box">
-            <p><i class="fa-solid fa-location-dot"></i> प्रतापगढ़ जिले के सिद्धपुरा गाँव से सीधा लाइव।</p>
-            <p><i class="fa-solid fa-bullseye"></i> <strong>मिशन:</strong> राजस्थान कंप्यूटर अनुदेशक एग्जाम (23 अगस्त 2026)।</p>
-            <p><i class="fa-solid fa-laptop-code"></i> वेब डेवलपमेंट, कोडिंग और टेक्नोलॉजी मेरा जुनून है। यह कमांड सेंटर मेरी तैयारी का मुख्य बेस है।</p>
-        </div>
-    </section>
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="search-bar" style="color: var(--text-muted);">
+                    <i class="fa-solid fa-magnifying-glass"></i> <span style="font-size: 14px; margin-left: 5px;">Dashboard</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle" title="Toggle Light/Dark Mode">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;">
+                        <img src="vishalnew.jpg" alt="Profile" style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent);">
+                        <span style="font-weight: 500; font-size: 14px;">Vishal V.</span>
+                    </div>
+                </div>
+            </nav>
 
-    <section id="photos">
-        <h2 class="section-title">Visual Logs</h2>
-        <div class="slider-container">
-            <button class="slider-btn prev play-sound" onclick="changeSlide(-1)">❮</button>
-            <button class="slider-btn next play-sound" onclick="changeSlide(1)">❯</button>
-            <div class="slides" id="slides">
-                <img src="vishal1.jpeg" alt="Log 1">
-                <img src="vishal2.jpeg" alt="Log 2">
-                <img src="vishal3.jpeg" alt="Log 3">
-                <img src="vishal4.jpeg" alt="Log 4">
-                <img src="vishal5.jpeg" alt="Log 5">
-                <img src="vishal6.jpeg" alt="Log 6">
-            </div>
-            <div class="slider-dots" id="dots-container"></div>
-        </div>
-    </section>
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>वेलकम बैक, विशाल! 👋</h1>
+                    <p>तुम्हारी कंप्यूटर अनुदेशक की तैयारी का स्टेटस यहाँ है।</p>
+                </div>
 
-    <section id="contact" style="min-height: 60vh;">
-        <h2 class="section-title">Comms Channel</h2>
-        <div class="glass-box text-center">
-            <p><i class="fa-solid fa-phone"></i> 6367180391</p>
-            <p><i class="fa-solid fa-envelope"></i> vishalvaishnav7023@gmail.com</p>
-            <div class="social-links mt-3">
-                <a href="https://wa.me/916367180391" target="_blank" class="neon-btn play-sound"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
-                <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="neon-btn play-sound"><i class="fa-brands fa-instagram"></i> Instagram</a>
-            </div>
-        </div>
-    </section>
+                <div class="quote-card">
+                    <i class="fa-solid fa-quote-left"></i>
+                    <p id="daily-quote">लोड हो रहा है...</p>
+                </div>
 
-    <footer>
-        <p>&copy; 2026 Vishal Vaishnav | Built for Computer Anudeshak Mission</p>
-    </footer>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-hourglass-half"></i></div>
+                        <div class="stat-info">
+                            <h3 id="countdown-timer">--</h3>
+                            <p>Exam Countdown</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: #10b981; background: rgba(16, 185, 129, 0.1);"><i class="fa-solid fa-fire"></i></div>
+                        <div class="stat-info">
+                            <h3>12 Days</h3>
+                            <p>Study Streak</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: #f59e0b; background: rgba(245, 158, 11, 0.1);"><i class="fa-solid fa-keyboard"></i></div>
+                        <div class="stat-info">
+                            <h3>45 WPM</h3>
+                            <p>Typing Speed</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: #8b5cf6; background: rgba(139, 92, 246, 0.1);"><i class="fa-solid fa-bullseye"></i></div>
+                        <div class="stat-info">
+                            <h3>14</h3>
+                            <p>Focus Sessions</p>
+                        </div>
+                    </div>
+                </div>
 
-    <div id="scrollTop" class="play-sound"><i class="fa-solid fa-arrow-up"></i></div>
+                </div>
+        </main>
+    </div>
 
-    <div class="chat-btn play-sound" onclick="toggleChat()"><i class="fa-solid fa-robot"></i></div>
-    <div class="chat-box glass-box" id="aiChatBox">
+    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
+    <div class="chat-box" id="aiChatBox">
         <div class="chat-header">
-            <span><i class="fa-solid fa-microchip"></i> Anudeshak AI</span>
-            <span class="close-chat play-sound" onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></span>
+            <span><i class="fa-solid fa-robot"></i> Assistant</span>
+            <i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="msg bot-msg">सिस्टम ऑनलाइन। मैं विशाल का AI हूँ। कमांड दें?</div>
+            <div class="msg bot-msg">नमस्ते विशाल! मैं तुम्हारा पर्सनल असिस्टेंट हूँ।</div>
         </div>
         <div class="chat-input-area">
             <input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)">
-            <button class="play-sound" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            <button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
