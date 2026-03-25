@@ -10,22 +10,15 @@
         .tracker-container { background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
         .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
         .tracker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(35px, 1fr)); gap: 8px; margin-top: 20px; }
-        .day-box { 
-            width: 100%; aspect-ratio: 1; background: var(--bg-color); border: 1px solid var(--border-color); 
-            border-radius: 6px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; 
-            font-size: 12px; color: var(--text-muted); font-weight: bold;
-        }
-        .day-box:hover { border-color: var(--accent); transform: scale(1.1); }
-        .day-box.completed { background: #10b981; border-color: #10b981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .day-box { width: 100%; aspect-ratio: 1; background: var(--bg-color); border: 1px solid var(--border-color); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
+        .day-box.completed { background: #10b981; border-color: #10b981; color: white; }
         .stats-badge { background: rgba(0, 242, 254, 0.1); color: var(--accent); padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--accent); }
     </style>
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
-            </div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
@@ -34,6 +27,7 @@
                 <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
                 <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
                 <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
             </ul>
         </aside>
 
@@ -41,71 +35,36 @@
             <nav class="top-navbar">
                 <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
                 <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-calendar-check"></i> <span style="font-size: 14px; margin-left: 5px;">Consistency Tracker</span></div>
-                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
+                </div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section" style="text-align: center;">
-                    <h1>Attendance Matrix 📅</h1>
-                    <p>अनुदेशक एग्जाम तक अपनी कंसिस्टेंसी (Consistency) बनाए रखें।</p>
-                </div>
-
+                <div class="welcome-section" style="text-align: center;"><h1>Attendance Matrix 📅</h1></div>
                 <div class="tracker-container">
-                    <div class="tracker-header">
-                        <h3>153 Days Challenge</h3>
-                        <div class="stats-badge" id="completed-count">Completed: 0 / 153</div>
-                    </div>
+                    <div class="tracker-header"><h3>153 Days Challenge</h3><div class="stats-badge" id="completed-count">Completed: 0 / 153</div></div>
                     <div class="tracker-grid" id="trackerGrid"></div>
-                    <div style="text-align: center; margin-top: 20px;">
-                        <button onclick="resetTracker()" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s;">Reset Matrix</button>
-                    </div>
+                    <div style="text-align: center; margin-top: 20px;"><button onclick="resetTracker()" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 8px 15px; border-radius: 8px; cursor: pointer;">Reset Matrix</button></div>
                 </div>
             </div>
         </main>
     </div>
 
+    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
+    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
+    
+    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+
     <script src="script.js"></script>
     <script>
-        const totalDays = 153;
-        const grid = document.getElementById('trackerGrid');
-        const countDisplay = document.getElementById('completed-count');
-        
-        // Load saved data
+        const totalDays = 153; const grid = document.getElementById('trackerGrid'); const countDisplay = document.getElementById('completed-count');
         let savedTracker = JSON.parse(localStorage.getItem('anudeshak_tracker')) || Array(totalDays).fill(false);
-
-        function updateCount() {
-            const completed = savedTracker.filter(day => day).length;
-            countDisplay.innerText = `Completed: ${completed} / ${totalDays}`;
-        }
-
-        function toggleDay(index, box) {
-            savedTracker[index] = !savedTracker[index];
-            box.classList.toggle('completed');
-            localStorage.setItem('anudeshak_tracker', JSON.stringify(savedTracker));
-            updateCount();
-        }
-
-        function createGrid() {
-            grid.innerHTML = '';
-            for (let i = 0; i < totalDays; i++) {
-                let box = document.createElement('div');
-                box.className = 'day-box';
-                box.innerText = i + 1;
-                if (savedTracker[i]) box.classList.add('completed');
-                box.onclick = () => toggleDay(i, box);
-                grid.appendChild(box);
-            }
-            updateCount();
-        }
-
-        function resetTracker() {
-            if(confirm("क्या आप सच में पूरी प्रोग्रेस रिसेट करना चाहते हैं?")) {
-                savedTracker = Array(totalDays).fill(false);
-                localStorage.setItem('anudeshak_tracker', JSON.stringify(savedTracker));
-                createGrid();
-            }
-        }
-
+        function updateCount() { const completed = savedTracker.filter(day => day).length; countDisplay.innerText = `Completed: ${completed} / ${totalDays}`; }
+        function toggleDay(index, box) { savedTracker[index] = !savedTracker[index]; box.classList.toggle('completed'); localStorage.setItem('anudeshak_tracker', JSON.stringify(savedTracker)); updateCount(); }
+        function createGrid() { grid.innerHTML = ''; for (let i = 0; i < totalDays; i++) { let box = document.createElement('div'); box.className = 'day-box'; box.innerText = i + 1; if (savedTracker[i]) box.classList.add('completed'); box.onclick = () => toggleDay(i, box); grid.appendChild(box); } updateCount(); }
+        function resetTracker() { if(confirm("पूरी प्रोग्रेस रिसेट करें?")) { savedTracker = Array(totalDays).fill(false); localStorage.setItem('anudeshak_tracker', JSON.stringify(savedTracker)); createGrid(); } }
         createGrid();
     </script>
 </body>
