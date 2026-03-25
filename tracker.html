@@ -1,92 +1,112 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Matrix - Anudeshak 2026</title>
+    <title>Tracker | Command Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { background-color: #050505; color: #00ff41; font-family: 'Courier New', monospace; text-align: center; padding: 20px; margin: 0; }
-        h1 { letter-spacing: 3px; text-transform: uppercase; text-shadow: 0 0 10px #00ff41; margin-bottom: 5px; }
-        #today-date { font-size: 1.5rem; color: #fff; margin-bottom: 20px; font-weight: bold; text-shadow: 0 0 15px #ffffff; background: rgba(255, 255, 255, 0.1); display: inline-block; padding: 10px 20px; border: 1px solid #fff; border-radius: 5px; }
-        .info-panel { margin-bottom: 30px; font-size: 0.9rem; color: #ccc; }
-        #calendar-grid { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; max-width: 800px; margin: 0 auto; padding: 20px; border: 1px dashed #00ff41; background: rgba(0, 20, 0, 0.5); }
-        .day-box { width: 40px; height: 40px; border: 1px solid #333; background-color: #111; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; cursor: pointer; border-radius: 4px; transition: 0.2s; }
-        .day-box:hover { border-color: #00ff41; transform: scale(1.1); }
-        .present { background-color: #00ff41; color: #000; border-color: #00ff41; box-shadow: 0 0 10px #00ff41; }
-        .absent { background-color: #ff0000; color: #fff; border-color: #ff0000; box-shadow: 0 0 10px #ff0000; }
-        button.back-btn { margin-top: 30px; padding: 12px 25px; background: transparent; color: #00ff41; border: 2px solid #00ff41; cursor: pointer; font-family: inherit; font-weight: bold; text-transform: uppercase; transition: 0.3s; }
-        button.back-btn:hover { background: #00ff41; color: #000; box-shadow: 0 0 15px #00ff41; }
+        .tracker-container { background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); }
+        .tracker-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+        .tracker-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(35px, 1fr)); gap: 8px; margin-top: 20px; }
+        .day-box { 
+            width: 100%; aspect-ratio: 1; background: var(--bg-color); border: 1px solid var(--border-color); 
+            border-radius: 6px; cursor: pointer; transition: 0.3s; display: flex; align-items: center; justify-content: center; 
+            font-size: 12px; color: var(--text-muted); font-weight: bold;
+        }
+        .day-box:hover { border-color: var(--accent); transform: scale(1.1); }
+        .day-box.completed { background: #10b981; border-color: #10b981; color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.4); }
+        .stats-badge { background: rgba(0, 242, 254, 0.1); color: var(--accent); padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--accent); }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item active"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+            </ul>
+        </aside>
 
-    <h1>TARGET: 23 AUG 2026</h1>
-    <div id="today-date">[ LOADING DATE... ]</div>
-    <div class="info-panel">
-        [ CLICK ONCE: <span style="color:#00ff41;">PRESENT (GREEN)</span> ] | [ CLICK TWICE: <span style="color:#ff0000;">ABSENT (RED)</span> ]
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-calendar-check"></i> <span style="font-size: 14px; margin-left: 5px;">Consistency Tracker</span></div>
+                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="welcome-section" style="text-align: center;">
+                    <h1>Attendance Matrix 📅</h1>
+                    <p>अनुदेशक एग्जाम तक अपनी कंसिस्टेंसी (Consistency) बनाए रखें।</p>
+                </div>
+
+                <div class="tracker-container">
+                    <div class="tracker-header">
+                        <h3>153 Days Challenge</h3>
+                        <div class="stats-badge" id="completed-count">Completed: 0 / 153</div>
+                    </div>
+                    <div class="tracker-grid" id="trackerGrid"></div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button onclick="resetTracker()" style="background: transparent; color: #ef4444; border: 1px solid #ef4444; padding: 8px 15px; border-radius: 8px; cursor: pointer; transition: 0.3s;">Reset Matrix</button>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div id="calendar-grid"></div>
+    <script src="script.js"></script>
+    <script>
+        const totalDays = 153;
+        const grid = document.getElementById('trackerGrid');
+        const countDisplay = document.getElementById('completed-count');
+        
+        // Load saved data
+        let savedTracker = JSON.parse(localStorage.getItem('anudeshak_tracker')) || Array(totalDays).fill(false);
 
-    <button class="back-btn" onclick="window.location.href='index.html'">🔙 BACK TO MAIN DASHBOARD</button>
-
-<script>
-    // Self-executing safe block
-    (function() {
-        try {
-            // 1. DATE LOGIC
-            const todayElement = document.getElementById('today-date');
-            if(todayElement) {
-                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-                const currentDate = new Date().toLocaleDateString('en-IN', options);
-                todayElement.innerText = "📅 TODAY: " + currentDate.toUpperCase();
-            }
-
-            // 2. MATRIX LOGIC
-            const totalDays = 153; 
-            const grid = document.getElementById('calendar-grid');
-            
-            // Safe Storage - Changed variable name to reset old bugs
-            let attendanceData = {};
-            try {
-                let savedData = localStorage.getItem('anudeshak_v2');
-                if(savedData) { attendanceData = JSON.parse(savedData); }
-            } catch(e) { console.log("Memory reset done."); attendanceData = {}; }
-
-            if(grid) {
-                for (let i = 1; i <= totalDays; i++) {
-                    let box = document.createElement('div');
-                    box.className = 'day-box';
-                    box.innerText = i;
-                    box.dataset.day = i;
-
-                    if (attendanceData[i] === 'present') { box.classList.add('present'); } 
-                    else if (attendanceData[i] === 'absent') { box.classList.add('absent'); }
-
-                    box.addEventListener('click', function() {
-                        let dayNum = this.dataset.day;
-                        if (this.classList.contains('present')) {
-                            this.classList.remove('present'); 
-                            this.classList.add('absent');
-                            attendanceData[dayNum] = 'absent';
-                        } else if (this.classList.contains('absent')) {
-                            this.classList.remove('absent'); 
-                            delete attendanceData[dayNum];
-                        } else {
-                            this.classList.add('present'); 
-                            attendanceData[dayNum] = 'present';
-                        }
-                        localStorage.setItem('anudeshak_v2', JSON.stringify(attendanceData));
-                    });
-                    grid.appendChild(box);
-                }
-            }
-        } catch (error) {
-            console.error("Script failed:", error);
-            document.getElementById('today-date').innerText = "SYSTEM ERROR: PLEASE REFRESH";
+        function updateCount() {
+            const completed = savedTracker.filter(day => day).length;
+            countDisplay.innerText = `Completed: ${completed} / ${totalDays}`;
         }
-    })();
-</script>
 
+        function toggleDay(index, box) {
+            savedTracker[index] = !savedTracker[index];
+            box.classList.toggle('completed');
+            localStorage.setItem('anudeshak_tracker', JSON.stringify(savedTracker));
+            updateCount();
+        }
+
+        function createGrid() {
+            grid.innerHTML = '';
+            for (let i = 0; i < totalDays; i++) {
+                let box = document.createElement('div');
+                box.className = 'day-box';
+                box.innerText = i + 1;
+                if (savedTracker[i]) box.classList.add('completed');
+                box.onclick = () => toggleDay(i, box);
+                grid.appendChild(box);
+            }
+            updateCount();
+        }
+
+        function resetTracker() {
+            if(confirm("क्या आप सच में पूरी प्रोग्रेस रिसेट करना चाहते हैं?")) {
+                savedTracker = Array(totalDays).fill(false);
+                localStorage.setItem('anudeshak_tracker', JSON.stringify(savedTracker));
+                createGrid();
+            }
+        }
+
+        createGrid();
+    </script>
 </body>
 </html>
