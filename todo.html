@@ -1,1 +1,106 @@
-0000
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List | Command Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .todo-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .todo-input-group input { flex: 1; padding: 12px 15px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; outline: none; }
+        .todo-input-group input:focus { border-color: var(--accent); }
+        .todo-input-group button { background: var(--accent); color: #fff; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        .todo-list { list-style: none; }
+        .todo-item { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); }
+        .todo-item.completed span { text-decoration: line-through; color: var(--text-muted); }
+        .todo-actions button { background: none; border: none; cursor: pointer; font-size: 16px; margin-left: 10px; }
+        .btn-check { color: #10b981; } .btn-delete { color: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="todo.html" class="nav-item active"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-list-check"></i> <span style="font-size: 14px; margin-left: 5px;">Task Manager</span></div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                </div>
+            </nav>
+
+            <div class="dashboard-content">
+                <div class="welcome-section">
+                    <h1>डेली टारगेट्स ✅</h1>
+                    <p>आज क्या पढ़ना है? अपना टास्क ऐड करें।</p>
+                </div>
+                
+                <div style="max-width: 600px;">
+                    <div class="todo-input-group">
+                        <input type="text" id="taskInput" placeholder="नया टास्क लिखें (e.g. HTML रिवीजन)..." onkeypress="if(event.key === 'Enter') addTask()">
+                        <button onclick="addTask()">Add</button>
+                    </div>
+                    <ul class="todo-list" id="taskList"></ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('anudeshak_tasks')) || [];
+
+        function renderTasks() {
+            const list = document.getElementById('taskList');
+            list.innerHTML = '';
+            tasks.forEach((task, index) => {
+                list.innerHTML += `
+                    <li class="todo-item ${task.completed ? 'completed' : ''}">
+                        <span>${task.text}</span>
+                        <div class="todo-actions">
+                            <button class="btn-check" onclick="toggleTask(${index})"><i class="fa-solid fa-check"></i></button>
+                            <button class="btn-delete" onclick="deleteTask(${index})"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </li>
+                `;
+            });
+            localStorage.setItem('anudeshak_tasks', JSON.stringify(tasks));
+        }
+
+        function addTask() {
+            const input = document.getElementById('taskInput');
+            if (input.value.trim() === '') return;
+            tasks.push({ text: input.value.trim(), completed: false });
+            input.value = '';
+            renderTasks();
+        }
+
+        function toggleTask(index) {
+            tasks[index].completed = !tasks[index].completed;
+            renderTasks();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            renderTasks();
+        }
+
+        renderTasks(); // Initial load
+    </script>
+</body>
+</html>
