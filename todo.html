@@ -9,7 +9,6 @@
     <style>
         .todo-input-group { display: flex; gap: 10px; margin-bottom: 20px; }
         .todo-input-group input { flex: 1; padding: 12px 15px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); border-radius: 8px; outline: none; }
-        .todo-input-group input:focus { border-color: var(--accent); }
         .todo-input-group button { background: var(--accent); color: #fff; border: none; padding: 0 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
         .todo-list { list-style: none; }
         .todo-item { display: flex; justify-content: space-between; align-items: center; background: var(--card-bg); padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border: 1px solid var(--border-color); }
@@ -21,9 +20,7 @@
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
-            </div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
@@ -32,6 +29,7 @@
                 <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
                 <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
                 <li><a href="todo.html" class="nav-item active"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
             </ul>
         </aside>
 
@@ -41,66 +39,33 @@
                 <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-list-check"></i> <span style="font-size: 14px; margin-left: 5px;">Task Manager</span></div>
                 <div class="nav-actions">
                     <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
                 </div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section">
-                    <h1>डेली टारगेट्स ✅</h1>
-                    <p>आज क्या पढ़ना है? अपना टास्क ऐड करें।</p>
-                </div>
-                
+                <div class="welcome-section"><h1>डेली टारगेट्स ✅</h1><p>आज क्या पढ़ना है? अपना टास्क ऐड करें।</p></div>
                 <div style="max-width: 600px;">
-                    <div class="todo-input-group">
-                        <input type="text" id="taskInput" placeholder="नया टास्क लिखें (e.g. HTML रिवीजन)..." onkeypress="if(event.key === 'Enter') addTask()">
-                        <button onclick="addTask()">Add</button>
-                    </div>
+                    <div class="todo-input-group"><input type="text" id="taskInput" placeholder="नया टास्क लिखें..." onkeypress="if(event.key === 'Enter') addTask()"><button onclick="addTask()">Add</button></div>
                     <ul class="todo-list" id="taskList"></ul>
                 </div>
             </div>
         </main>
     </div>
 
+    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
+    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
+    
+    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+
     <script src="script.js"></script>
     <script>
         let tasks = JSON.parse(localStorage.getItem('anudeshak_tasks')) || [];
-
-        function renderTasks() {
-            const list = document.getElementById('taskList');
-            list.innerHTML = '';
-            tasks.forEach((task, index) => {
-                list.innerHTML += `
-                    <li class="todo-item ${task.completed ? 'completed' : ''}">
-                        <span>${task.text}</span>
-                        <div class="todo-actions">
-                            <button class="btn-check" onclick="toggleTask(${index})"><i class="fa-solid fa-check"></i></button>
-                            <button class="btn-delete" onclick="deleteTask(${index})"><i class="fa-solid fa-trash"></i></button>
-                        </div>
-                    </li>
-                `;
-            });
-            localStorage.setItem('anudeshak_tasks', JSON.stringify(tasks));
-        }
-
-        function addTask() {
-            const input = document.getElementById('taskInput');
-            if (input.value.trim() === '') return;
-            tasks.push({ text: input.value.trim(), completed: false });
-            input.value = '';
-            renderTasks();
-        }
-
-        function toggleTask(index) {
-            tasks[index].completed = !tasks[index].completed;
-            renderTasks();
-        }
-
-        function deleteTask(index) {
-            tasks.splice(index, 1);
-            renderTasks();
-        }
-
-        renderTasks(); // Initial load
+        function renderTasks() { const list = document.getElementById('taskList'); list.innerHTML = ''; tasks.forEach((t, i) => { list.innerHTML += `<li class="todo-item ${t.completed ? 'completed' : ''}"><span>${t.text}</span><div class="todo-actions"><button class="btn-check" onclick="toggleTask(${i})"><i class="fa-solid fa-check"></i></button><button class="btn-delete" onclick="deleteTask(${i})"><i class="fa-solid fa-trash"></i></button></div></li>`; }); localStorage.setItem('anudeshak_tasks', JSON.stringify(tasks)); }
+        function addTask() { const input = document.getElementById('taskInput'); if (input.value.trim() === '') return; tasks.push({ text: input.value.trim(), completed: false }); input.value = ''; renderTasks(); }
+        function toggleTask(i) { tasks[i].completed = !tasks[i].completed; renderTasks(); }
+        function deleteTask(i) { tasks.splice(i, 1); renderTasks(); }
+        renderTasks();
     </script>
 </body>
 </html>
