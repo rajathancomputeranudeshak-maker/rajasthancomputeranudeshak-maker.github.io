@@ -3,69 +3,260 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Computer Quiz | Command Center</title>
+    <title>Quiz & Flashcards | Anudeshak OS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .quiz-box { background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 600px; margin: 0 auto; text-align: center; }
-        .option-btn { background: var(--bg-color); color: var(--text-main); border: 1px solid var(--accent); padding: 12px; margin: 8px 0; width: 100%; border-radius: 8px; cursor: pointer; transition: 0.3s; font-size: 16px; }
-        .option-btn:hover { background: var(--accent); color: #fff; }
-        .option-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .quiz-container { background: var(--card-bg); padding: 35px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 700px; margin: 0 auto; backdrop-filter: blur(10px); text-align: center; }
+        
+        /* Tab Buttons */
+        .tab-controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+        .tab-btn { background: var(--bg-color); color: var(--text-muted); border: 1px solid var(--border-color); padding: 10px 25px; border-radius: 30px; cursor: pointer; font-weight: 700; transition: 0.3s; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+        .tab-btn.active { background: rgba(0, 242, 254, 0.15); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(0, 242, 254, 0.3); }
+
+        /* 3D Flashcard CSS */
+        .flashcard-section { display: none; perspective: 1000px; }
+        .flashcard-section.active { display: block; }
+        .flashcard { width: 100%; height: 250px; position: relative; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; margin-bottom: 25px; }
+        .flashcard.flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; border-radius: 15px; border: 2px solid var(--accent); box-shadow: 0 10px 30px rgba(0,242,254,0.1); }
+        .card-front { background: linear-gradient(135deg, rgba(17,24,39,0.9), rgba(7,9,15,1)); color: var(--text-main); font-size: 22px; font-weight: 600; }
+        .card-back { background: linear-gradient(135deg, rgba(0,242,254,0.1), rgba(16,185,129,0.1)); color: #10b981; transform: rotateY(180deg); font-size: 20px; font-weight: bold; border-color: #10b981; }
+        .fc-controls button { background: var(--sidebar-bg); color: var(--text-main); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; margin: 0 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .fc-controls button:hover { background: var(--accent); color: #000; }
+
+        /* MCQ Quiz CSS */
+        .mcq-section { display: none; }
+        .mcq-section.active { display: block; }
+        .timer-box { font-size: 24px; font-weight: 800; color: #ef4444; margin-bottom: 20px; text-shadow: 0 0 10px rgba(239, 68, 68, 0.4); }
+        .question-text { font-size: 20px; font-weight: 600; color: var(--text-main); margin-bottom: 25px; line-height: 1.5; }
+        .option-btn { background: rgba(0,0,0,0.3); color: var(--text-muted); border: 1px solid var(--border-color); padding: 15px; margin: 8px 0; width: 100%; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 16px; font-weight: 500; text-align: left; }
+        .option-btn:hover { background: rgba(0, 242, 254, 0.1); color: var(--accent); border-color: var(--accent); transform: translateX(5px); }
+        .option-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .result-text { margin-top: 20px; font-weight: 800; font-size: 18px; min-height: 25px; }
+        .score-board { font-size: 18px; color: var(--accent); font-weight: bold; margin-bottom: 15px; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-microchip"></i> Anudeshak OS</h2></div>
+            
+            <div class="user-game-profile" style="padding: 0 20px 20px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--bg-color); box-shadow: 0 0 15px var(--accent);"><i class="fa-solid fa-user-astronaut"></i></div>
+                <h4 style="color: var(--text-main); font-size: 16px;">Aspirant</h4>
+                <div style="color: var(--accent); font-size: 12px; font-weight: bold; margin: 5px 0;" id="user-level">Level 1: Noob</div>
+                <div style="background: var(--bg-color); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; border: 1px solid var(--border-color);"><div id="xp-progress" style="background: var(--accent); height: 100%; width: 0%; transition: 0.5s;"></div></div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;"><span id="user-xp">0</span> / 100 XP</div>
+            </div>
+
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
                 <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
                 <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
-                <li><a href="quiz.html" class="nav-item active"><i class="fa-solid fa-brain"></i> Quiz</a></li>
-                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="quiz.html" class="nav-item active"><i class="fa-solid fa-brain"></i> Flashcards & Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Smart Notes</a></li>
                 <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
-                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Developer</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <nav class="top-navbar">
                 <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
-                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-brain"></i> <span style="font-size: 14px; margin-left: 5px;">Computer Quiz</span></div>
-                <div class="nav-actions">
-                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
-                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
-                </div>
+                <div style="color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-brain"></i> <span>Memory Engine</span></div>
+                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section" style="text-align: center;"><h1>कंप्यूटर क्विज़ चैलेंज 🧠</h1></div>
-                <div class="quiz-box">
-                    <div id="timer" style="color: #ef4444; font-weight: bold; font-size: 20px; margin-bottom: 15px;">समय: 10s</div>
-                    <h2 id="question" style="margin-bottom: 20px; color: var(--accent);">प्रश्न लोड हो रहा है...</h2>
-                    <div id="options-box"></div>
-                    <p id="result" style="margin-top: 20px; font-weight: bold; font-size: 18px; height: 25px;"></p>
+                <div class="welcome-section" style="text-align: center;">
+                    <h1 style="background: linear-gradient(to right, #00f2fe, #4facfe); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Knowledge Test 🧠</h1>
+                    <p>फ्लैशकार्ड्स से रटें, और MCQ क्विज़ (नेगेटिव मार्किंग के साथ) देकर XP कमाएं!</p>
+                </div>
+
+                <div class="quiz-container">
+                    
+                    <div class="tab-controls">
+                        <button class="tab-btn active" onclick="switchTab('flashcards', this)">Flashcards 🃏</button>
+                        <button class="tab-btn" onclick="switchTab('mcq', this)">MCQ Quiz ⏱️</button>
+                    </div>
+
+                    <div class="flashcard-section active" id="flashcards-view">
+                        <div class="flashcard" id="fc-card" onclick="flipCard()">
+                            <div class="card-face card-front" id="fc-question">Click to flip!</div>
+                            <div class="card-face card-back" id="fc-answer">This is the answer!</div>
+                        </div>
+                        <div class="fc-controls">
+                            <button onclick="prevCard()"><i class="fa-solid fa-arrow-left"></i> Prev</button>
+                            <span style="margin: 0 15px; font-weight: bold; color: var(--text-muted);" id="fc-counter">1 / 5</span>
+                            <button onclick="nextCard()">Next <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                        <p style="margin-top: 15px; font-size: 12px; color: var(--text-muted);">कार्ड को पलटने के लिए उस पर क्लिक करें।</p>
+                    </div>
+
+                    <div class="mcq-section" id="mcq-view">
+                        <div class="score-board">Score: <span id="current-score">0</span> | Negative: -0.33</div>
+                        <div class="timer-box" id="timer">10s</div>
+                        <div class="question-text" id="question">प्रश्न लोड हो रहा है...</div>
+                        <div id="options-box"></div>
+                        <div class="result-text" id="result"></div>
+                    </div>
+
                 </div>
             </div>
         </main>
     </div>
 
-    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
-    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
-    
-    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-box glass-box">
+            <div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> Developer</h3><i class="fa-solid fa-xmark close-modal" id="close-modal-btn"></i></div>
+            <div class="contact-body">
+                <div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div>
+                <div class="contact-links-list">
+                    <a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a>
+                    <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a>
+                    <a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
     <script>
-        const quizData = [ { question: "वेबसाइट का स्ट्रक्चर बनाने के लिए किस भाषा का उपयोग होता है?", options: ["Python", "HTML", "C++", "Java"], answer: "HTML" }, { question: "CSS का फुल फॉर्म क्या है?", options: ["Computer Style Sheet", "Cascading Style Sheet", "Creative Style System", "Color Style Sheet"], answer: "Cascading Style Sheet" }, { question: "वेब पेज को इंटरैक्टिव कौन सी भाषा बनाती है?", options: ["HTML", "CSS", "JavaScript", "SQL"], answer: "JavaScript" }, { question: "कंप्यूटर का दिमाग किसे कहा जाता है?", options: ["RAM", "Monitor", "CPU", "Keyboard"], answer: "CPU" } ];
-        let currentQIndex = 0, score = 0, timeLeft = 10, timerInterval;
-        function startTimer() { timeLeft = 10; document.getElementById('timer').innerText = `समय: ${timeLeft}s`; clearInterval(timerInterval); timerInterval = setInterval(() => { timeLeft--; document.getElementById('timer').innerText = `समय: ${timeLeft}s`; if (timeLeft <= 0) { clearInterval(timerInterval); handleTimeout(); } }, 1000); }
-        function handleTimeout() { let resultText = document.getElementById('result'); resultText.innerText = `⏳ समय समाप्त! सही: ${quizData[currentQIndex].answer}`; resultText.style.color = "#f59e0b"; disableOptions(); setTimeout(() => { currentQIndex++; loadQuestion(); }, 2000); }
+        // --- DATA SET (CS & Web Dev) ---
+        const qaData = [
+            { q: "वेब पेज को इंटरैक्टिव कौन सी भाषा बनाती है?", options: ["HTML", "CSS", "JavaScript", "SQL"], a: "JavaScript" },
+            { q: "OSI Model में कुल कितनी Layers होती हैं?", options: ["5 Layers", "7 Layers", "9 Layers", "4 Layers"], a: "7 Layers" },
+            { q: "HTTP का डिफ़ॉल्ट Port Number क्या है?", options: ["21", "25", "80", "443"], a: "80" },
+            { q: "CSS का फुल फॉर्म क्या है?", options: ["Computer Style Sheet", "Cascading Style Sheet", "Creative Style System", "Color Style Sheet"], a: "Cascading Style Sheet" },
+            { q: "Data Manipulation Language (DML) का उदाहरण कौन सा है?", options: ["CREATE", "DROP", "UPDATE", "ALTER"], a: "UPDATE" }
+        ];
+
+        // --- TAB SWITCH LOGIC ---
+        function switchTab(tab, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            document.getElementById('flashcards-view').classList.remove('active');
+            document.getElementById('mcq-view').classList.remove('active');
+            
+            if(tab === 'flashcards') {
+                document.getElementById('flashcards-view').classList.add('active');
+            } else {
+                document.getElementById('mcq-view').classList.add('active');
+                if(currentQIndex === 0 && score === 0) loadQuestion(); // Start MCQ only when tab is opened
+            }
+        }
+
+        // --- FLASHCARDS LOGIC ---
+        let fcIndex = 0;
+        const fcCard = document.getElementById('fc-card');
+        const fcQuestion = document.getElementById('fc-question');
+        const fcAnswer = document.getElementById('fc-answer');
+        const fcCounter = document.getElementById('fc-counter');
+
+        function loadFlashcard() {
+            fcCard.classList.remove('flipped');
+            setTimeout(() => {
+                fcQuestion.innerText = qaData[fcIndex].q;
+                fcAnswer.innerText = qaData[fcIndex].a;
+                fcCounter.innerText = `${fcIndex + 1} / ${qaData.length}`;
+            }, 150);
+        }
+
+        function flipCard() { fcCard.classList.toggle('flipped'); }
+        function nextCard() { if(fcIndex < qaData.length - 1) { fcIndex++; loadFlashcard(); } }
+        function prevCard() { if(fcIndex > 0) { fcIndex--; loadFlashcard(); } }
+        loadFlashcard(); // Init
+
+        // --- MCQ QUIZ LOGIC (With Negative Marking & XP) ---
+        let currentQIndex = 0; 
+        let score = 0; 
+        let timeLeft = 10; 
+        let timerInterval;
+
+        function startTimer() { 
+            timeLeft = 10; 
+            document.getElementById('timer').innerText = `${timeLeft}s`; 
+            clearInterval(timerInterval); 
+            
+            timerInterval = setInterval(() => { 
+                timeLeft--; 
+                document.getElementById('timer').innerText = `${timeLeft}s`; 
+                if (timeLeft <= 0) { 
+                    clearInterval(timerInterval); 
+                    handleTimeout(); 
+                } 
+            }, 1000); 
+        }
+
+        function handleTimeout() { 
+            let resultText = document.getElementById('result'); 
+            resultText.innerHTML = `⏳ Time Up! <span style="color:#10b981;">Correct: ${qaData[currentQIndex].a}</span>`; 
+            resultText.style.color = "#f59e0b"; 
+            score -= 0.33; // Negative Marking for leaving blank / Timeout
+            document.getElementById('current-score').innerText = score.toFixed(2);
+            disableOptions(); 
+            setTimeout(() => { currentQIndex++; loadQuestion(); }, 2500); 
+        }
+
         function disableOptions() { document.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true); }
-        function loadQuestion() { if(currentQIndex >= quizData.length) { document.getElementById('question').innerText = `क्विज़ खत्म! 🎉 स्कोर: ${score}/${quizData.length}`; document.getElementById('options-box').innerHTML = ""; document.getElementById('result').innerText = ""; document.getElementById('timer').style.display = "none"; clearInterval(timerInterval); return; } document.getElementById('question').innerText = quizData[currentQIndex].question; document.getElementById('options-box').innerHTML = ""; document.getElementById('result').innerText = ""; startTimer(); quizData[currentQIndex].options.forEach(opt => { let btn = document.createElement('button'); btn.innerText = opt; btn.className = 'option-btn'; btn.onclick = () => checkAnswer(opt); document.getElementById('options-box').appendChild(btn); }); }
-        function checkAnswer(selectedOption) { clearInterval(timerInterval); disableOptions(); let correctOption = quizData[currentQIndex].answer; let resultText = document.getElementById('result'); if(selectedOption === correctOption) { resultText.innerText = "✅ सही!"; resultText.style.color = "#10b981"; score++; } else { resultText.innerText = `❌ गलत! सही: ${correctOption}`; resultText.style.color = "#ef4444"; } setTimeout(() => { currentQIndex++; loadQuestion(); }, 1500); }
-        loadQuestion();
+
+        function loadQuestion() { 
+            if(currentQIndex >= qaData.length) { 
+                let finalScore = score.toFixed(2);
+                document.getElementById('question').innerText = `क्विज़ खत्म! 🎉 आपका फाइनल स्कोर: ${finalScore} / ${qaData.length}`; 
+                document.getElementById('options-box').innerHTML = ""; 
+                document.getElementById('result').innerText = ""; 
+                document.getElementById('timer').style.display = "none"; 
+                clearInterval(timerInterval); 
+                
+                // Add XP based on score
+                if(typeof addXP === "function" && score > 0) {
+                    let earnedXP = Math.floor(score * 10);
+                    addXP(earnedXP);
+                    document.getElementById('result').innerHTML = `<span style="color:var(--accent);">बधाई हो! आपको +${earnedXP} XP मिले।</span>`;
+                }
+                return; 
+            } 
+            
+            document.getElementById('question').innerText = `Q${currentQIndex + 1}: ${qaData[currentQIndex].q}`; 
+            document.getElementById('options-box').innerHTML = ""; 
+            document.getElementById('result').innerText = ""; 
+            startTimer(); 
+            
+            qaData[currentQIndex].options.forEach(opt => { 
+                let btn = document.createElement('button'); 
+                btn.innerText = opt; 
+                btn.className = 'option-btn'; 
+                btn.onclick = () => checkAnswer(opt, btn); 
+                document.getElementById('options-box').appendChild(btn); 
+            }); 
+        }
+
+        function checkAnswer(selectedOption, btn) { 
+            clearInterval(timerInterval); 
+            disableOptions(); 
+            let correctOption = qaData[currentQIndex].a; 
+            let resultText = document.getElementById('result'); 
+            
+            if(selectedOption === correctOption) { 
+                btn.style.borderColor = "#10b981";
+                btn.style.color = "#10b981";
+                resultText.innerText = "✅ सही जवाब!"; 
+                resultText.style.color = "#10b981"; 
+                score += 1; 
+            } else { 
+                btn.style.borderColor = "#ef4444";
+                btn.style.color = "#ef4444";
+                resultText.innerHTML = `❌ गलत! नेगेटिव मार्किंग (-0.33)<br>सही जवाब: <span style="color:#10b981;">${correctOption}</span>`; 
+                resultText.style.color = "#ef4444"; 
+                score -= 0.33; 
+            } 
+            document.getElementById('current-score').innerText = score.toFixed(2);
+            setTimeout(() => { currentQIndex++; loadQuestion(); }, 2500); 
+        }
     </script>
 </body>
 </html>
