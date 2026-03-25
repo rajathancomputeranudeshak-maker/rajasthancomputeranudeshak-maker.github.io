@@ -1,197 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pro Typing Tutor - Anudeshak 2026</title>
+    <title>Typing Tool | Command Center</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
     <style>
-        body {
-            background-color: #0d1117; color: #c9d1d9;
-            font-family: 'Courier New', Courier, monospace;
-            margin: 0; padding: 20px;
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh;
+        .typing-container {
+            background: var(--card-bg); padding: 30px; border-radius: 12px;
+            border: 1px solid var(--border-color); box-shadow: var(--shadow);
+            max-width: 800px; margin: 0 auto;
         }
-        h1 { color: #58a6ff; margin-bottom: 5px; text-transform: uppercase; text-shadow: 0 0 10px rgba(88,166,255,0.5); }
-        .sub-title { color: #8b949e; font-size: 0.9rem; margin-bottom: 30px; letter-spacing: 1px; }
-
-        .container {
-            background-color: #161b22; border: 1px solid #30363d;
-            border-radius: 10px; padding: 30px; max-width: 850px; width: 95%;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        .stats-header {
+            display: flex; justify-content: space-between; margin-bottom: 20px;
+            padding-bottom: 15px; border-bottom: 1px solid var(--border-color);
         }
-
-        .stats-bar {
-            display: flex; justify-content: space-between;
-            background-color: #0d1117; padding: 15px 30px;
-            border-radius: 8px; margin-bottom: 25px; border: 1px solid #30363d;
-        }
-        .stat-item { text-align: center; }
-        .stat-value { font-size: 2.2rem; font-weight: bold; color: #00ff41; text-shadow: 0 0 10px rgba(0,255,65,0.3); }
-        .stat-label { font-size: 0.8rem; color: #8b949e; text-transform: uppercase; margin-top: 5px; }
-
-        /* Text Box Style */
-        #text-display {
-            font-size: 1.6rem; line-height: 1.8; margin-bottom: 25px;
-            user-select: none; text-align: left; padding: 20px;
-            background: #090d13; border-radius: 8px; border: 1px solid #21262d;
-            min-height: 120px; cursor: text;
-        }
-
-        /* Letters Style */
-        #text-display span {
-            position: relative; padding: 2px 0px; border-radius: 2px; transition: 0.1s;
-        }
+        .stat-box { text-align: center; }
+        .stat-box h4 { color: var(--text-muted); font-size: 14px; text-transform: uppercase; }
+        .stat-box span { font-size: 24px; font-weight: bold; color: var(--accent); }
         
-        /* Correct & Incorrect Colors */
-        #text-display span.correct { color: #00ff41; background: rgba(0, 255, 65, 0.1); }
-        #text-display span.incorrect { color: #ff4b4b; background: rgba(255, 75, 75, 0.2); text-decoration: underline; }
+        .text-display {
+            font-size: 18px; line-height: 1.6; margin-bottom: 20px;
+            padding: 15px; background: var(--bg-color); border-radius: 8px;
+            border: 1px solid var(--border-color); color: var(--text-muted);
+            user-select: none; min-height: 100px;
+        }
+        .text-display span.correct { color: #10b981; }
+        .text-display span.incorrect { color: #ef4444; background: rgba(239, 68, 68, 0.2); border-radius: 3px; }
+        .text-display span.active { border-bottom: 2px solid var(--accent); color: var(--text-main); }
         
-        /* THE MOVING BLINKING CURSOR */
-        #text-display span.current {
-            background-color: #58a6ff; color: #0d1117; box-shadow: 0 0 10px #58a6ff;
-            animation: blink 1s infinite;
+        .typing-input {
+            width: 100%; padding: 15px; font-size: 18px; border-radius: 8px;
+            background: var(--bg-color); border: 1px solid var(--border-color);
+            color: var(--text-main); outline: none; transition: 0.3s;
         }
-
-        @keyframes blink {
-            0%, 100% { background-color: #58a6ff; color: #0d1117; }
-            50% { background-color: transparent; color: #c9d1d9; box-shadow: none; border-bottom: 3px solid #58a6ff; }
+        .typing-input:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 242, 254, 0.2); }
+        
+        .reset-btn {
+            display: block; width: 100%; margin-top: 20px; padding: 12px;
+            background: var(--accent); color: #fff; border: none;
+            border-radius: 8px; font-size: 16px; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
         }
-
-        /* Hidden Input Box */
-        #typing-input { opacity: 0; position: absolute; z-index: -999; }
-
-        button {
-            background: transparent; color: #58a6ff; border: 2px solid #58a6ff;
-            padding: 12px 30px; border-radius: 5px; font-size: 1rem; font-weight: bold;
-            cursor: pointer; text-transform: uppercase; transition: 0.3s; width: 100%;
-        }
-        button:hover { background: #58a6ff; color: #0d1117; box-shadow: 0 0 15px #58a6ff; }
+        .reset-btn:hover { background: var(--accent-hover); }
     </style>
 </head>
 <body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+                <li><a href="typing.html" class="nav-item active"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
+                <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
+                <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+            </ul>
+        </aside>
 
-    <h1>COMMAND-LINE TYPING</h1>
-    <p class="sub-title">MISSION: ANUDESHAK 2026</p>
+        <main class="main-content">
+            <nav class="top-navbar">
+                <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+                <div class="search-bar" style="color: var(--text-muted);">
+                    <i class="fa-solid fa-keyboard"></i> <span style="font-size: 14px; margin-left: 5px;">Typing Speed Test</span>
+                </div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                </div>
+            </nav>
 
-    <div class="container">
-        <div class="stats-bar">
-            <div class="stat-item"><div class="stat-value" id="time-left">60</div><div class="stat-label">Seconds</div></div>
-            <div class="stat-item"><div class="stat-value" id="wpm-display">00</div><div class="stat-label">WPM</div></div>
-            <div class="stat-item"><div class="stat-value" id="accuracy-display">100</div><div class="stat-label">% Accuracy</div></div>
-        </div>
+            <div class="dashboard-content">
+                <div class="welcome-section" style="text-align: center;">
+                    <h1>Terminal Typing ⌨️</h1>
+                    <p>कंप्यूटर अनुदेशक सिलेबस से जुड़े शब्द टाइप करें और अपनी स्पीड (WPM) बढ़ाएं।</p>
+                </div>
 
-        <div id="text-display" onclick="document.getElementById('typing-input').focus()"></div>
-
-        <input type="text" id="typing-input" autocomplete="off" autofocus>
-        
-        <button onclick="resetGame()">🔄 REBOOT SYSTEM / NEXT TEXT</button>
+                <div class="typing-container">
+                    <div class="stats-header">
+                        <div class="stat-box"><h4>Time Left</h4><span id="time">60</span>s</div>
+                        <div class="stat-box"><h4>Speed</h4><span id="wpm">0</span> WPM</div>
+                        <div class="stat-box"><h4>Accuracy</h4><span id="accuracy">100</span>%</div>
+                    </div>
+                    
+                    <div class="text-display" id="text-display"></div>
+                    
+                    <input type="text" class="typing-input" id="typing-input" placeholder="टाइमर शुरू करने के लिए यहाँ टाइप करना शुरू करें..." autocomplete="off">
+                    
+                    <button class="reset-btn" onclick="resetTest()"><i class="fa-solid fa-rotate-right"></i> Restart Test</button>
+                </div>
+            </div>
+        </main>
     </div>
-    
-    <a href="index.html" style="margin-top: 20px; color: #8b949e; text-decoration: none; font-size: 0.9rem;">← TERMINATE SESSION (BACK)</a>
 
-<script>
-    // --- KEYBOARD SOUND GENERATOR (NO EXTERNAL FILES NEEDED) ---
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    const audioCtx = new AudioContext();
+    <script src="script.js"></script>
+    <script>
+        const texts = [
+            "Hypertext Markup Language is the standard markup language for documents designed to be displayed in a web browser. Cascading Style Sheets is a style sheet language used for describing the presentation of a document.",
+            "JavaScript is a high level, often just-in-time compiled language that conforms to the ECMAScript standard. Database management systems are software systems used to manage and manipulate data in a database.",
+            "Computer network topology is the arrangement of the elements of a communication network. Network topology can be used to define or describe the arrangement of various types of telecommunication networks."
+        ];
 
-    function playTypeSound() {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'square'; // Mechanical sound type
-        osc.frequency.setValueAtTime(150, audioCtx.currentTime); 
-        osc.frequency.exponentialRampToValueAtTime(40, audioCtx.currentTime + 0.05);
-        gain.gain.setValueAtTime(0.05, audioCtx.currentTime); // Volume
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
-    }
+        const textDisplay = document.getElementById('text-display');
+        const typingInput = document.getElementById('typing-input');
+        const timeDisplay = document.getElementById('time');
+        const wpmDisplay = document.getElementById('wpm');
+        const accuracyDisplay = document.getElementById('accuracy');
 
-    // --- TYPING LOGIC ---
-    const textOptions = [
-        "The Central Processing Unit (CPU) is the brain of the computer. It executes all instructions and processes data efficiently.",
-        "Random Access Memory (RAM) is temporary storage. When the computer turns off, all data stored in RAM is completely lost.",
-        "An Operating System (OS) manages hardware and software. Windows, Linux, and macOS are popular operating systems.",
-        "Network topology refers to the arrangement of different elements in a computer network, like star, ring, or mesh topologies."
-    ];
-
-    let timer; let maxTime = 60; let timeLeft = maxTime; let isTyping = false;
-
-    const textDisplay = document.getElementById("text-display");
-    const typingInput = document.getElementById("typing-input");
-    const timeLeftTag = document.getElementById("time-left");
-    const wpmTag = document.getElementById("wpm-display");
-    const accuracyTag = document.getElementById("accuracy-display");
-
-    function loadText() {
-        let currentText = textOptions[Math.floor(Math.random() * textOptions.length)];
-        textDisplay.innerHTML = "";
-        currentText.split("").forEach(char => {
-            let span = document.createElement("span"); span.innerText = char;
-            textDisplay.appendChild(span);
-        });
-        textDisplay.querySelectorAll("span")[0].classList.add("current");
-    }
-
-    typingInput.addEventListener("input", () => {
-        playTypeSound(); // PLAY SOUND ON EVERY KEYPRESS
-
-        let chars = textDisplay.querySelectorAll("span");
-        let typedText = typingInput.value.split("");
-        
-        if (!isTyping) { timer = setInterval(initTimer, 1000); isTyping = true; }
-
+        let timeLeft = 60;
+        let timeInterval = null;
+        let isTyping = false;
+        let charIndex = 0;
         let mistakes = 0;
-        chars.forEach((span, index) => {
-            let typedChar = typedText[index];
-            span.classList.remove("correct", "incorrect", "current");
 
-            if (typedChar == null) { } 
-            else if (typedChar === span.innerText) { span.classList.add("correct"); } 
-            else { span.classList.add("incorrect"); mistakes++; }
-        });
-
-        let currentIndex = typedText.length;
-        if (currentIndex < chars.length) {
-            chars[currentIndex].classList.add("current");
-        } else {
-            clearInterval(timer); typingInput.value = ""; 
-            alert(`Mission Passed! WPM: ${wpmTag.innerText} | Accuracy: ${accuracyTag.innerText}%`);
-            resetGame();
+        function loadText() {
+            const randomIndex = Math.floor(Math.random() * texts.length);
+            textDisplay.innerHTML = '';
+            texts[randomIndex].split('').forEach(char => {
+                let span = `<span>${char}</span>`;
+                textDisplay.innerHTML += span;
+            });
+            textDisplay.querySelectorAll('span')[0].classList.add('active');
+            document.addEventListener('keydown', () => typingInput.focus());
         }
 
-        let correctChars = currentIndex - mistakes;
-        let wpm = Math.round(((correctChars / 5) / (maxTime - timeLeft)) * 60);
-        wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
-        wpmTag.innerText = wpm < 10 ? "0" + wpm : wpm;
+        function initTyping() {
+            const characters = textDisplay.querySelectorAll('span');
+            let typedChar = typingInput.value.split('')[charIndex];
 
-        let accuracy = Math.round((correctChars / currentIndex) * 100);
-        accuracyTag.innerText = isNaN(accuracy) || currentIndex === 0 ? 100 : accuracy;
-    });
+            if (charIndex < characters.length - 1 && timeLeft > 0) {
+                if (!isTyping) {
+                    timeInterval = setInterval(updateTimer, 1000);
+                    isTyping = true;
+                }
 
-    function initTimer() {
-        if (timeLeft > 0) { timeLeft--; timeLeftTag.innerText = timeLeft; } 
-        else {
-            clearInterval(timer); isTyping = false; typingInput.disabled = true;
-            alert(`Time Over! Final WPM: ${wpmTag.innerText}`);
+                if (typedChar == null) {
+                    if(charIndex > 0) {
+                        charIndex--;
+                        if (characters[charIndex].classList.contains('incorrect')) { mistakes--; }
+                        characters[charIndex].classList.remove('correct', 'incorrect');
+                    }
+                } else {
+                    if (characters[charIndex].innerText === typedChar) {
+                        characters[charIndex].classList.add('correct');
+                    } else {
+                        mistakes++;
+                        characters[charIndex].classList.add('incorrect');
+                    }
+                    charIndex++;
+                }
+
+                characters.forEach(span => span.classList.remove('active'));
+                characters[charIndex].classList.add('active');
+
+                let wpm = Math.round(((charIndex - mistakes) / 5) / ((60 - timeLeft) / 60));
+                wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+                
+                let acc = Math.round(((charIndex - mistakes) / charIndex) * 100);
+                acc = acc < 0 || !acc ? 100 : acc;
+
+                wpmDisplay.innerText = wpm;
+                accuracyDisplay.innerText = acc;
+            } else if (charIndex >= characters.length - 1) {
+                clearInterval(timeInterval);
+                typingInput.value = "";
+            }
         }
-    }
 
-    function resetGame() {
-        clearInterval(timer); loadText(); timeLeft = maxTime; isTyping = false;
-        typingInput.value = ""; typingInput.disabled = false;
-        timeLeftTag.innerText = timeLeft; wpmTag.innerText = "00"; accuracyTag.innerText = "100";
-        typingInput.focus();
-    }
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.innerText = timeLeft;
+            } else {
+                clearInterval(timeInterval);
+                typingInput.disabled = true;
+            }
+        }
 
-    document.addEventListener("keydown", () => typingInput.focus());
-    textDisplay.addEventListener("click", () => typingInput.focus());
+        function resetTest() {
+            loadText();
+            clearInterval(timeInterval);
+            timeLeft = 60;
+            charIndex = mistakes = 0;
+            isTyping = false;
+            typingInput.value = "";
+            typingInput.disabled = false;
+            timeDisplay.innerText = timeLeft;
+            wpmDisplay.innerText = 0;
+            accuracyDisplay.innerText = 100;
+        }
 
-    loadText();
-</script>
-
+        typingInput.addEventListener('input', initTyping);
+        loadText();
+    </script>
 </body>
 </html>
