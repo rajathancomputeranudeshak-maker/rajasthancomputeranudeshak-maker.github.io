@@ -3,76 +3,261 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Typing Tool | Command Center</title>
+    <title>Typing Engine | Anudeshak OS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
     <style>
-        .typing-container { background: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 800px; margin: 0 auto; }
-        .stats-header { display: flex; justify-content: space-between; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
-        .stat-box { text-align: center; } .stat-box h4 { color: var(--text-muted); font-size: 14px; text-transform: uppercase; } .stat-box span { font-size: 24px; font-weight: bold; color: var(--accent); }
-        .text-display { font-size: 18px; line-height: 1.6; margin-bottom: 20px; padding: 15px; background: var(--bg-color); border-radius: 8px; border: 1px solid var(--border-color); color: var(--text-muted); user-select: none; min-height: 100px; }
-        .text-display span.correct { color: #10b981; } .text-display span.incorrect { color: #ef4444; background: rgba(239, 68, 68, 0.2); } .text-display span.active { border-bottom: 2px solid var(--accent); color: var(--text-main); }
-        .typing-input { width: 100%; padding: 15px; font-size: 18px; border-radius: 8px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-main); outline: none; }
-        .reset-btn { display: block; width: 100%; margin-top: 20px; padding: 12px; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .typing-container { background: var(--card-bg); padding: 35px; border-radius: 15px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 900px; margin: 0 auto; backdrop-filter: blur(10px); }
+        
+        /* Time Selector Buttons */
+        .time-selectors { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; }
+        .time-btn { background: var(--bg-color); color: var(--text-muted); border: 1px solid var(--border-color); padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: 600; transition: 0.3s; }
+        .time-btn.active { background: rgba(0, 242, 254, 0.1); color: var(--accent); border-color: var(--accent); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2); }
+        .time-btn:hover { color: var(--text-main); border-color: var(--text-main); }
+
+        .stats-header { display: flex; justify-content: space-between; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+        .stat-box { text-align: center; } 
+        .stat-box h4 { color: var(--text-muted); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; } 
+        .stat-box span { font-size: 28px; font-weight: 800; color: var(--accent); text-shadow: 0 0 10px rgba(0,242,254,0.3); }
+        
+        .text-display { font-size: 20px; line-height: 1.8; margin-bottom: 25px; padding: 20px; background: rgba(0,0,0,0.2); border-radius: 10px; border: 1px solid var(--border-color); color: var(--text-muted); user-select: none; max-height: 200px; overflow-y: auto; text-align: justify; letter-spacing: 0.5px; }
+        .text-display span.correct { color: #10b981; } 
+        .text-display span.incorrect { color: #ef4444; background: rgba(239, 68, 68, 0.2); border-radius: 3px; } 
+        .text-display span.active { border-bottom: 2px solid var(--accent); color: var(--text-main); background: rgba(0, 242, 254, 0.1); }
+        
+        .typing-input { width: 100%; padding: 18px; font-size: 18px; border-radius: 10px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-main); outline: none; transition: 0.3s; box-shadow: inset 0 2px 5px rgba(0,0,0,0.5); }
+        .typing-input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(0, 242, 254, 0.2), inset 0 2px 5px rgba(0,0,0,0.5); }
+        
+        .reset-btn { display: block; width: 100%; margin-top: 25px; padding: 15px; background: var(--accent); color: #000; border: none; border-radius: 10px; font-size: 16px; font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .reset-btn:hover { background: var(--text-main); box-shadow: 0 0 20px rgba(255,255,255,0.4); }
     </style>
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-microchip"></i> Anudeshak OS</h2></div>
+            
+            <div class="user-game-profile" style="padding: 0 20px 20px; text-align: center; border-bottom: 1px solid var(--border-color); margin-bottom: 20px;">
+                <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent-hover)); margin: 0 auto 10px; display: flex; justify-content: center; align-items: center; font-size: 24px; color: var(--bg-color); box-shadow: 0 0 15px var(--accent);"><i class="fa-solid fa-user-astronaut"></i></div>
+                <h4 style="color: var(--text-main); font-size: 16px;">Aspirant</h4>
+                <div style="color: var(--accent); font-size: 12px; font-weight: bold; margin: 5px 0;" id="user-level">Level 1: Noob</div>
+                <div style="background: var(--bg-color); height: 8px; border-radius: 4px; overflow: hidden; margin-top: 5px; border: 1px solid var(--border-color);"><div id="xp-progress" style="background: var(--accent); height: 100%; width: 0%; transition: 0.5s;"></div></div>
+                <div style="font-size: 10px; color: var(--text-muted); margin-top: 5px;"><span id="user-xp">0</span> / 100 XP</div>
+            </div>
+
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item active"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
                 <li><a href="tracker.html" class="nav-item"><i class="fa-solid fa-calendar-check"></i> Tracker</a></li>
                 <li><a href="focus.html" class="nav-item"><i class="fa-solid fa-stopwatch"></i> Focus Mode</a></li>
-                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
-                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
+                <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Flashcards & Quiz</a></li>
+                <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Smart Notes</a></li>
                 <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
-                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Developer</a></li>
             </ul>
         </aside>
 
         <main class="main-content">
             <nav class="top-navbar">
                 <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
-                <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-keyboard"></i> <span style="font-size: 14px; margin-left: 5px;">Typing Speed Test</span></div>
-                <div class="nav-actions">
-                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
-                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
-                </div>
+                <div style="color: var(--text-muted); font-weight: 500;"><i class="fa-solid fa-keyboard"></i> <span>Pro Typing Engine</span></div>
+                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section" style="text-align: center;"><h1>Terminal Typing ⌨️</h1><p>कंप्यूटर अनुदेशक सिलेबस से जुड़े शब्द टाइप करें।</p></div>
+                <div class="welcome-section" style="text-align: center;">
+                    <h1 style="background: linear-gradient(to right, #10b981, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Mechanical Typing ⌨️</h1>
+                    <p>सिलेबस के भारी शब्द। अपनी टाइमिंग चुनें और XP कमाएं।</p>
+                </div>
+
                 <div class="typing-container">
+                    <div class="time-selectors">
+                        <button class="time-btn active" onclick="setTimer(60, this)">1 Min</button>
+                        <button class="time-btn" onclick="setTimer(180, this)">3 Min</button>
+                        <button class="time-btn" onclick="setTimer(300, this)">5 Min</button>
+                    </div>
+
                     <div class="stats-header">
                         <div class="stat-box"><h4>Time Left</h4><span id="time">60</span>s</div>
                         <div class="stat-box"><h4>Speed</h4><span id="wpm">0</span> WPM</div>
                         <div class="stat-box"><h4>Accuracy</h4><span id="accuracy">100</span>%</div>
                     </div>
+                    
                     <div class="text-display" id="text-display"></div>
-                    <input type="text" class="typing-input" id="typing-input" placeholder="टाइमर शुरू करने के लिए यहाँ टाइप करना शुरू करें..." autocomplete="off">
+                    
+                    <input type="text" class="typing-input" id="typing-input" placeholder="टाइमर शुरू करने के लिए यहाँ टाइप करना शुरू करें..." autocomplete="off" spellcheck="false">
+                    
                     <button class="reset-btn" onclick="resetTest()"><i class="fa-solid fa-rotate-right"></i> Restart Test</button>
                 </div>
             </div>
         </main>
     </div>
 
-    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
-    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
-    
-    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+    <div class="contact-modal" id="contactModal">
+        <div class="contact-box glass-box">
+            <div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> Developer</h3><i class="fa-solid fa-xmark close-modal" id="close-modal-btn"></i></div>
+            <div class="contact-body">
+                <div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div>
+                <div class="contact-links-list">
+                    <a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a>
+                    <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a>
+                    <a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="type-sound" src="https://assets.mixkit.co/sfx/preview/mixkit-mechanical-keyboard-single-keystroke-2568.mp3" preload="auto"></audio>
 
     <script src="script.js"></script>
     <script>
-        const texts = ["Hypertext Markup Language is the standard markup language for documents. Cascading Style Sheets is a style sheet language used for describing the presentation of a document.", "JavaScript is a high level compiled language that conforms to the ECMAScript standard. Database management systems are software systems used to manage data."];
-        const textDisplay = document.getElementById('text-display'), typingInput = document.getElementById('typing-input'), timeDisplay = document.getElementById('time'), wpmDisplay = document.getElementById('wpm'), accuracyDisplay = document.getElementById('accuracy');
-        let timeLeft = 60, timeInterval = null, isTyping = false, charIndex = 0, mistakes = 0;
-        function loadText() { const randomIndex = Math.floor(Math.random() * texts.length); textDisplay.innerHTML = ''; texts[randomIndex].split('').forEach(char => { textDisplay.innerHTML += `<span>${char}</span>`; }); textDisplay.querySelectorAll('span')[0].classList.add('active'); document.addEventListener('keydown', () => typingInput.focus()); }
-        function initTyping() { const characters = textDisplay.querySelectorAll('span'); let typedChar = typingInput.value.split('')[charIndex]; if (charIndex < characters.length - 1 && timeLeft > 0) { if (!isTyping) { timeInterval = setInterval(updateTimer, 1000); isTyping = true; } if (typedChar == null) { if(charIndex > 0) { charIndex--; if (characters[charIndex].classList.contains('incorrect')) { mistakes--; } characters[charIndex].classList.remove('correct', 'incorrect'); } } else { if (characters[charIndex].innerText === typedChar) { characters[charIndex].classList.add('correct'); } else { mistakes++; characters[charIndex].classList.add('incorrect'); } charIndex++; } characters.forEach(span => span.classList.remove('active')); characters[charIndex].classList.add('active'); let wpm = Math.round(((charIndex - mistakes) / 5) / ((60 - timeLeft) / 60)); wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm; let acc = Math.round(((charIndex - mistakes) / charIndex) * 100); acc = acc < 0 || !acc ? 100 : acc; wpmDisplay.innerText = wpm; accuracyDisplay.innerText = acc; } else if (charIndex >= characters.length - 1) { clearInterval(timeInterval); typingInput.value = ""; } }
-        function updateTimer() { if (timeLeft > 0) { timeLeft--; timeDisplay.innerText = timeLeft; } else { clearInterval(timeInterval); typingInput.disabled = true; } }
-        function resetTest() { loadText(); clearInterval(timeInterval); timeLeft = 60; charIndex = mistakes = 0; isTyping = false; typingInput.value = ""; typingInput.disabled = false; timeDisplay.innerText = timeLeft; wpmDisplay.innerText = 0; accuracyDisplay.innerText = 100; }
-        typingInput.addEventListener('input', initTyping); loadText();
+        // Large Computer Science Paragraphs
+        const texts = [
+            "Computer architecture is a specification detailing how a set of software and hardware technology standards interact to form a computer system or platform. In short, computer architecture refers to how a computer system is designed and what technologies it is compatible with. There are three categories of computer architecture: System Design, Instruction Set Architecture, and Microarchitecture. Data structure and algorithms are fundamental to programming.",
+            "Object-oriented programming is a programming paradigm based on the concept of objects, which can contain data and code. The data is in the form of fields, often known as attributes or properties, and the code is in the form of procedures, often known as methods. A feature of objects is that an object's own procedures can access and often modify the data fields of itself. Polymorphism and Encapsulation are main pillars of OOPs.",
+            "A database management system (DBMS) is a software package designed to define, manipulate, retrieve and manage data in a database. A DBMS generally manipulates the data itself, the data format, field names, record structure and file structure. It also defines rules to validate and manipulate this data. Structured Query Language (SQL) is a standard language for storing, manipulating and retrieving data in databases."
+        ];
+
+        const textDisplay = document.getElementById('text-display');
+        const typingInput = document.getElementById('typing-input');
+        const timeDisplay = document.getElementById('time');
+        const wpmDisplay = document.getElementById('wpm');
+        const accuracyDisplay = document.getElementById('accuracy');
+        const typeSound = document.getElementById('type-sound');
+
+        let selectedTime = 60; // Default 1 min
+        let timeLeft = selectedTime;
+        let timeInterval = null;
+        let isTyping = false;
+        let charIndex = 0;
+        let mistakes = 0;
+
+        // Change Timer (1m, 3m, 5m)
+        function setTimer(seconds, btn) {
+            document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedTime = seconds;
+            resetTest();
+        }
+
+        function loadText() {
+            const randomIndex = Math.floor(Math.random() * texts.length);
+            textDisplay.innerHTML = '';
+            texts[randomIndex].split('').forEach(char => {
+                textDisplay.innerHTML += `<span>${char}</span>`;
+            });
+            textDisplay.querySelectorAll('span')[0].classList.add('active');
+            
+            // Auto-scroll logic inside the container
+            textDisplay.scrollTop = 0;
+        }
+
+        function playSound() {
+            typeSound.currentTime = 0;
+            typeSound.play().catch(e => console.log("Sound autoplay blocked"));
+        }
+
+        function initTyping() {
+            playSound(); // Play mechanical sound on every key press
+            
+            const characters = textDisplay.querySelectorAll('span');
+            let typedChar = typingInput.value.split('')[charIndex];
+
+            if (charIndex < characters.length - 1 && timeLeft > 0) {
+                if (!isTyping) {
+                    timeInterval = setInterval(updateTimer, 1000);
+                    isTyping = true;
+                }
+
+                if (typedChar == null) {
+                    // Backspace logic
+                    if(charIndex > 0) {
+                        charIndex--;
+                        if (characters[charIndex].classList.contains('incorrect')) { mistakes--; }
+                        characters[charIndex].classList.remove('correct', 'incorrect');
+                    }
+                } else {
+                    if (characters[charIndex].innerText === typedChar) {
+                        characters[charIndex].classList.add('correct');
+                    } else {
+                        mistakes++;
+                        characters[charIndex].classList.add('incorrect');
+                    }
+                    charIndex++;
+                }
+
+                characters.forEach(span => span.classList.remove('active'));
+                if(charIndex < characters.length) {
+                    characters[charIndex].classList.add('active');
+                    // Scroll the text display so cursor is always visible
+                    let activeLine = characters[charIndex].offsetTop;
+                    if (activeLine > 100) {
+                        textDisplay.scrollTop = activeLine - 50;
+                    }
+                }
+
+                // Calculate WPM & Accuracy
+                let timeSpent = selectedTime - timeLeft;
+                let wpm = Math.round(((charIndex - mistakes) / 5) / (timeSpent / 60));
+                wpm = wpm < 0 || !wpm || wpm === Infinity ? 0 : wpm;
+                
+                let acc = Math.round(((charIndex - mistakes) / charIndex) * 100);
+                acc = acc < 0 || !acc ? 100 : acc;
+
+                wpmDisplay.innerText = wpm;
+                accuracyDisplay.innerText = acc;
+            } else if (charIndex >= characters.length - 1 || timeLeft <= 0) {
+                finishTest();
+            }
+        }
+
+        function updateTimer() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                timeDisplay.innerText = timeLeft;
+            } else {
+                finishTest();
+            }
+        }
+
+        function finishTest() {
+            clearInterval(timeInterval);
+            typingInput.disabled = true;
+            
+            let finalWPM = wpmDisplay.innerText;
+            // Save Real Data to Dashboard
+            localStorage.setItem('anudeshak_wpm', finalWPM);
+            
+            // Reward XP via gamification in script.js
+            if(typeof addXP === "function" && parseInt(finalWPM) > 10) {
+                let earnedXP = 20;
+                addXP(earnedXP);
+                alert(`टेस्ट समाप्त! स्पीड: ${finalWPM} WPM. आपको +${earnedXP} XP मिले! 🔥`);
+            } else {
+                alert(`टेस्ट समाप्त! आपकी स्पीड ${finalWPM} WPM रही। और प्रैक्टिस करें!`);
+            }
+        }
+
+        function resetTest() {
+            loadText();
+            clearInterval(timeInterval);
+            timeLeft = selectedTime;
+            charIndex = mistakes = 0;
+            isTyping = false;
+            typingInput.value = "";
+            typingInput.disabled = false;
+            timeDisplay.innerText = timeLeft;
+            wpmDisplay.innerText = 0;
+            accuracyDisplay.innerText = 100;
+        }
+
+        typingInput.addEventListener('input', initTyping);
+        
+        // Block Copy/Paste in input
+        typingInput.addEventListener('paste', e => e.preventDefault());
+        
+        // Initialize
+        loadText();
     </script>
 </body>
 </html>
