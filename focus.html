@@ -8,26 +8,17 @@
     <link rel="stylesheet" href="style.css">
     <style>
         .focus-container { text-align: center; background: var(--card-bg); padding: 50px 30px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: var(--shadow); max-width: 500px; margin: 0 auto; }
-        .timer-circle { 
-            width: 250px; height: 250px; margin: 0 auto 30px; border-radius: 50%; 
-            border: 8px solid rgba(0, 242, 254, 0.1); display: flex; justify-content: center; align-items: center; 
-            box-shadow: inset 0 0 30px rgba(0, 242, 254, 0.1), 0 0 30px rgba(0, 242, 254, 0.1);
-            position: relative;
-        }
-        .timer-display { font-size: 60px; font-weight: 800; color: var(--accent); letter-spacing: 2px; text-shadow: 0 0 15px rgba(0,242,254,0.4); }
-        .timer-controls button { margin: 5px; padding: 12px 25px; font-size: 16px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; color: #fff; min-width: 120px; }
-        .btn-start { background: #10b981; } .btn-start:hover { box-shadow: 0 0 15px #10b981; transform: translateY(-2px); }
-        .btn-pause { background: #f59e0b; } .btn-pause:hover { box-shadow: 0 0 15px #f59e0b; transform: translateY(-2px); }
-        .btn-reset { background: #ef4444; } .btn-reset:hover { box-shadow: 0 0 15px #ef4444; transform: translateY(-2px); }
+        .timer-circle { width: 250px; height: 250px; margin: 0 auto 30px; border-radius: 50%; border: 8px solid rgba(0, 242, 254, 0.1); display: flex; justify-content: center; align-items: center; box-shadow: inset 0 0 30px rgba(0, 242, 254, 0.1); }
+        .timer-display { font-size: 60px; font-weight: 800; color: var(--accent); }
+        .timer-controls button { margin: 5px; padding: 12px 25px; font-size: 16px; border-radius: 30px; border: none; cursor: pointer; font-weight: bold; color: #fff; }
+        .btn-start { background: #10b981; } .btn-pause { background: #f59e0b; } .btn-reset { background: #ef4444; }
         .status-text { margin-bottom: 20px; color: var(--text-muted); font-size: 18px; font-weight: 500; }
     </style>
 </head>
 <body>
     <div class="app-container">
         <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <h2><i class="fa-solid fa-code"></i> Command Center</h2>
-            </div>
+            <div class="sidebar-header"><h2><i class="fa-solid fa-code"></i> Command Center</h2></div>
             <ul class="nav-menu">
                 <li><a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i> Dashboard</a></li>
                 <li><a href="typing.html" class="nav-item"><i class="fa-solid fa-keyboard"></i> Typing Tool</a></li>
@@ -36,6 +27,7 @@
                 <li><a href="quiz.html" class="nav-item"><i class="fa-solid fa-brain"></i> Quiz</a></li>
                 <li><a href="notes.html" class="nav-item"><i class="fa-solid fa-book"></i> Notes</a></li>
                 <li><a href="todo.html" class="nav-item"><i class="fa-solid fa-list-check"></i> To-Do</a></li>
+                <li><a href="#" class="nav-item" id="contact-link"><i class="fa-solid fa-user-gear"></i> Contact Developer</a></li>
             </ul>
         </aside>
 
@@ -43,22 +35,17 @@
             <nav class="top-navbar">
                 <button class="menu-btn" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
                 <div class="search-bar" style="color: var(--text-muted);"><i class="fa-solid fa-stopwatch"></i> <span style="font-size: 14px; margin-left: 5px;">Pomodoro Timer</span></div>
-                <div class="nav-actions"><button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button></div>
+                <div class="nav-actions">
+                    <button class="theme-toggle" id="theme-toggle"><i class="fa-solid fa-moon"></i></button>
+                    <div class="user-profile" style="display: flex; align-items: center; gap: 10px;"><div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); display: flex; justify-content: center; align-items: center; color: var(--bg-color); font-weight: bold;"><i class="fa-solid fa-user-astronaut"></i></div><span style="font-weight: 500; font-size: 14px;">Aspirant</span></div>
+                </div>
             </nav>
 
             <div class="dashboard-content">
-                <div class="welcome-section" style="text-align: center;">
-                    <h1>Deep Focus Mode ⏱️</h1>
-                    <p>25 मिनट तक डिस्ट्रैक्शन फ्री पढ़ाई करें।</p>
-                </div>
-
+                <div class="welcome-section" style="text-align: center;"><h1>Deep Focus Mode ⏱️</h1></div>
                 <div class="focus-container">
                     <div class="status-text" id="statusText">रेडी टू फोकस?</div>
-                    
-                    <div class="timer-circle" id="timerCircle">
-                        <div class="timer-display" id="timeDisplay">25:00</div>
-                    </div>
-                    
+                    <div class="timer-circle" id="timerCircle"><div class="timer-display" id="timeDisplay">25:00</div></div>
                     <div class="timer-controls">
                         <button class="btn-start" onclick="startTimer()"><i class="fa-solid fa-play"></i> Start</button>
                         <button class="btn-pause" onclick="pauseTimer()"><i class="fa-solid fa-pause"></i> Pause</button>
@@ -69,68 +56,20 @@
         </main>
     </div>
 
+    <button class="chat-btn" onclick="toggleChat()"><i class="fa-solid fa-message"></i></button>
+    <div class="chat-box" id="aiChatBox"><div class="chat-header"><span><i class="fa-solid fa-robot"></i> Study Assistant</span><i class="fa-solid fa-xmark close-chat" onclick="toggleChat()"></i></div><div class="chat-messages" id="chatMessages"><div class="msg bot-msg">नमस्ते! मैं आपका पर्सनल स्टडी असिस्टेंट हूँ।</div></div><div class="chat-input-area"><input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)"><button onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button></div></div>
+    
+    <div class="contact-modal" id="contactModal"><div class="contact-box glass-box"><div class="contact-header"><h3><i class="fa-solid fa-address-book"></i> डेवलपर से संपर्क करें</h3><i class="fa-solid fa-xmark close-modal" onclick="toggleContactModal()"></i></div><div class="contact-body"><div class="credit-badge"><i class="fa-solid fa-shield-cat"></i> Designed by: <span style="font-weight: 700; color: #fff;">Vishal Vaishnav</span></div><div class="contact-links-list"><a href="https://wa.me/916367180391" target="_blank" class="contact-link-item" style="border-left-color: #25D366;"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> 6367180391 <span class="muted-text">WhatsApp</span></a><a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="contact-link-item" style="border-left-color: #E1306C;"><i class="fa-brands fa-instagram" style="color: #E1306C;"></i> vishalvaishnav7023 <span class="muted-text">Instagram</span></a><a href="https://chetakfpo.github.io/chetakfpo/" target="_blank" class="contact-link-item" style="border-left-color: #ff9f43;"><i class="fa-solid fa-building-flag" style="color: #ff9f43;"></i> Chetak FPO <span class="muted-text">Live Project</span></a></div></div></div></div>
+
     <script src="script.js"></script>
     <script>
-        let timeLeft = 25 * 60; // 25 Minutes in seconds
-        let timerInterval;
-        let isRunning = false;
-        
-        const timeDisplay = document.getElementById('timeDisplay');
-        const statusText = document.getElementById('statusText');
-        const timerCircle = document.getElementById('timerCircle');
-
-        function updateDisplay() {
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-            timeDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        function startTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                statusText.innerText = "फोकस मोड ऑन है... पढ़ते रहें!";
-                statusText.style.color = "#10b981";
-                timerCircle.style.borderColor = "rgba(16, 185, 129, 0.5)";
-                timerCircle.style.boxShadow = "0 0 30px rgba(16, 185, 129, 0.2)";
-                
-                timerInterval = setInterval(() => {
-                    if (timeLeft > 0) {
-                        timeLeft--;
-                        updateDisplay();
-                    } else {
-                        clearInterval(timerInterval);
-                        isRunning = false;
-                        statusText.innerText = "सेशन पूरा हुआ! 5 मिनट का ब्रेक लें।";
-                        statusText.style.color = "#00f2fe";
-                        alert("फोकस सेशन कम्पलीट! शानदार काम विशाल।");
-                    }
-                }, 1000);
-            }
-        }
-
-        function pauseTimer() {
-            if (isRunning) {
-                clearInterval(timerInterval);
-                isRunning = false;
-                statusText.innerText = "टाइमर पॉज्ड है। जल्दी वापस आएं!";
-                statusText.style.color = "#f59e0b";
-                timerCircle.style.borderColor = "rgba(245, 158, 11, 0.5)";
-                timerCircle.style.boxShadow = "0 0 30px rgba(245, 158, 11, 0.2)";
-            }
-        }
-
-        function resetTimer() {
-            clearInterval(timerInterval);
-            isRunning = false;
-            timeLeft = 25 * 60;
-            updateDisplay();
-            statusText.innerText = "रेडी टू फोकस?";
-            statusText.style.color = "var(--text-muted)";
-            timerCircle.style.borderColor = "rgba(0, 242, 254, 0.1)";
-            timerCircle.style.boxShadow = "inset 0 0 30px rgba(0, 242, 254, 0.1), 0 0 30px rgba(0, 242, 254, 0.1)";
-        }
-
-        updateDisplay(); // Initial call
+        let timeLeft = 25 * 60, timerInterval, isRunning = false;
+        const timeDisplay = document.getElementById('timeDisplay'), statusText = document.getElementById('statusText'), timerCircle = document.getElementById('timerCircle');
+        function updateDisplay() { let minutes = Math.floor(timeLeft / 60); let seconds = timeLeft % 60; timeDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`; }
+        function startTimer() { if (!isRunning) { isRunning = true; statusText.innerText = "फोकस मोड ऑन है!"; statusText.style.color = "#10b981"; timerInterval = setInterval(() => { if (timeLeft > 0) { timeLeft--; updateDisplay(); } else { clearInterval(timerInterval); isRunning = false; statusText.innerText = "सेशन पूरा हुआ!"; alert("फोकस सेशन कम्पलीट!"); } }, 1000); } }
+        function pauseTimer() { if (isRunning) { clearInterval(timerInterval); isRunning = false; statusText.innerText = "टाइमर पॉज्ड है।"; statusText.style.color = "#f59e0b"; } }
+        function resetTimer() { clearInterval(timerInterval); isRunning = false; timeLeft = 25 * 60; updateDisplay(); statusText.innerText = "रेडी टू फोकस?"; statusText.style.color = "var(--text-muted)"; }
+        updateDisplay();
     </script>
 </body>
 </html>
