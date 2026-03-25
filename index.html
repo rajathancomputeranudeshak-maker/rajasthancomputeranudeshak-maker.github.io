@@ -3,274 +3,148 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vishal Vaishnav - Anudeshak Command Center</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
-        
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-        html { scroll-behavior: smooth; overflow-x: hidden; }
-        body { background: #0b0f19; color: white; line-height: 1.6; }
-
-        /* --- PRO NAVBAR --- */
-        .navbar { 
-            position: fixed; top: 0; width: 100%; padding: 15px 50px; 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: rgba(11, 15, 25, 0.9); backdrop-filter: blur(10px); 
-            border-bottom: 2px solid #00f2fe; z-index: 1000; 
-            box-shadow: 0 5px 20px rgba(0, 242, 254, 0.2);
-        }
-        .logo { color: #00f2fe; font-size: 26px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
-        .nav-links { list-style: none; display: flex; gap: 20px; align-items: center; }
-        .nav-links li a { 
-            color: #fff; text-decoration: none; font-size: 14px; 
-            transition: 0.3s; font-weight: 600; text-transform: uppercase; 
-            padding: 8px 12px; border-radius: 5px;
-        }
-        .nav-links li a:hover { 
-            background: #00f2fe; color: #0b0f19; box-shadow: 0 0 15px #00f2fe; 
-        }
-
-        @media (max-width: 768px) { 
-            .navbar { flex-direction: column; padding: 15px; } 
-            .nav-links { gap: 10px; margin-top: 15px; flex-wrap: wrap; justify-content: center; } 
-        }
-
-        /* --- MAIN DASHBOARD SECTION --- */
-        section { min-height: 100vh; padding: 120px 20px 50px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        h2.section-title { color: #00f2fe; font-size: 32px; margin-bottom: 30px; text-transform: uppercase; letter-spacing: 2px; text-shadow: 0 0 10px rgba(0,242,254,0.5); }
-
-        #home { background: radial-gradient(circle, rgba(11,15,25,1) 0%, rgba(5,7,12,1) 100%); }
-        .profile-pic { width: 180px; height: 180px; border-radius: 50%; object-fit: cover; padding: 5px; background: linear-gradient(45deg, #00f2fe, #4facfe); margin-bottom: 20px; box-shadow: 0 0 30px rgba(0, 242, 254, 0.6); }
-        #home h1 { font-size: 45px; margin-bottom: 5px; font-weight: 800; }
-        .typing-text { color: #00f2fe; font-size: 22px; font-weight: 400; height: 35px; margin-bottom: 30px; }
-
-        /* --- APP GRID (Study Tools) --- */
-        .app-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px; max-width: 900px; width: 100%; margin-top: 30px;
-        }
-        .app-card {
-            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(0, 242, 254, 0.3);
-            border-radius: 15px; padding: 25px; text-decoration: none; color: white;
-            transition: all 0.3s ease; position: relative; overflow: hidden;
-        }
-        .app-card:hover {
-            transform: translateY(-10px); background: rgba(0, 242, 254, 0.1);
-            border-color: #00f2fe; box-shadow: 0 10px 30px rgba(0, 242, 254, 0.3);
-        }
-        .app-icon { font-size: 40px; margin-bottom: 15px; display: block; }
-        .app-title { font-size: 20px; font-weight: 600; color: #00f2fe; margin-bottom: 10px; }
-        .app-desc { font-size: 13px; color: #aaa; }
-        .badge {
-            position: absolute; top: 15px; right: -25px; background: #ff004c; color: white;
-            font-size: 10px; font-weight: bold; padding: 5px 30px; transform: rotate(45deg);
-            box-shadow: 0 0 10px #ff004c; animation: pulse 1.5s infinite;
-        }
-        @keyframes pulse { 0% { opacity: 0.8; } 50% { opacity: 1; box-shadow: 0 0 20px #ff004c; } 100% { opacity: 0.8; } }
-
-        /* --- ABOUT & CONTACT --- */
-        .info-box { max-width: 700px; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); margin-bottom: 20px;}
-        .info-box p { color: #ccc; font-size: 16px; margin-bottom: 15px; }
-        
-        .social-btn { display: inline-block; padding: 12px 25px; text-decoration: none; font-weight: 600; border-radius: 30px; transition: 0.3s; margin: 10px; border: 2px solid transparent; }
-        .whatsapp { border-color: #25D366; color: #25D366; }
-        .whatsapp:hover { background: #25D366; color: #fff; box-shadow: 0 0 20px #25D366; }
-        .instagram { border-color: #E1306C; color: #E1306C; }
-        .instagram:hover { background: #E1306C; color: #fff; box-shadow: 0 0 20px #E1306C; }
-
-        /* --- PHOTOS SLIDER (UPDATED FOR PRO THEME) --- */
-        .slider-container { position: relative; width: 90%; max-width: 650px; height: 400px; margin: 0 auto; overflow: hidden; border-radius: 15px; border: 2px solid rgba(0, 242, 254, 0.5); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2); }
-        .slides { display: flex; width: 600%; /* 6 photos */ height: 100%; transition: transform 0.5s ease-in-out; }
-        .slides img { width: 16.666%; height: 100%; object-fit: cover; }
-        .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(11,15,25,0.8); color: #00f2fe; border: 1px solid #00f2fe; padding: 10px 15px; font-size: 20px; cursor: pointer; border-radius: 50%; transition: 0.3s; z-index: 10; }
-        .slider-btn:hover { background: #00f2fe; color: #0b0f19; }
-        .prev { left: 10px; }
-        .next { right: 10px; }
-
-        /* --- CHATBOT --- */
-        .chat-btn { position: fixed; bottom: 30px; right: 30px; background: #00f2fe; color: #0b0f19; width: 65px; height: 65px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; cursor: pointer; box-shadow: 0 0 25px #00f2fe; z-index: 1000; transition: 0.3s; }
-        .chat-btn:hover { transform: scale(1.1); }
-        .chat-box { position: fixed; bottom: 110px; right: 30px; width: 350px; height: 450px; background: rgba(11, 15, 25, 0.95); border: 2px solid #00f2fe; border-radius: 15px; display: none; flex-direction: column; z-index: 1000; box-shadow: 0 0 30px rgba(0, 242, 254, 0.3); backdrop-filter: blur(10px); overflow: hidden; }
-        .chat-header { background: #00f2fe; color: #0b0f19; padding: 15px 20px; font-weight: bold; font-size: 18px; display: flex; justify-content: space-between; align-items: center; }
-        .close-chat { cursor: pointer; font-size: 24px; transition: 0.2s; }
-        .close-chat:hover { color: #ff004c; }
-        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; font-size: 14px; }
-        .msg { padding: 10px 15px; border-radius: 15px; max-width: 85%; line-height: 1.4; }
-        .user-msg { background: #2a2d3a; color: white; align-self: flex-end; border-bottom-right-radius: 0; }
-        .bot-msg { background: rgba(0, 242, 254, 0.1); color: #00f2fe; border: 1px solid #00f2fe; align-self: flex-start; border-bottom-left-radius: 0; }
-        .chat-input-area { display: flex; padding: 15px; background: rgba(0,0,0,0.5); border-top: 1px solid rgba(0, 242, 254, 0.2); }
-        .chat-input-area input { flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border: 1px solid #444; border-radius: 8px; color: white; outline: none; transition: 0.3s; }
-        .chat-input-area input:focus { border-color: #00f2fe; }
-        .chat-input-area button { background: #00f2fe; color: #0b0f19; border: none; padding: 0 20px; margin-left: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-    </style>
+    <title>Vishal Vaishnav - Command Center</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="particles-js"></div>
+
+    <audio id="click-sound" src="https://www.soundjay.com/buttons/sounds/button-09.mp3"></audio>
 
     <nav class="navbar">
-        <div class="logo">Vishal.</div>
+        <div class="logo"><i class="fa-solid fa-terminal"></i> Vishal.</div>
         <ul class="nav-links">
-            <li><a href="#home">Dashboard</a></li>
-            <li><a href="#about">About Me</a></li>
-            <li><a href="#photos">Photos</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#home" class="nav-item">Dashboard</a></li>
+            <li><a href="#stats" class="nav-item">Stats</a></li>
+            <li><a href="#about" class="nav-item">About</a></li>
+            <li><a href="#photos" class="nav-item">Photos</a></li>
+            <li><a href="#contact" class="nav-item">Contact</a></li>
         </ul>
     </nav>
 
     <section id="home">
-        <img src="vishalnew.jpg" alt="Vishal Vaishnav" class="profile-pic">
+        <div class="profile-glow">
+            <img src="vishalnew.jpg" alt="Vishal Vaishnav" class="profile-pic">
+        </div>
         <h1>विशाल वैष्णव</h1>
         <div class="typing-text" id="typewriter"></div>
-        <p style="color: #aaa; margin-bottom: 20px; max-width: 600px;">
-            Target: Computer Anudeshak Exam (23 Aug 2026). <br>
-            Welcome to my central command center. Explore the study tools below.
-        </p>
+        
+        <div class="countdown-container">
+            <h3><i class="fa-solid fa-hourglass-half"></i> Computer Anudeshak Exam</h3>
+            <p class="target-date">23 August 2026</p>
+            <div id="countdown" class="neon-text">Loading Timer...</div>
+        </div>
 
         <div class="app-grid">
-            <a href="typing.html" class="app-card">
+            <a href="typing.html" class="app-card play-sound">
                 <div class="badge">PRO</div>
-                <span class="app-icon">⌨️</span>
+                <i class="fa-solid fa-keyboard app-icon"></i>
                 <div class="app-title">Terminal Typing</div>
-                <div class="app-desc">Mechanical sound & live accuracy tracking with Anudeshak syllabus text.</div>
+                <div class="app-desc">Live accuracy tracking with syllabus text.</div>
             </a>
-            
-            <a href="tracker.html" class="app-card">
-                <span class="app-icon">📅</span>
+            <a href="tracker.html" class="app-card play-sound">
+                <i class="fa-regular fa-calendar-check app-icon"></i>
                 <div class="app-title">Attendance Matrix</div>
-                <div class="app-desc">153-Day consistency tracker. Maintain the green streak until exam day.</div>
+                <div class="app-desc">Maintain the green streak until exam day.</div>
             </a>
-
-            <a href="focus.html" class="app-card">
-                <span class="app-icon">⏱️</span>
+            <a href="focus.html" class="app-card play-sound">
+                <i class="fa-solid fa-stopwatch app-icon"></i>
                 <div class="app-title">Deep Focus Mode</div>
-                <div class="app-desc">25-Minute Pomodoro timer with dynamic motivational quotes.</div>
+                <div class="app-desc">25-Min Pomodoro timer with dynamic quotes.</div>
             </a>
-
-            <a href="quiz.html" class="app-card">
-                <span class="app-icon">🧠</span>
+            <a href="quiz.html" class="app-card play-sound">
+                <i class="fa-solid fa-brain app-icon"></i>
                 <div class="app-title">Computer Quiz</div>
-                <div class="app-desc">Test your fundamentals with interactive multiple-choice questions.</div>
+                <div class="app-desc">Test fundamentals with interactive MCQs.</div>
             </a>
         </div>
     </section>
 
-    <section id="about">
-        <h2 class="section-title">मेरे बारे में</h2>
-        <div class="info-box">
-            <p>नमस्ते! मैं विशाल वैष्णव हूँ। मैं प्रतापगढ़ जिले के सिद्धपुरा गाँव से हूँ।</p>
-            <p>मेरा एकमात्र लक्ष्य <strong>23 अगस्त 2026</strong> को होने वाले <strong>राजस्थान कंप्यूटर अनुदेशक</strong> एग्जाम को क्लियर करना है।</p>
-            <p>मुझे वेब डेवलपमेंट (HTML, CSS, JS), कोडिंग और नई टेक्नोलॉजी सीखने का बहुत शौक है। यह डैशबोर्ड मैंने अपनी तैयारी को ट्रैक करने और दूसरों की मदद करने के लिए बनाया है।</p>
-        </div>
-    </section>
-
-    <section id="photos">
-        <h2 class="section-title">Photos</h2>
-        <div class="slider-container">
-            <button class="slider-btn prev" onclick="changeSlide(-1)">❮</button>
-            <button class="slider-btn next" onclick="changeSlide(1)">❯</button>
-            <div class="slides" id="slides">
-                <img src="vishal1.jpeg" alt="Photo 1">
-                <img src="vishal2.jpeg" alt="Photo 2">
-                <img src="vishal3.jpeg" alt="Photo 3">
-                <img src="vishal4.jpeg" alt="Photo 4">
-                <img src="vishal5.jpeg" alt="Photo 5">
-                <img src="vishal6.jpeg" alt="Photo 6">
+    <section id="stats">
+        <h2 class="section-title">Preparation Stats</h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <i class="fa-solid fa-fire"></i>
+                <h3 id="streak-count">0</h3>
+                <p>Day Streak</p>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-code"></i>
+                <h3>HTML/CSS/JS</h3>
+                <p>Core Skills</p>
+            </div>
+            <div class="stat-card">
+                <i class="fa-solid fa-crosshairs"></i>
+                <h3>100%</h3>
+                <p>Focus Level</p>
             </div>
         </div>
     </section>
 
-    <section id="contact">
-        <h2 class="section-title">संपर्क करें</h2>
-        <div class="info-box" style="margin-bottom: 30px;">
-            <p><strong>📱 मोबाइल:</strong> 6367180391</p>
-            <p><strong>✉️ ईमेल:</strong> vishalvaishnav7023@gmail.com</p>
-        </div>
-        <div>
-            <a href="https://wa.me/916367180391" target="_blank" class="social-btn whatsapp">💬 WhatsApp</a>
-            <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="social-btn instagram">📸 Instagram</a>
+    <section id="about">
+        <h2 class="section-title">About Commander</h2>
+        <div class="glass-box">
+            <p><i class="fa-solid fa-location-dot"></i> प्रतापगढ़ जिले के सिद्धपुरा गाँव से सीधा लाइव।</p>
+            <p><i class="fa-solid fa-bullseye"></i> <strong>मिशन:</strong> राजस्थान कंप्यूटर अनुदेशक एग्जाम (23 अगस्त 2026)।</p>
+            <p><i class="fa-solid fa-laptop-code"></i> वेब डेवलपमेंट, कोडिंग और टेक्नोलॉजी मेरा जुनून है। यह कमांड सेंटर मेरी तैयारी का मुख्य बेस है।</p>
         </div>
     </section>
 
-    <div class="chat-btn" onclick="toggleChat()">🤖</div>
-    <div class="chat-box" id="aiChatBox">
+    <section id="photos">
+        <h2 class="section-title">Visual Logs</h2>
+        <div class="slider-container">
+            <button class="slider-btn prev play-sound" onclick="changeSlide(-1)">❮</button>
+            <button class="slider-btn next play-sound" onclick="changeSlide(1)">❯</button>
+            <div class="slides" id="slides">
+                <img src="vishal1.jpeg" alt="Log 1">
+                <img src="vishal2.jpeg" alt="Log 2">
+                <img src="vishal3.jpeg" alt="Log 3">
+                <img src="vishal4.jpeg" alt="Log 4">
+                <img src="vishal5.jpeg" alt="Log 5">
+                <img src="vishal6.jpeg" alt="Log 6">
+            </div>
+            <div class="slider-dots" id="dots-container"></div>
+        </div>
+    </section>
+
+    <section id="contact" style="min-height: 60vh;">
+        <h2 class="section-title">Comms Channel</h2>
+        <div class="glass-box text-center">
+            <p><i class="fa-solid fa-phone"></i> 6367180391</p>
+            <p><i class="fa-solid fa-envelope"></i> vishalvaishnav7023@gmail.com</p>
+            <div class="social-links mt-3">
+                <a href="https://wa.me/916367180391" target="_blank" class="neon-btn play-sound"><i class="fa-brands fa-whatsapp"></i> WhatsApp</a>
+                <a href="https://www.instagram.com/vishalvaishnav7023?igsh=YmRueDdjN28wMTd3" target="_blank" class="neon-btn play-sound"><i class="fa-brands fa-instagram"></i> Instagram</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Vishal Vaishnav | Built for Computer Anudeshak Mission</p>
+    </footer>
+
+    <div id="scrollTop" class="play-sound"><i class="fa-solid fa-arrow-up"></i></div>
+
+    <div class="chat-btn play-sound" onclick="toggleChat()"><i class="fa-solid fa-robot"></i></div>
+    <div class="chat-box glass-box" id="aiChatBox">
         <div class="chat-header">
-            <span>Anudeshak AI</span>
-            <span class="close-chat" onclick="toggleChat()">×</span>
+            <span><i class="fa-solid fa-microchip"></i> Anudeshak AI</span>
+            <span class="close-chat play-sound" onclick="toggleChat()"><i class="fa-solid fa-xmark"></i></span>
         </div>
         <div class="chat-messages" id="chatMessages">
-            <div class="msg bot-msg">नमस्ते! मैं विशाल का AI असिस्टेंट हूँ। मैं आपकी क्या मदद कर सकता हूँ?</div>
+            <div class="msg bot-msg">सिस्टम ऑनलाइन। मैं विशाल का AI हूँ। कमांड दें?</div>
         </div>
         <div class="chat-input-area">
-            <input type="text" id="userInput" placeholder="यहाँ टाइप करें..." onkeypress="handleEnter(event)">
-            <button onclick="sendMessage()">➤</button>
+            <input type="text" id="userInput" placeholder="कमांड टाइप करें..." onkeypress="handleEnter(event)">
+            <button class="play-sound" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <script>
-        // 1. Typing Animation
-        const texts = ["भावी कंप्यूटर अनुदेशक...", "वेब डेवलपर...", "कोडिंग एक्सपर्ट..."];
-        let count = 0; let index = 0;
-        function type() {
-            if (count === texts.length) count = 0;
-            let currentText = texts[count];
-            let letter = currentText.slice(0, ++index);
-            document.getElementById("typewriter").textContent = letter + "|";
-            if (letter.length === currentText.length) { count++; index = 0; setTimeout(type, 2000); } 
-            else { setTimeout(type, 100); }
-        }
-        type();
-
-        // 2. Photo Slider Logic
-        let slideIndex = 0;
-        const slides = document.getElementById("slides");
-        const totalSlides = 6; // 6 Photos
-
-        function changeSlide(direction) {
-            slideIndex += direction;
-            if (slideIndex >= totalSlides) slideIndex = 0;
-            if (slideIndex < 0) slideIndex = totalSlides - 1;
-            // 6 photos means each photo is 16.666% wide
-            slides.style.transform = `translateX(-${slideIndex * 16.666}%)`;
-        }
-        setInterval(() => changeSlide(1), 5000); // Auto slide every 5 seconds
-
-        // 3. Chatbot Logic
-        function toggleChat() {
-            const chatBox = document.getElementById("aiChatBox");
-            chatBox.style.display = (chatBox.style.display === "flex") ? "none" : "flex";
-        }
-
-        function handleEnter(event) {
-            if (event.key === "Enter") sendMessage();
-        }
-
-        function sendMessage() {
-            const input = document.getElementById("userInput");
-            const message = input.value.trim();
-            if (!message) return;
-
-            const chatMessages = document.getElementById("chatMessages");
-            chatMessages.innerHTML += `<div class="msg user-msg">${message}</div>`;
-            input.value = "";
-            chatMessages.scrollTop = chatMessages.scrollHeight; 
-
-            setTimeout(() => {
-                let reply = "मैं अभी सीख रहा हूँ, लेकिन आप विशाल से WhatsApp पर संपर्क कर सकते हैं!";
-                let lowerMessage = message.toLowerCase();
-
-                if(lowerMessage.includes("exam") || lowerMessage.includes("अनुदेशक") || lowerMessage.includes("तैयारी")) {
-                    reply = "विशाल 23 अगस्त 2026 को होने वाले राजस्थान कंप्यूटर अनुदेशक एग्जाम की जोरदार तैयारी कर रहे हैं!";
-                } else if (lowerMessage.includes("skills") || lowerMessage.includes("कोडिंग")) {
-                    reply = "विशाल को HTML, CSS, JavaScript और मॉडर्न वेब डेवलपमेंट का शौक है।";
-                } else if (lowerMessage.includes("address") || lowerMessage.includes("कहाँ") || lowerMessage.includes("रहते") || lowerMessage.includes("location") || lowerMessage.includes("जगह")) {
-                    reply = "विशाल प्रतापगढ़, राजस्थान के एक छोटे से गाँव सिद्धपुरा से हैं।";
-                } else if (lowerMessage.includes("hello") || lowerMessage.includes("hi") || lowerMessage.includes("नमस्ते")) {
-                    reply = "नमस्ते! मैं आपकी क्या मदद कर सकता हूँ?";
-                }
-
-                chatMessages.innerHTML += `<div class="msg bot-msg">${reply}</div>`;
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }, 800);
-        }
-    </script>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
